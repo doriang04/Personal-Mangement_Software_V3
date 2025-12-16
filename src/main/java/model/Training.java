@@ -44,6 +44,7 @@ public class Training {
     }
 
     public SkillManager getSkill() {
+        if (skill == null) skill = new SkillManager();
         return skill;
     }
 

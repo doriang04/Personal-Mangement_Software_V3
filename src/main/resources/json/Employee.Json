@@ -1,0 +1,300 @@
+[
+  {
+    "id": 1,
+    "username": "ceo.hans",
+    "password": "secure123",
+    "firstName": "Hans",
+    "lastName": "Müller",
+    "eMail": "hans.mueller@bauxyz.de",
+    "phoneNumber": "01751234567",
+    "dateOfBirth": "1975-03-15",
+    "address": "Hauptstr. 12, 80331 München",
+    "gender": "M",
+    "hireDate": "2010-01-01",
+    "employmentStatus": true,
+    "teamId": 12,
+    "managerId": 0,
+    "roleId": 1,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 1, "acquireDate": "2015-06-01"},
+        {"skillId": 11, "acquireDate": "2012-03-01"},
+        {"skillId": 17, "acquireDate": "2018-09-01"},
+        {"skillId": 67, "acquireDate": "2020-05-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [],
+      "doneTrainings": [
+        {"trainingId": 1, "completionDate": "2023-12-01"},
+        {"trainingId": 5, "completionDate": "2024-03-15"}
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "username": "bauleiter.karl",
+    "password": "bauleiter2025",
+    "firstName": "Karl",
+    "lastName": "Schmidt",
+    "eMail": "karl.schmidt@bauxyz.de",
+    "phoneNumber": "01752345678",
+    "dateOfBirth": "1980-07-22",
+    "address": "Baustellenweg 5, 80999 München",
+    "gender": "M",
+    "hireDate": "2015-04-01",
+    "employmentStatus": true,
+    "teamId": 2,
+    "managerId": 1,
+    "roleId": 2,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 2, "acquireDate": "2018-02-01"},
+        {"skillId": 22, "acquireDate": "2019-11-01"},
+        {"skillId": 20, "acquireDate": "2020-06-01"},
+        {"skillId": 12, "acquireDate": "2023-04-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [{"trainingId": 3, "assigningDate": "2025-02-01"}],
+      "doneTrainings": [{"trainingId": 1, "completionDate": "2024-01-15"}]
+    }
+  },
+  {
+    "id": 3,
+    "username": "maurer.vorarbeiter",
+    "password": "maurer123",
+    "firstName": "Peter",
+    "lastName": "Weber",
+    "eMail": "peter.weber@bauxyz.de",
+    "phoneNumber": "01753456789",
+    "dateOfBirth": "1985-11-10",
+    "address": "Mauerstr. 8, 81479 München",
+    "gender": "M",
+    "hireDate": "2018-09-01",
+    "employmentStatus": true,
+    "teamId": 2,
+    "managerId": 2,
+    "roleId": 3,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 51, "acquireDate": "2020-05-01"},
+        {"skillId": 49, "acquireDate": "2021-03-01"},
+        {"skillId": 16, "acquireDate": "2022-07-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [{"trainingId": 2, "assigningDate": "2025-01-20"}],
+      "doneTrainings": [{"trainingId": 4, "completionDate": "2023-11-01"}]
+    }
+  },
+  {
+    "id": 4,
+    "username": "fachmaurer.anna",
+    "password": "fachkraft456",
+    "firstName": "Anna",
+    "lastName": "Bauer",
+    "eMail": "anna.bauer@bauxyz.de",
+    "phoneNumber": "01754567890",
+    "dateOfBirth": "1990-02-28",
+    "address": "Steinweg 23, 81679 München",
+    "gender": "F",
+    "hireDate": "2020-03-01",
+    "employmentStatus": true,
+    "teamId": 2,
+    "managerId": 3,
+    "roleId": 4,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 53, "acquireDate": "2020-08-01"},
+        {"skillId": 14, "acquireDate": "2021-12-01"},
+        {"skillId": 48, "acquireDate": "2022-05-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [],
+      "doneTrainings": [{"trainingId": 16, "completionDate": "2024-06-01"}]
+    }
+  },
+  {
+    "id": 5,
+    "username": "beton.vorarbeiter",
+    "password": "beton789",
+    "firstName": "Thomas",
+    "lastName": "Fischer",
+    "eMail": "thomas.fischer@bauxyz.de",
+    "phoneNumber": "01755678901",
+    "dateOfBirth": "1983-09-14",
+    "address": "Betonallee 7, 81929 München",
+    "gender": "M",
+    "hireDate": "2017-06-01",
+    "employmentStatus": true,
+    "teamId": 3,
+    "managerId": 2,
+    "roleId": 6,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 52, "acquireDate": "2019-04-01"},
+        {"skillId": 60, "acquireDate": "2020-10-01"},
+        {"skillId": 16, "acquireDate": "2021-08-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [{"trainingId": 16, "assigningDate": "2025-03-15"}],
+      "doneTrainings": [{"trainingId": 4, "completionDate": "2022-09-01"}]
+    }
+  },
+  {
+    "id": 6,
+    "username": "stahl.planer.max",
+    "password": "stahlplaner2025",
+    "firstName": "Max",
+    "lastName": "Hoffmann",
+    "eMail": "max.hoffmann@bauxyz.de",
+    "phoneNumber": "01756789012",
+    "dateOfBirth": "1982-05-18",
+    "address": "Stahlstr. 15, 81243 München",
+    "gender": "M",
+    "hireDate": "2016-08-01",
+    "employmentStatus": true,
+    "teamId": 4,
+    "managerId": 2,
+    "roleId": 9,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 39, "acquireDate": "2017-03-01"},
+        {"skillId": 60, "acquireDate": "2018-11-01"},
+        {"skillId": 5, "acquireDate": "2020-06-01"},
+        {"skillId": 98, "acquireDate": "2023-02-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [{"trainingId": 17, "assigningDate": "2025-04-01"}],
+      "doneTrainings": [
+        {"trainingId": 3, "completionDate": "2022-09-15"},
+        {"trainingId": 12, "completionDate": "2024-01-20"}
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "username": "stahlbauer.lukas",
+    "password": "schweisser456",
+    "firstName": "Lukas",
+    "lastName": "Richter",
+    "eMail": "lukas.richter@bauxyz.de",
+    "phoneNumber": "01757890123",
+    "dateOfBirth": "1988-12-03",
+    "address": "Eisenweg 22, 81379 München",
+    "gender": "M",
+    "hireDate": "2019-05-01",
+    "employmentStatus": true,
+    "teamId": 4,
+    "managerId": 6,
+    "roleId": 10,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 37, "acquireDate": "2019-09-01"},
+        {"skillId": 10, "acquireDate": "2020-04-01"},
+        {"skillId": 20, "acquireDate": "2021-03-01"},
+        {"skillId": 16, "acquireDate": "2022-08-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [],
+      "doneTrainings": [
+        {"trainingId": 17, "completionDate": "2024-05-10"},
+        {"trainingId": 4, "completionDate": "2023-10-01"}
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "username": "metallbauer.sophie",
+    "password": "metall789",
+    "firstName": "Sophie",
+    "lastName": "Klein",
+    "eMail": "sophie.klein@bauxyz.de",
+    "phoneNumber": "01758901234",
+    "dateOfBirth": "1992-08-27",
+    "address": "Metallallee 9, 81737 München",
+    "gender": "F",
+    "hireDate": "2021-02-01",
+    "employmentStatus": true,
+    "teamId": 4,
+    "managerId": 6,
+    "roleId": 11,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 55, "acquireDate": "2021-06-01"},
+        {"skillId": 14, "acquireDate": "2022-01-01"},
+        {"skillId": 48, "acquireDate": "2022-09-01"},
+        {"skillId": 36, "acquireDate": "2023-11-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [{"trainingId": 10, "assigningDate": "2025-05-15"}],
+      "doneTrainings": [{"trainingId": 16, "completionDate": "2024-03-20"}]
+    }
+  },
+  {
+    "id": 9,
+    "username": "stahl.helper.martin",
+    "password": "helfer123",
+    "firstName": "Martin",
+    "lastName": "Lehmann",
+    "eMail": "martin.lehmann@bauxyz.de",
+    "phoneNumber": "01759012345",
+    "dateOfBirth": "1995-04-12",
+    "address": "Schweißstr. 3, 81829 München",
+    "gender": "M",
+    "hireDate": "2022-07-01",
+    "employmentStatus": true,
+    "teamId": 4,
+    "managerId": 7,
+    "roleId": 10,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 37, "acquireDate": "2022-11-01"},
+        {"skillId": 93, "acquireDate": "2023-02-01"},
+        {"skillId": 14, "acquireDate": "2023-08-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [{"trainingId": 17, "assigningDate": "2025-06-01"}],
+      "doneTrainings": [{"trainingId": 4, "completionDate": "2023-12-15"}]
+    }
+  },
+  {
+    "id": 10,
+    "username": "stahl.tech.nina",
+    "password": "techniker456",
+    "firstName": "Nina",
+    "lastName": "Wagner",
+    "eMail": "nina.wagner@bauxyz.de",
+    "phoneNumber": "01760123456",
+    "dateOfBirth": "1989-10-05",
+    "address": "Konstruktionsweg 18, 81925 München",
+    "gender": "F",
+    "hireDate": "2018-11-01",
+    "employmentStatus": true,
+    "teamId": 4,
+    "managerId": 6,
+    "roleId": 11,
+    "skill": {
+      "aktiveSkillHistory": [
+        {"skillId": 5, "acquireDate": "2019-05-01"},
+        {"skillId": 55, "acquireDate": "2020-09-01"},
+        {"skillId": 60, "acquireDate": "2021-12-01"},
+        {"skillId": 99, "acquireDate": "2023-07-01"}
+      ]
+    },
+    "training": {
+      "openTrainings": [],
+      "doneTrainings": [
+        {"trainingId": 12, "completionDate": "2023-11-10"},
+        {"trainingId": 3, "completionDate": "2022-06-01"}
+      ]
+    }
+  }
+]

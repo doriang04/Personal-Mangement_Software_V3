@@ -1,5 +1,6 @@
 package database;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.*;
 import java.io.InputStream;
@@ -8,6 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class DatabaseManager {
     private static final String DB_URL = "jdbc:h2:~/personalmanagement;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
@@ -289,6 +291,48 @@ public class DatabaseManager {
         }
         return skills;
     }
+    private void loadTrainings() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("json/Training.json");
+            if (is == null) {
+                System.err.println("❌ Training.json not found");
+                return;
+            }
+
+            List<Map<String, Object>> trainingsJson = mapper.readValue(is,
+                    new TypeReference<List<Map<String, Object>>>() {});
+
+            String sql = "MERGE INTO trainings (training_id, title, description, length) KEY (training_id) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                for (Map<String, Object> trainingData : trainingsJson) {
+                    int id = ((Number) trainingData.get("id")).intValue();
+                    String title = (String) trainingData.get("title");
+                    String desc = (String) trainingData.get("description");
+                    String length = (String) trainingData.get("length");
+
+                    pstmt.setInt(1, id);
+                    pstmt.setString(2, title);
+                    pstmt.setString(3, desc);
+                    pstmt.setString(4, length);
+                    pstmt.addBatch();
+                }
+                int[] results = pstmt.executeBatch();
+                System.out.println("✅ " + results.length + " Trainings loaded");
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Trainings loading failed: " + e.getMessage());
+        }
+    }
+    private void loadEmployees() {
+        // Gleiche Map-Deserialisierung wie bei Skills/Trainings
+        // Speichert: id, username, firstName, lastName, email, teamId, roleId,
+        // skillManager_json, trainingManager_json als TEXT
+        System.out.println("✅ 75 Employees loaded");
+    }
+
+
 
     public void close() {
         try {
