@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "name": "Chief Executive Officer",
+    "description": "Langjährige Erfahrung in der Bau- oder Projektleitung, Abgeschlossenes Studium im Bauingenieurwesen, Führungskompetenz, Strategisches Denken, Change Management",
+    "permission": "full_admin"
+  },
+  {
+    "id": 2,
+    "name": "Bauleiter",
+    "description": "Meisterbrief im Bauwesen, 5 Jahre Erfahrung auf Baustellen, Kenntnisse in Bauleitung und -organisation",
+    "permission": "construction_manage"
+  },
+  {
+    "id": 3,
+    "name": "Vorarbeiter Maurer",
+    "description": "Meisterbrief im Maurerhandwerk, Erfahrung in Personalführung",
+    "permission": "masonry_supervise"
+  },
+  {
+    "id": 4,
+    "name": "Facharbeiter Maurer",
+    "description": "Abgeschlossene Berufsausbildung als Maurer",
+    "permission": "masonry_execute"
+  },
+  {
+    "id": 5,
+    "name": "Maurerhelfer",
+    "description": "Grundkenntnisse Bauwesen, Körperliche Belastbarkeit",
+    "permission": "masonry_assist"
+  },
+  {
+    "id": 6,
+    "name": "Vorarbeiter Betonbau",
+    "description": "Meisterbrief im Betonbau, Kenntnisse im Schalungsbau",
+    "permission": "concrete_supervise"
+  },
+  {
+    "id": 7,
+    "name": "Betonbauer",
+    "description": "Berufsausbildung Betonbauer, Erfahrung im Stahlbetonbau",
+    "permission": "concrete_execute"
+  },
+  {
+    "id": 8,
+    "name": "Betonbauhelfer",
+    "description": "Erste Erfahrung auf Baustellen",
+    "permission": "concrete_assist"
+  },
+  {
+    "id": 9,
+    "name": "Stahlbauplaner",
+    "description": "Studium Bauingenieurwesen, Kenntnisse in Statik & Stahlbau",
+    "permission": "steel_plan"
+  },
+  {
+    "id": 10,
+    "name": "Stahlbauer",
+    "description": "Berufsausbildung Stahlbauer, Schweißschein",
+    "permission": "steel_execute"
+  },
+  {
+    "id": 11,
+    "name": "Metallbauer",
+    "description": "Ausbildung Metallbau, Technisches Verständnis",
+    "permission": "metal_execute"
+  },
+  {
+    "id": 12,
+    "name": "Leiter Baustellenbetrieb",
+    "description": "Techniker- oder Meisterausbildung, Projektleitungserfahrung, Arbeitssicherheit",
+    "permission": "site_ops_manage"
+  },
+  {
+    "id": 13,
+    "name": "Logistikplaner",
+    "description": "Studium oder Ausbildung Logistik, Organisationstalent",
+    "permission": "logistics_plan"
+  },
+  {
+    "id": 14,
+    "name": "Baustellenlogistiker",
+    "description": "Gabelstaplerschein, Teamfähigkeit",
+    "permission": "logistics_execute"
+  },
+  {
+    "id": 15,
+    "name": "Sicherheitsbeauftragter",
+    "description": "SiGeKo-Zertifizierung, Kenntnisse Arbeitsschutz",
+    "permission": "safety_manage"
+  },
+  {
+    "id": 16,
+    "name": "Baukontrolleur",
+    "description": "Technische Ausbildung, Erfahrung in Bauüberwachung",
+    "permission": "site_inspect"
+  },
+  {
+    "id": 17,
+    "name": "Baukoordinator",
+    "description": "Bauingenieurwesen Studium, Kommunikationsfähigkeit",
+    "permission": "site_coordinate"
+  },
+  {
+    "id": 18,
+    "name": "Bauleiterassistent",
+    "description": "Technische Ausbildung, Baustellenerfahrung",
+    "permission": "site_assist"
+  },
+  {
+    "id": 19,
+    "name": "Leiter Geräte & Fuhrpark",
+    "description": "Technisches Studium oder Ausbildung, Fuhrparkmanagement, Führerschein C",
+    "permission": "equipment_manage"
+  },
+  {
+    "id": 20,
+    "name": "Baggerfahrer",
+    "description": "Führerschein Baumaschinen, Praxiserfahrung",
+    "permission": "equipment_drive"
+  },
+  {
+    "id": 21,
+    "name": "Maschinentechniker",
+    "description": "Mechatronik-Ausbildung, Fehlerdiagnosekenntnisse",
+    "permission": "equipment_maintain"
+  },
+  {
+    "id": 22,
+    "name": "Fuhrparktechniker",
+    "description": "KFZ-Mechatroniker, Fuhrparkerfahrung",
+    "permission": "fleet_maintain"
+  },
+  {
+    "id": 23,
+    "name": "Fahrzeugmechaniker",
+    "description": "KFZ-Ausbildung, Hydraulikkenntnisse",
+    "permission": "vehicle_maintain"
+  },
+  {
+    "id": 24,
+    "name": "Projektleiter Bau",
+    "description": "Bauingenieurwesen Studium, Projektmanagement, MS Project",
+    "permission": "project_manage"
+  },
+  {
+    "id": 25,
+    "name": "Projektadministrator",
+    "description": "Administrative Fähigkeiten, Projektsoftwarekenntnisse",
+    "permission": "project_admin"
+  },
+  {
+    "id": 26,
+    "name": "Dokumentationsspezialist",
+    "description": "Dokumentenmanagement, Qualitätssicherung",
+    "permission": "documentation"
+  },
+  {
+    "id": 27,
+    "name": "Projektassistent",
+    "description": "Organisationsfähigkeiten, Grundkenntnisse Projektmanagement",
+    "permission": "project_assist"
+  },
+  {
+    "id": 28,
+    "name": "Ressourcenplaner",
+    "description": "Excel-Kenntnisse, Planungsfähigkeiten",
+    "permission": "resource_plan"
+  },
+  {
+    "id": 29,
+    "name": "Terminplanungsassistent",
+    "description": "Organisationstalent, Grundkenntnisse Bauprozesse",
+    "permission": "scheduling_assist"
+  },
+  {
+    "id": 30,
+    "name": "Leiter Planung & Kalkulation",
+    "description": "Ausbildung im Bauwesen, Baukalkulation, CAD & AVA",
+    "permission": "planning_manage"
+  },
+  {
+    "id": 31,
+    "name": "Terminplaner",
+    "description": "MS Project, Erfahrung in Bauzeitplanung",
+    "permission": "scheduling_manage"
+  },
+  {
+    "id": 32,
+    "name": "Zeitplaner",
+    "description": "Kenntnisse Lean Construction, Analysefähigkeit",
+    "permission": "time_planning"
+  },
+  {
+    "id": 33,
+    "name": "Kostenkalkulator",
+    "description": "Erfahrung in Baukalkulation, Excel-Kenntnisse",
+    "permission": "cost_estimate"
+  },
+  {
+    "id": 34,
+    "name": "Projektkalkulator",
+    "description": "Kenntnisse AVA, Projektverständnis",
+    "permission": "project_calc"
+  },
+  {
+    "id": 35,
+    "name": "Leiter Einkauf",
+    "description": "Einkäuferzertifikat, Verhandlungsgeschick, Vertragsrecht",
+    "permission": "procurement_manage"
+  },
+  {
+    "id": 36,
+    "name": "Lieferantenkoordinator",
+    "description": "Kommunikationsfähigkeit, Vertragskenntnisse",
+    "permission": "supplier_coord"
+  },
+  {
+    "id": 37,
+    "name": "Materialeinkäufer",
+    "description": "Einkaufserfahrung, Technisches Verständnis",
+    "permission": "material_buy"
+  },
+  {
+    "id": 38,
+    "name": "Bestellsachbearbeiter",
+    "description": "Erfahrung mit ERP, Zuverlässigkeit",
+    "permission": "order_process"
+  },
+  {
+    "id": 39,
+    "name": "Lagerverwalter",
+    "description": "Lagerwirtschaftsausbildung, Sorgfalt",
+    "permission": "stock_manage"
+  },
+  {
+    "id": 40,
+    "name": "Leiter IT",
+    "description": "Studium Informatik, IT-Strategie, Führungskompetenz",
+    "permission": "it_manage"
+  },
+  {
+    "id": 41,
+    "name": "Systemadministrator",
+    "description": "Windows/Linux-Kenntnisse, Netzwerkverständnis",
+    "permission": "sys_admin"
+  },
+  {
+    "id": 42,
+    "name": "Netzwerktechniker",
+    "description": "Cisco-Kenntnisse, Netzwerkinfrastrukturwissen",
+    "permission": "network_admin"
+  },
+  {
+    "id": 43,
+    "name": "IT-Support Spezialist",
+    "description": "Helpdesk-Erfahrung, Kundenorientierung",
+    "permission": "it_support"
+  },
+  {
+    "id": 44,
+    "name": "Helpdesk-Mitarbeiter",
+    "description": "Ticket-System Erfahrung, Technisches Grundwissen",
+    "permission": "helpdesk"
+  },
+  {
+    "id": 45,
+    "name": "Softwareentwickler",
+    "description": "Kenntnisse in C#, Python, Git & CI/CD",
+    "permission": "software_dev"
+  },
+  {
+    "id": 46,
+    "name": "Systemintegrator",
+    "description": "Systemlandschaft-Verständnis, IT-Projektmitarbeit",
+    "permission": "system_integrate"
+  },
+  {
+    "id": 47,
+    "name": "Leiter Personal",
+    "description": "Studium HR oder BWL, Arbeitsrecht, Führungserfahrung",
+    "permission": "hr_manage"
+  },
+  {
+    "id": 48,
+    "name": "Recruiter",
+    "description": "Interviewtechniken, ATS-Kenntnisse",
+    "permission": "recruiting"
+  },
+  {
+    "id": 49,
+    "name": "Lohnbuchhalter",
+    "description": "DATEV-Kenntnisse, Lohnsteuer",
+    "permission": "payroll"
+  },
+  {
+    "id": 50,
+    "name": "Leiter Finanzen",
+    "description": "BWL Studium, HGB & IFRS, Controlling-Erfahrung",
+    "permission": "finance_manage"
+  }
+]

@@ -1,0 +1,602 @@
+[
+  {
+    "skillId": 1,
+    "requiredYears": "5",
+    "certification": ["Agiles Führen im Bauwesen"],
+    "description": "Führungskompetenzen für Bauprojekte mit agilen Methoden"
+  },
+  {
+    "skillId": 2,
+    "requiredYears": "3",
+    "certification": ["Projektmanagement"],
+    "description": "Grundlegende Projektmanagement-Kenntnisse für Bauprojekte"
+  },
+  {
+    "skillId": 3,
+    "requiredYears": "2",
+    "certification": ["BIM-Zertifikat"],
+    "description": "Building Information Modeling für digitale Bauprojekte"
+  },
+  {
+    "skillId": 4,
+    "requiredYears": "4",
+    "certification": ["Bauvertragsrecht"],
+    "description": "Rechtliche Grundlagen für Bauprojekte und Verträge"
+  },
+  {
+    "skillId": 5,
+    "requiredYears": "3",
+    "certification": ["CAD-Vertiefung"],
+    "description": "Erweiterte CAD-Kenntnisse für Baukonstruktionen"
+  },
+  {
+    "skillId": 6,
+    "requiredYears": "2",
+    "certification": ["Change Management"],
+    "description": "Veränderungsprozesse in Bauprojekten steuern"
+  },
+  {
+    "skillId": 7,
+    "requiredYears": "3",
+    "certification": ["Datenanalyse im Baukontext"],
+    "description": "Datenanalyse für Bauprojektoptimierung"
+  },
+  {
+    "skillId": 8,
+    "requiredYears": "4",
+    "certification": ["Digitalisierung im Bauwesen"],
+    "description": "Digitale Transformation im Bausektor"
+  },
+  {
+    "skillId": 9,
+    "requiredYears": "2",
+    "certification": ["Dokumentationstechniken"],
+    "description": "Effiziente Bauprojektdokumentation"
+  },
+  {
+    "skillId": 10,
+    "requiredYears": "3",
+    "certification": ["Fortbildung Arbeitssicherheit"],
+    "description": "Sichere Arbeitsbedingungen auf Baustellen"
+  },
+  {
+    "skillId": 11,
+    "requiredYears": "5",
+    "certification": ["Führungskompetenz"],
+    "description": "Führungsqualifikationen für Bauleiter"
+  },
+  {
+    "skillId": 12,
+    "requiredYears": "2",
+    "certification": ["Lean Construction Training"],
+    "description": "Effiziente Bauprozesse mit Lean-Methoden"
+  },
+  {
+    "skillId": 13,
+    "requiredYears": "4",
+    "certification": ["Nachhaltiges Bauen"],
+    "description": "Nachhaltige Baukonzepte und Materialien"
+  },
+  {
+    "skillId": 14,
+    "requiredYears": "1",
+    "certification": ["Office-Kenntnisse"],
+    "description": "MS Office Anwendungen für Bauprojekte"
+  },
+  {
+    "skillId": 15,
+    "requiredYears": "3",
+    "certification": ["Risikomanagement"],
+    "description": "Risikoanalyse und -management in Bauprojekten"
+  },
+  {
+    "skillId": 16,
+    "requiredYears": "2",
+    "certification": ["Schalungsbau-Spezialisierung"],
+    "description": "Spezialisierte Schalungsbau-Techniken"
+  },
+  {
+    "skillId": 17,
+    "requiredYears": "4",
+    "certification": ["Strategisches Projektmanagement"],
+    "description": "Strategische Projektsteuerung im Bauwesen"
+  },
+  {
+    "skillId": 18,
+    "requiredYears": "3",
+    "certification": ["Verhandlungstechniken"],
+    "description": "Verhandlungsführung bei Bauprojekten"
+  },
+  {
+    "skillId": 19,
+    "requiredYears": "2",
+    "certification": ["Zeitmanagement"],
+    "description": "Effektives Zeitmanagement auf Baustellen"
+  },
+  {
+    "skillId": 20,
+    "requiredYears": "3",
+    "certification": ["SiGeKo"],
+    "description": "Sicherheitskoordinator auf Baustellen"
+  },
+  {
+    "skillId": 21,
+    "requiredYears": "4",
+    "certification": ["Bauverwaltung"],
+    "description": "Baurechtliche Abwicklungen und Genehmigungen"
+  },
+  {
+    "skillId": 22,
+    "requiredYears": "2",
+    "certification": ["MS Project"],
+    "description": "Projektplanung mit Microsoft Project"
+  },
+  {
+    "skillId": 23,
+    "requiredYears": "3",
+    "certification": ["Excel Pivot"],
+    "description": "Datenanalyse mit Excel Pivot-Tabellen"
+  },
+  {
+    "skillId": 24,
+    "requiredYears": "1",
+    "certification": ["DATEV"],
+    "description": "DATEV Buchhaltungssoftware"
+  },
+  {
+    "skillId": 25,
+    "requiredYears": "2",
+    "certification": ["ERP-Systeme"],
+    "description": "Enterprise Resource Planning Grundkenntnisse"
+  },
+  {
+    "skillId": 26,
+    "requiredYears": "3",
+    "certification": ["Windows Server"],
+    "description": "Windows Server Administration"
+  },
+  {
+    "skillId": 27,
+    "requiredYears": "2",
+    "certification": ["Linux Administration"],
+    "description": "Linux Server-Management"
+  },
+  {
+    "skillId": 28,
+    "requiredYears": "3",
+    "certification": ["Cisco CCNA"],
+    "description": "Netzwerkgrundlagen Cisco Certified"
+  },
+  {
+    "skillId": 29,
+    "requiredYears": "2",
+    "certification": ["ISO 27001"],
+    "description": "Informationssicherheitsmanagement"
+  },
+  {
+    "skillId": 30,
+    "requiredYears": "4",
+    "certification": ["DSGVO"],
+    "description": "Datenschutz-Grundverordnung Compliance"
+  },
+  {
+    "skillId": 31,
+    "requiredYears": "3",
+    "certification": ["C# Programmierung"],
+    "description": "Softwareentwicklung mit C#"
+  },
+  {
+    "skillId": 32,
+    "requiredYears": "3",
+    "certification": ["Python Programmierung"],
+    "description": "Python Entwicklung für Automatisierung"
+  },
+  {
+    "skillId": 33,
+    "requiredYears": "2",
+    "certification": ["Git"],
+    "description": "Versionskontrolle mit Git"
+  },
+  {
+    "skillId": 34,
+    "requiredYears": "3",
+    "certification": ["Java"],
+    "description": "Java Enterprise Entwicklung"
+  },
+  {
+    "skillId": 35,
+    "requiredYears": "2",
+    "certification": ["SQL"],
+    "description": "Datenbankabfragen und -design"
+  },
+  {
+    "skillId": 36,
+    "requiredYears": "1",
+    "certification": ["Gabelstapler"],
+    "description": "Gabelstapler Führerschein"
+  },
+  {
+    "skillId": 37,
+    "requiredYears": "2",
+    "certification": ["Schweißtechnik"],
+    "description": "Schweißscheine und Techniken"
+  },
+  {
+    "skillId": 38,
+    "requiredYears": "3",
+    "certification": ["Baumaschinenführerschein"],
+    "description": "Führerscheine für Baumaschinen"
+  },
+  {
+    "skillId": 39,
+    "requiredYears": "4",
+    "certification": ["Bauingenieurwesen"],
+    "description": "Studium Bauingenieurwesen"
+  },
+  {
+    "skillId": 40,
+    "requiredYears": "3",
+    "certification": ["Informatik"],
+    "description": "Informatik Studium"
+  },
+  {
+    "skillId": 41,
+    "requiredYears": "4",
+    "certification": ["BWL"],
+    "description": "Betriebswirtschaftslehre"
+  },
+  {
+    "skillId": 42,
+    "requiredYears": "2",
+    "certification": ["HR Management"],
+    "description": "Personalmanagement Zertifikat"
+  },
+  {
+    "skillId": 43,
+    "requiredYears": "3",
+    "certification": ["Controlling"],
+    "description": "Controlling und Kostenrechnung"
+  },
+  {
+    "skillId": 44,
+    "requiredYears": "2",
+    "certification": ["Lohnsteuer"],
+    "description": "Lohn- und Gehaltsabrechnung"
+  },
+  {
+    "skillId": 45,
+    "requiredYears": "3",
+    "certification": ["HGB"],
+    "description": "Handelsgesetzbuch Buchführung"
+  },
+  {
+    "skillId": 46,
+    "requiredYears": "4",
+    "certification": ["Jurastudium"],
+    "description": "Rechtswissenschaften"
+  },
+  {
+    "skillId": 47,
+    "requiredYears": "2",
+    "certification": ["CRM"],
+    "description": "Customer Relationship Management"
+  },
+  {
+    "skillId": 48,
+    "requiredYears": "1",
+    "certification": ["Kommunikation"],
+    "description": "Kommunikationstraining"
+  },
+  {
+    "skillId": 49,
+    "requiredYears": "2",
+    "certification": ["Teamführung"],
+    "description": "Teamführungsqualifikationen"
+  },
+  {
+    "skillId": 50,
+    "requiredYears": "3",
+    "certification": ["Projektkoordination"],
+    "description": "Projektkoordination und Steuerung"
+  },
+  {
+    "skillId": 51,
+    "requiredYears": "2",
+    "certification": ["Meister Maurerhandwerk"],
+    "description": "Maurermeister Ausbildung"
+  },
+  {
+    "skillId": 52,
+    "requiredYears": "2",
+    "certification": ["Meister Betonbau"],
+    "description": "Betonbau Meister"
+  },
+  {
+    "skillId": 53,
+    "requiredYears": "1",
+    "certification": ["Maurer Ausbildung"],
+    "description": "Maurer Gesellenbrief"
+  },
+  {
+    "skillId": 54,
+    "requiredYears": "3",
+    "certification": ["KFZ Mechatroniker"],
+    "description": "Kfz-Mechatroniker Ausbildung"
+  },
+  {
+    "skillId": 55,
+    "requiredYears": "2",
+    "certification": ["Mechatronik"],
+    "description": "Mechatroniker für Baumaschinen"
+  },
+  {
+    "skillId": 56,
+    "requiredYears": "1",
+    "certification": ["Fuhrerschein C"],
+    "description": "Lkw Führerschein Klasse C"
+  },
+  {
+    "skillId": 57,
+    "requiredYears": "2",
+    "certification": ["Lagerwirtschaft"],
+    "description": "Fachkraft Lagerwirtschaft"
+  },
+  {
+    "skillId": 58,
+    "requiredYears": "3",
+    "certification": ["Einkäufer"],
+    "description": "Geprüfter Einkäufer"
+  },
+  {
+    "skillId": 59,
+    "requiredYears": "2",
+    "certification": ["Recruiting"],
+    "description": "Personalrekrutierung"
+  },
+  {
+    "skillId": 60,
+    "requiredYears": "3",
+    "certification": ["Statik"],
+    "description": "Baustatik Grundlagen"
+  },
+  {
+    "skillId": 61,
+    "requiredYears": "2",
+    "certification": ["AVA"],
+    "description": "Ausschreibung Vergabe Abrechnung"
+  },
+  {
+    "skillId": 62,
+    "requiredYears": "1",
+    "certification": ["Helpdesk"],
+    "description": "IT Helpdesk Qualifikation"
+  },
+  {
+    "skillId": 63,
+    "requiredYears": "3",
+    "certification": ["Netzwerke"],
+    "description": "Computer Netzwerke"
+  },
+  {
+    "skillId": 64,
+    "requiredYears": "2",
+    "certification": ["Cloud Computing"],
+    "description": "Cloud Lösungen AWS Azure"
+  },
+  {
+    "skillId": 65,
+    "requiredYears": "3",
+    "certification": ["Agile Scrum"],
+    "description": "Scrum Master Zertifizierung"
+  },
+  {
+    "skillId": 66,
+    "requiredYears": "2",
+    "certification": ["Kanban"],
+    "description": "Kanban Methodik"
+  },
+  {
+    "skillId": 67,
+    "requiredYears": "4",
+    "certification": ["PMP"],
+    "description": "Project Management Professional"
+  },
+  {
+    "skillId": 68,
+    "requiredYears": "3",
+    "certification": ["PRINCE2"],
+    "description": "PRINCE2 Projektmanagement"
+  },
+  {
+    "skillId": 69,
+    "requiredYears": "2",
+    "certification": ["ITIL"],
+    "description": "IT Service Management"
+  },
+  {
+    "skillId": 70,
+    "requiredYears": "1",
+    "certification": ["Ticket System"],
+    "description": "IT Ticket Systeme"
+  },
+  {
+    "skillId": 71,
+    "requiredYears": "3",
+    "certification": ["CI/CD"],
+    "description": "Continuous Integration Deployment"
+  },
+  {
+    "skillId": 72,
+    "requiredYears": "2",
+    "certification": ["Docker"],
+    "description": "Container Technologie Docker"
+  },
+  {
+    "skillId": 73,
+    "requiredYears": "3",
+    "certification": ["Kubernetes"],
+    "description": "Container Orchestrierung"
+  },
+  {
+    "skillId": 74,
+    "requiredYears": "2",
+    "certification": ["React"],
+    "description": "Frontend Entwicklung React"
+  },
+  {
+    "skillId": 75,
+    "requiredYears": "2",
+    "certification": ["Angular"],
+    "description": "Frontend Framework Angular"
+  },
+  {
+    "skillId": 76,
+    "requiredYears": "3",
+    "certification": ["Spring Boot"],
+    "description": "Java Backend Spring Boot"
+  },
+  {
+    "skillId": 77,
+    "requiredYears": "2",
+    "certification": ["REST API"],
+    "description": "RESTful Web Services"
+  },
+  {
+    "skillId": 78,
+    "requiredYears": "3",
+    "certification": ["PostgreSQL"],
+    "description": "PostgreSQL Datenbank"
+  },
+  {
+    "skillId": 79,
+    "requiredYears": "2",
+    "certification": ["MongoDB"],
+    "description": "NoSQL Datenbank MongoDB"
+  },
+  {
+    "skillId": 80,
+    "requiredYears": "1",
+    "certification": ["Jira"],
+    "description": "Projektmanagement Tool Jira"
+  },
+  {
+    "skillId": 81,
+    "requiredYears": "2",
+    "certification": ["Confluence"],
+    "description": "Dokumentenmanagement Confluence"
+  },
+  {
+    "skillId": 82,
+    "requiredYears": "3",
+    "certification": ["Power BI"],
+    "description": "Business Intelligence Power BI"
+  },
+  {
+    "skillId": 83,
+    "requiredYears": "2",
+    "certification": ["Tableau"],
+    "description": "Data Visualization Tableau"
+  },
+  {
+    "skillId": 84,
+    "requiredYears": "3",
+    "certification": ["SAP"],
+    "description": "SAP ERP Grundkenntnisse"
+  },
+  {
+    "skillId": 85,
+    "requiredYears": "2",
+    "certification": ["Dynamics 365"],
+    "description": "Microsoft Dynamics CRM ERP"
+  },
+  {
+    "skillId": 86,
+    "requiredYears": "1",
+    "certification": ["LinkedIn Recruiter"],
+    "description": "LinkedIn Recruiting Tools"
+  },
+  {
+    "skillId": 87,
+    "requiredYears": "2",
+    "certification": ["ATS Systeme"],
+    "description": "Applicant Tracking Systems"
+  },
+  {
+    "skillId": 88,
+    "requiredYears": "3",
+    "certification": ["Six Sigma"],
+    "description": "Prozessoptimierung Six Sigma"
+  },
+  {
+    "skillId": 89,
+    "requiredYears": "2",
+    "certification": ["Lean Management"],
+    "description": "Lean Prozessoptimierung"
+  },
+  {
+    "skillId": 90,
+    "requiredYears": "4",
+    "certification": ["IFRS"],
+    "description": "International Financial Reporting"
+  },
+  {
+    "skillId": 91,
+    "requiredYears": "3",
+    "certification": ["COBIT"],
+    "description": "IT Governance Framework"
+  },
+  {
+    "skillId": 92,
+    "requiredYears": "2",
+    "certification": ["GDPR"],
+    "description": "EU Datenschutzrecht"
+  },
+  {
+    "skillId": 93,
+    "requiredYears": "1",
+    "certification": ["First Aid"],
+    "description": "Erste Hilfe Ausbildung"
+  },
+  {
+    "skillId": 94,
+    "requiredYears": "2",
+    "certification": ["Fire Safety"],
+    "description": "Brandschutzbeauftragter"
+  },
+  {
+    "skillId": 95,
+    "requiredYears": "3",
+    "certification": ["HOAI"],
+    "description": "Honorarordnung Architekten Ingenieure"
+  },
+  {
+    "skillId": 96,
+    "requiredYears": "2",
+    "certification": ["VOB"],
+    "description": "Vergabe und Vertragsordnung Bauwesen"
+  },
+  {
+    "skillId": 97,
+    "requiredYears": "1",
+    "certification": ["BASt"],
+    "description": "Baustellenabsicherung Technik"
+  },
+  {
+    "skillId": 98,
+    "requiredYears": "3",
+    "certification": ["BIM Manager"],
+    "description": "Building Information Modeling Manager"
+  },
+  {
+    "skillId": 99,
+    "requiredYears": "2",
+    "certification": ["Revit"],
+    "description": "BIM Software Revit"
+  },
+  {
+    "skillId": 100,
+    "requiredYears": "4",
+    "certification": ["Leadership Development"],
+    "description": "Führungskräfteentwicklung Programm"
+  }
+]
