@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Skill {
 
     private int skillId;
-    private Time requiredYears;
+    private String requiredYears;
     private ArrayList<String> certification;
     private String description;
 
@@ -18,21 +18,12 @@ public class Skill {
         this.skillId = skillId;
     }
 
-    public Time getRequiredYears() {
+    public String getRequiredYears() {
         return requiredYears;
     }
 
-    public String getRequiredYearsAsString() {
-        if (requiredYears == null) {
-            return "0";
-        }
-        // Konvertiert Time zu Jahren (angenommen HH:MM = Stunden → Jahre)
-        long millis = requiredYears.getTime();
-        long hours = millis / (1000 * 60 * 60);
-        return String.valueOf(hours);
-    }
 
-    public void setRequiredYears(Time requiredYears) {
+    public void setRequiredYears(String requiredYears) {
         this.requiredYears = requiredYears;
     }
 

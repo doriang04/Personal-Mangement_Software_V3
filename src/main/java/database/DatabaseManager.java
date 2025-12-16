@@ -203,7 +203,7 @@ public class DatabaseManager {
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 for (Skill skill : skills) {
                     pstmt.setInt(1, skill.getSkillId());
-                    pstmt.setTime(2, skill.getRequiredYears());
+                    pstmt.setString(2, skill.getRequiredYears());
                     pstmt.setString(3, skill.getDescription());
                     pstmt.setString(4, mapper.writeValueAsString(skill.getCertification()));
                     pstmt.addBatch();
@@ -265,7 +265,7 @@ public class DatabaseManager {
             while (rs.next()) {
                 Skill skill = new Skill();
                 skill.setSkillId(rs.getInt("skill_id"));
-                skill.setRequiredYears(rs.getTime("required_years"));  // String → Time intern
+                skill.setRequiredYears(rs.getString("required_years"));  // String → Time intern
                 skill.setDescription(rs.getString("description"));
 
                 // ✅ JSON-String → ArrayList<String> Konvertierung
