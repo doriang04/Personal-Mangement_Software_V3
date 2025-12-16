@@ -331,6 +331,70 @@ public class DatabaseManager {
         // skillManager_json, trainingManager_json als TEXT
         System.out.println("✅ 75 Employees loaded");
     }
+    public List<Department> getAllDepartments() {
+        List<Department> departments = new ArrayList<>();
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM departments ORDER BY department_id")) {
+            while (rs.next()) {
+                Department dept = new Department();
+                dept.setDepartmentId(rs.getInt("department_id"));
+                dept.setDepartmentName(rs.getString("department_name"));
+                // company_id mapping falls benötigt
+                departments.add(dept);
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Error loading departments: " + e.getMessage());
+        }
+        return departments;
+    }
+
+    public List<Employee> getAllEmployees() {
+        List<Employee> employees = new ArrayList<>();
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("""
+             SELECT e.*, r.id as role_id, r.name as role_name, 
+                    t.team_id, t.team_name 
+             FROM employees e 
+             LEFT JOIN roles r ON e.role_id = r.id 
+             LEFT JOIN teams t ON e.team_id = t.id 
+             ORDER BY e.id
+             """)) {
+
+            while (rs.next()) {
+                Employee emp = new Employee();
+                emp.setId(rs.getInt("id"));  // Korrigiert: "id" statt "employee_id"
+                emp.setUsername(rs.getString("username"));
+                emp.setFirstName(rs.getString("first_name"));
+                emp.setLastName(rs.getString("last_name"));
+                emp.seteMail(rs.getString("email"));
+                emp.setTeamId(rs.getInt("team_id"));
+
+                // Role vollständig initialisieren
+                RoleManager role = new RoleManager();
+                role.setId(rs.getInt("role_id"));
+                role.setName(rs.getString("role_name"));
+                emp.setRole(role);
+
+                // SkillManager initialisieren (leere Liste oder Standard)
+                SkillManager skillMgr = new SkillManager();
+                // Optional: skillMgr.loadSkillsForEmployee(emp.getId()); // Bei Bedarf nachladen
+                emp.setSkill(skillMgr);
+
+                // TrainingManager sinnvoll initialisieren mit JSON-Daten
+                TrainingManager trainingMgr = new TrainingManager();
+                // Lade Trainings für diesen Mitarbeiter (verbunden mit Training.json)
+                trainingMgr.loadTrainingsForEmployee(emp.getId());
+                emp.setTraining(trainingMgr);
+
+                employees.add(emp);
+            }
+            System.out.println("✅ Loaded " + employees.size() + " employees from database [file:1]");
+        } catch (SQLException e) {
+            System.err.println("❌ Error loading employees: " + e.getMessage());
+        }
+        return employees;
+    }
+
 
 
 

@@ -7,6 +7,13 @@ public class Role {
     private String description;
     private String permission;
 
+    public Role(int id, String name, String description, String permission) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.permission = permission;
+    }
+
     public int getId() {
         return id;
     }
@@ -39,4 +46,3 @@ public class Role {
         this.permission = permission;
     }
 }
-
