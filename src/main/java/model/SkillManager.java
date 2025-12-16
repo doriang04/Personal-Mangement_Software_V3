@@ -6,15 +6,15 @@ import java.util.Date;
 public class SkillManager {
 
     public static class SkillHistoryEntry {
-        private String skillId;
+        private int skillId;
         private Date acquireDate;
 
-        public SkillHistoryEntry(String skillId, Date acquireDate) {
+        public SkillHistoryEntry(int skillId, Date acquireDate) {
             this.skillId = skillId;
             this.acquireDate = acquireDate;
         }
 
-        public String getSkillId() {
+        public int getSkillId() {
             return skillId;
         }
 
@@ -25,6 +25,7 @@ public class SkillManager {
 
     private ArrayList<SkillHistoryEntry> aktiveSkillHistory;
     private ArrayList<SkillHistoryEntry> inactiveSkillHistory;
+
 
     public ArrayList<SkillHistoryEntry> getAktiveSkillHistory() {
         return aktiveSkillHistory;
@@ -43,10 +44,19 @@ public class SkillManager {
     }
 
     // Platzhalter für add/remove/update‑Methoden
-    public void addAktiveSkillHistory(Skill skill, Date date) {}
-    public void removeAktiveSkillHistory(ArrayList<SkillHistoryEntry> list) {}
-    public void addInactiveSkillHistory(Skill skill, Date date) {}
-    public void removeInactiveSkillHistory(ArrayList<SkillHistoryEntry> list) {}
-    public void updateSelf() {}
+    public void addAktiveSkillHistory(Skill skill, Date date) {
+        aktiveSkillHistory.add(new SkillHistoryEntry(skill.getSkillId(), date)
+    );}
+    public void removeAktiveSkillHistory(ArrayList<SkillHistoryEntry> list) {
+        aktiveSkillHistory.removeAll(list);
+    }
+    public void addInactiveSkillHistory(Skill skill, Date date) {
+        inactiveSkillHistory.add(new SkillHistoryEntry(skill.getSkillId(), date));
+    }
+    public void removeInactiveSkillHistory(ArrayList<SkillHistoryEntry> list) {
+        inactiveSkillHistory.removeAll(list);
+    }
+    public void updateSelf() {
+    }
 }
 
