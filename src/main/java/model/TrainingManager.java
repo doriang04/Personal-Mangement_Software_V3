@@ -41,4 +41,7 @@ public class TrainingManager {
     public void setDoneTrainings(ArrayList<TrainingEntry> doneTrainings) {
         this.doneTrainings = doneTrainings;
     }
+
+    
+
 }

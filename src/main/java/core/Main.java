@@ -3,8 +3,8 @@ package core;
 import database.DatabaseManager;
 import model.*;
 
-import javax.management.relation.Role;
 import java.util.List;
+import model.Role;
 
 public class Main {
     private static DatabaseManager dbManager = new DatabaseManager();
