@@ -1,15 +1,13 @@
+package model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import model.RoleHistoryEntry;
-
-import javax.management.relation.Role;
 
 public class RoleManager {
 
     private List<RoleHistoryEntry> roleHistory = new ArrayList<>();
     private Role activeRole;
+    private int id;
 
     public List<RoleHistoryEntry> getRoleHistory() {
         return new ArrayList<>(roleHistory);
@@ -23,6 +21,14 @@ public class RoleManager {
         return activeRole;
     }
 
+    public int getRolemanagerid() {
+        return id;
+    }
+
+    public void setRolemanagerId(int id) {
+        this.id = id;
+    }
+
     public void setActiveRole(Role activeRole) {
         this.activeRole = activeRole;
     }
@@ -32,7 +38,7 @@ public class RoleManager {
         // alte aktive Rolle schließen
         if (activeRole != null) {
             for (RoleHistoryEntry entry : roleHistory) {
-                if (entry.getRoleId() == activeRole.getId() && entry.getEndDate() == null) {
+                if (entry.getRoleId() == (activeRole).getId() && entry.getEndDate() == null) {
                     entry.setEndDate(date.minusDays(1));
                     break;
                 }

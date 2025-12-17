@@ -244,11 +244,10 @@ public class DatabaseManager {
              ResultSet rs = stmt.executeQuery("SELECT * FROM roles ORDER BY role_id")) {
 
             while (rs.next()) {
-                Role role = new Role();
-                role.setId(rs.getInt("role_id"));
-                role.setName(rs.getString("name"));
-                role.setDescription(rs.getString("description"));
-                role.setPermission(rs.getString("permission"));
+                Role role = new Role(rs.getInt("role_id"), 
+                                     rs.getString("name"), 
+                                     rs.getString("description"), 
+                                     rs.getString("permission"));
                 roles.add(role);
             }
             System.out.println("✅ Loaded " + roles.size() + " roles from database");
@@ -370,10 +369,12 @@ public class DatabaseManager {
                 emp.setTeamId(rs.getInt("team_id"));
 
                 // Role vollständig initialisieren
-                RoleManager role = new RoleManager();
-                role.setId(rs.getInt("role_id"));
-                role.setName(rs.getString("role_name"));
-                emp.setRole(role);
+                RoleManager roleMgr = new RoleManager();
+                Role r = roleMgr.getActiveRole();
+                r.setId(rs.getInt("role_id"));
+                r.setName(rs.getString("role_name"));
+                roleMgr.setActiveRole(r);
+                emp.setRole(roleMgr);
 
                 // SkillManager initialisieren (leere Liste oder Standard)
                 SkillManager skillMgr = new SkillManager();
@@ -383,6 +384,7 @@ public class DatabaseManager {
                 // TrainingManager sinnvoll initialisieren mit JSON-Daten
                 TrainingManager trainingMgr = new TrainingManager();
                 // Lade Trainings für diesen Mitarbeiter (verbunden mit Training.json)
+
                 trainingMgr.loadTrainingsForEmployee(emp.getId());
                 emp.setTraining(trainingMgr);
 
