@@ -23,6 +23,15 @@ public class TrainingSkillManager {
         }
     }
 
+    private Training training;
+    private int id;
+    
+    public TrainingSkillManager(Training training) {
+        this.skillList = new ArrayList<>();
+        this.training = training;
+        this.id = training.getId();
+    }
+
     private ArrayList<TrainingSkillEntry> skillList;
 
     public ArrayList<TrainingSkillEntry> getSkillList() {
@@ -34,13 +43,28 @@ public class TrainingSkillManager {
     }
 
     // Platzhalter laut Diagramm
-    public ArrayList<TrainingSkillEntry> getSkillHistory() { return null; }
-    public void addAktiveSkillHistory(Skill skill, Date date) {}
-    public void addInactiveSkillHistory(Skill skill, Date date) {}
-    public void removeAktiveSkillHistory(ArrayList<TrainingSkillEntry> list) {}
-    public void removeInactiveSkillHistory(ArrayList<TrainingSkillEntry> list) {}
-    public Training getTraining() { return null; }
-    public void setTraining(Training training, boolean booleanFlag) {}
-    public void updateSelf() {}
+    public void addSkill(Skill skill, Date date) {
+        TrainingSkillEntry entry = new TrainingSkillEntry(String.valueOf(skill.getSkillId()), date);
+        skillList.add(entry);
+    }
+
+    public void removeSkill(Skill skill) {
+        if (skill == null) {
+            return;
+        }
+        String id = String.valueOf(skill.getSkillId());
+        for (java.util.Iterator<TrainingSkillEntry> it = skillList.iterator(); it.hasNext();) {
+            TrainingSkillEntry entry = it.next();
+            if (id.equals(entry.getSkillId())) {
+                it.remove();
+            }
+        }
+    }
+    public Training getTraining() {
+        return training;
+    }
+    public void setTraining(Training training) {
+        this.training = training;
+    }
 }
 

@@ -8,8 +8,16 @@ public class Training {
     private String title;
     private String description;
     private Time length;
-    private SkillManager skill;
+    private TrainingSkillManager skillList;
     private Employee assigningManager;
+
+    public Training(int id, String title, String description, Time length, TrainingSkillManager skillList) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.length = length;
+        this.skillList = skillList;
+    }
 
     public int getId() {
         return id;
@@ -43,13 +51,8 @@ public class Training {
         this.length = length;
     }
 
-    public SkillManager getSkill() {
-        if (skill == null) skill = new SkillManager();
-        return skill;
-    }
-
-    public void setSkill(SkillManager skill) {
-        this.skill = skill;
+    public TrainingSkillManager getSkills() {
+        return skillList;
     }
 
     public Employee getAssigningManager() {
@@ -58,6 +61,18 @@ public class Training {
 
     public void setAssigningManager(Employee assigningManager) {
         this.assigningManager = assigningManager;
+    }
+
+    public void setSkills(TrainingSkillManager skillList) {
+        this.skillList = skillList;
+    }   
+
+    public void setSkillList(TrainingSkillManager skillList) {
+        this.skillList = skillList;
+    }
+
+    public TrainingSkillManager getSkillList() {
+        return skillList;
     }
 }
 

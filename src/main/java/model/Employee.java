@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Date;
 public class Employee {
 
     // Attribute
@@ -13,14 +14,38 @@ public class Employee {
     private String lastName;
     private String eMail;
     private int phoneNumber;
-    private java.util.Date dateOfBirth;
+    private Date dateOfBirth;
     private String address;
     private char gender;
-    private java.util.Date hireDate;
+    private Date hireDate;
     private boolean employmentStatus;
     private SkillManager skill;
     private TrainingManager training;
     private RoleManager role;
+    
+    public Employee(int id, Team team, String username, String password, String permissionString,
+                    String firstName, String lastName, String eMail, Date dateOfBirth, String adress, char gender, Date hireDate,
+                    Employee managerId, boolean employmentStatus, int phoneNumber, SkillManager skill, TrainingManager training, RoleManager role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.permissionString = permissionString;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.eMail = eMail;
+        this.dateOfBirth = dateOfBirth;
+        this.address = adress;
+        this.gender = gender;
+        this.hireDate = hireDate;
+        this.team = team;
+        this.managerId = managerId;
+        this.employmentStatus = employmentStatus;
+        this.phoneNumber = phoneNumber;
+        this.skill = skill;
+        this.training = training;
+        this.role = new RoleManager(this);
+        this.training = new TrainingManager(this); 
+    }
 
     // Methoden
     public int getId() {

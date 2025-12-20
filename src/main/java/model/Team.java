@@ -5,6 +5,13 @@ public class Team {
     private int departmentId;
     private int teamId;
     private String teamName;
+    // TODO: Teams können Teams haben (Hierarchie)
+    
+    public Team(int departmentId, int teamId, String teamName) {
+        this.departmentId = departmentId;
+        this.teamId = teamId;
+        this.teamName = teamName;
+    }
 
     public int getDepartmentId() {
         return departmentId;
