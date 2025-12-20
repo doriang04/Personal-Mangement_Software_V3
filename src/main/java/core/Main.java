@@ -34,9 +34,7 @@ public class Main {
     }
 
     private static Company loadCompany() {
-        Company company = new Company();
-        company.setCompanyId(1);
-        company.setName("Bauunternehmen XYZ GmbH");
+        Company company = new Company(1, "Bauunternehmen XYZ GmbH");
         System.out.println("🏢 Company: " + company.getName());
         return company;
     }
