@@ -5,6 +5,10 @@ import java.util.Date;
 
 public class TrainingManager {
 
+    public void loadTrainingsForEmployee(int employeeId) {
+        // TODO write this function, this is just a placeholder so the programm runs
+    }
+
     public static class TrainingEntry {
         private String trainingId;
         private Date date;
