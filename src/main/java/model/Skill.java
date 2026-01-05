@@ -1,6 +1,5 @@
 package model;
 
-import java.sql.Time;
 import java.util.ArrayList;
 
 public class Skill {
@@ -9,6 +8,13 @@ public class Skill {
     private String requiredYears;
     private ArrayList<String> certification;
     private String description;
+
+    public Skill(int skillId, String requiredYears, ArrayList<String> certification, String description) {
+        this.skillId = skillId;
+        this.requiredYears = requiredYears;
+        this.certification = certification;
+        this.description = description;
+    }
 
     public int getSkillId() {
         return skillId;

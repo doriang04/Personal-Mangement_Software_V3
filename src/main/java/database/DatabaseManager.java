@@ -225,10 +225,7 @@ public class DatabaseManager {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT * FROM teams ORDER BY team_id")) {
             while (rs.next()) {
-                Team team = new Team();
-                team.setDepartmentId(rs.getInt("department_id"));
-                team.setTeamId(rs.getInt("team_id"));
-                team.setTeamName(rs.getString("team_name"));
+                Team team = new Team(rs.getInt("department_id"), rs.getInt("team_id"), rs.getString("team_name"));
                 teams.add(team);
             }
         } catch (SQLException e) {
@@ -264,23 +261,26 @@ public class DatabaseManager {
 
             ObjectMapper mapper = new ObjectMapper();
             while (rs.next()) {
-                Skill skill = new Skill();
-                skill.setSkillId(rs.getInt("skill_id"));
-                skill.setRequiredYears(rs.getString("required_years"));  // String → Time intern
-                skill.setDescription(rs.getString("description"));
+                // Lese einfache Felder
+                int skillId = rs.getInt("skill_id");
+                String requiredYears = rs.getString("required_years");
+                String description = rs.getString("description");
 
                 // ✅ JSON-String → ArrayList<String> Konvertierung
                 String certJson = rs.getString("certifications");
+                ArrayList<String> certifications = new ArrayList<>();
                 if (certJson != null && !certJson.isEmpty() && !"[]".equals(certJson)) {
                     try {
                         String[] certArray = mapper.readValue(certJson, String[].class);
-                        skill.setCertification(new ArrayList<>(Arrays.asList(certArray)));
+                        if (certArray != null) {
+                            certifications = new ArrayList<>(Arrays.asList(certArray));
+                        }
                     } catch (Exception e) {
-                        skill.setCertification(new ArrayList<>()); // Empty bei Parse-Fehler
+                        certifications = new ArrayList<>(); // Empty bei Parse-Fehler
                     }
-                } else {
-                    skill.setCertification(new ArrayList<>());
                 }
+
+                Skill skill = new Skill(skillId, requiredYears, certifications, description);
                 skills.add(skill);
             }
             System.out.println("✅ Loaded " + skills.size() + " skills from database");
@@ -325,9 +325,50 @@ public class DatabaseManager {
         }
     }
     private void loadEmployees() {
-        // Gleiche Map-Deserialisierung wie bei Skills/Trainings
-        // Speichert: id, username, firstName, lastName, email, teamId, roleId,
-        // skillManager_json, trainingManager_json als TEXT
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream is = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("json/Employee.json");
+            if (is == null) {
+                System.err.println("❌ Employee.json not found");
+                return;
+            }
+
+            List<Map<String, Object>> employeesJson = mapper.readValue(is,
+                    new TypeReference<List<Map<String, Object>>>() {});
+
+            String sql = "MERGE INTO employees (id, username, first_name, last_name, email, team_id, role_id, skillManager_json, trainingManager_json) "
+                       + "KEY (id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                for (Map<String, Object> empData : employeesJson) {
+                    int id = ((Number) empData.get("id")).intValue();
+                    String username = (String) empData.get("username");
+                    String firstName = (String) empData.get("firstName");
+                    String lastName = (String) empData.get("lastName");
+                    String email = (String) empData.get("eMail");
+                    int teamId = ((Number) empData.get("teamId")).intValue();
+                    int roleId = ((Number) empData.get("roleId")).intValue();
+
+                    // SkillManager und TrainingManager als JSON speichern
+                    String skillMgrJson = mapper.writeValueAsString(empData.get("skillManager"));
+                    String trainingMgrJson = mapper.writeValueAsString(empData.get("trainingManager"));
+
+                    pstmt.setInt(1, id);
+                    pstmt.setString(2, username);
+                    pstmt.setString(3, firstName);
+                    pstmt.setString(4, lastName);
+                    pstmt.setString(5, email);
+                    pstmt.setInt(6, teamId);
+                    pstmt.setInt(7, roleId);
+                    pstmt.setString(8, skillMgrJson);
+                    pstmt.setString(9, trainingMgrJson);
+                    pstmt.addBatch();
+                }
+                pstmt.executeBatch();
+            }
+        } catch (Exception e) {
+            System.err.println("❌ Employees loading failed: " + e.getMessage());
+        }
         System.out.println("✅ 75 Employees loaded");
     }
     public List<Department> getAllDepartments() {
@@ -335,9 +376,7 @@ public class DatabaseManager {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT * FROM departments ORDER BY department_id")) {
             while (rs.next()) {
-                Department dept = new Department();
-                dept.setDepartmentId(rs.getInt("department_id"));
-                dept.setDepartmentName(rs.getString("department_name"));
+                Department dept = new Department(rs.getString("department_name"), rs.getInt("department_id"), rs.getInt("company_id"));
                 // company_id mapping falls benötigt
                 departments.add(dept);
             }
@@ -396,9 +435,6 @@ public class DatabaseManager {
         }
         return employees;
     }
-
-
-
 
     public void close() {
         try {

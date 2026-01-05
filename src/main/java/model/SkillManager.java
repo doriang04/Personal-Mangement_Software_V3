@@ -1,7 +1,10 @@
 package model;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 public class SkillManager {
 
@@ -21,11 +24,33 @@ public class SkillManager {
         public Date getAcquireDate() {
             return acquireDate;
         }
-    }
 
+        // Prüft, ob die Skill abgelaufen ist (älter als 3 Jahre)
+        public boolean isExpired() {
+        LocalDate acquired = acquireDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        return acquired.plusYears(3).isBefore(LocalDate.now());
+
+        }
+    }
+    private int id;
     private ArrayList<SkillHistoryEntry> aktiveSkillHistory;
     private ArrayList<SkillHistoryEntry> inactiveSkillHistory;
 
+    public SkillManager(int id) {
+        this.id = id;
+        this.aktiveSkillHistory = new ArrayList<>();
+        this.inactiveSkillHistory = new ArrayList<>();
+    }
+
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public ArrayList<SkillHistoryEntry> getAktiveSkillHistory() {
         return aktiveSkillHistory;
@@ -43,7 +68,7 @@ public class SkillManager {
         this.inactiveSkillHistory = inactiveSkillHistory;
     }
 
-    // Platzhalter für add/remove/update‑Methoden
+    // add/remove/update‑Methoden der SkillHistory
     public void addAktiveSkillHistory(Skill skill, Date date) {
         aktiveSkillHistory.add(new SkillHistoryEntry(skill.getSkillId(), date)
     );}
@@ -56,7 +81,17 @@ public class SkillManager {
     public void removeInactiveSkillHistory(ArrayList<SkillHistoryEntry> list) {
         inactiveSkillHistory.removeAll(list);
     }
+    
     public void updateSelf() {
+        Iterator<SkillHistoryEntry> iterator = aktiveSkillHistory.iterator(); //iterieren durch SkillHistory
+        while (iterator.hasNext()) {
+            SkillHistoryEntry entry = iterator.next();
+
+            if (entry.isExpired()) {
+                iterator.remove();              // aus aktiv entfernen
+                inactiveSkillHistory.add(entry); // in inaktiv verschieben
+            }
+        }
     }
 }
 

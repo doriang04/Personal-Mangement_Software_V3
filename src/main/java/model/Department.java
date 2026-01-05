@@ -6,6 +6,12 @@ public class Department {
     private String departmentName;
     private Company companyId;   // wie im Diagramm benannt
 
+    public Department(int departmentId, String departmentName, Company companyId) {
+        this.departmentId = departmentId;
+        this.departmentName = departmentName;
+        this.companyId = companyId;
+    }
+
     public int getDepartmentId() {
         return departmentId;
     }
