@@ -6,8 +6,6 @@ import java.awt.*;
 
 public class Temp_Example_View extends JPanel implements View {
 
-    private final String viewId = "temp-example-view";
-
     public Temp_Example_View() {
         setLayout(new GridLayout());
         setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
@@ -16,7 +14,17 @@ public class Temp_Example_View extends JPanel implements View {
 
     @Override
     public String getViewId() {
-        return viewId;
+        return "temp-example-view";
+    }
+
+    @Override
+    public String getViewTabTitle() {
+        return "Temp Example View";
+    }
+
+    @Override
+    public JComponent getComponent() {
+        return this;
     }
 
 }

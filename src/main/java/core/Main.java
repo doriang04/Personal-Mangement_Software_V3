@@ -41,6 +41,10 @@ public class Main {
         System.out.println("✅ System bereit - Alle Java Klassen geladen!");
     }
 
+    // TODO welche der folgenden Funktionen sind gebraucht und welche waren nur fürs testen?
+    //      -> gebrauchten: aussehen lassen, als hätte es ein Mensch gecodet
+    //      -> fürs testen: löschen, wir wollen keine redundanzen im code
+
     private static Company loadCompany() {
         Company company = new Company();
         company.setCompanyId(1);

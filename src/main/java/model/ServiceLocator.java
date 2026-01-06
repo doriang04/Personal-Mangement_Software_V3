@@ -1,4 +1,6 @@
-package model;
+package model; // TODO move this to core package?
+
+import core.SessionManager;
 
 public class ServiceLocator {
 
@@ -24,5 +26,9 @@ public class ServiceLocator {
 
     public static TrainingManagerContainer getTrainingManagerContainer() {
         return TrainingManagerContainer.getInstance();
+    }
+
+    public static SessionManager getSessionManager() {
+        return SessionManager.getInstance();
     }
 }

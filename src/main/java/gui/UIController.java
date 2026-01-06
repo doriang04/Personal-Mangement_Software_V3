@@ -1,8 +1,7 @@
 package gui;
 
 import gui.views.Temp_Example_View;
-
-import javax.swing.*;
+import gui.views.View;
 
 public class UIController {
 
@@ -19,9 +18,9 @@ public class UIController {
         mainWindow = MainWindow.getInstance();
     }
 
-    public void requestViewChange(String viewId, String[] args) {
+    public void requestTabCreation(String viewId, String[] args) {
         // TODO implement request filtering and such in here before asking MainWindow to change its View
-        JPanel newView = null;
+        View newView = null;
 
         switch(viewId) {
             case "asdf" -> {
@@ -33,7 +32,7 @@ public class UIController {
 
         if (newView == null) newView = new Temp_Example_View();
 
-        mainWindow.changeCoreContentPanel(newView);
+        mainWindow.openTab(newView, true); // TODO make closable dynamic
     }
 
 }
