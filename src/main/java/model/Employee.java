@@ -8,7 +8,6 @@ public class Employee {
     private Employee managerId;
     private String username;
     private String password;
-    private String permissionString; // TODO assign this somewhere?! or just add in functionality for getting it via the roles, as you define permissions there
     private String firstName;
     private String lastName;
     private String eMail;
@@ -45,10 +44,6 @@ public class Employee {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPermissionString() {
-        return permissionString;
     }
 
     public String getFirstName() {

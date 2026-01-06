@@ -1,9 +1,11 @@
 package gui;
 
 import model.ServiceLocator;
+import core.SessionManager;
 import gui.views.DashboardView;
 import gui.views.EmployeeDetailView;
 import gui.views.EmployeeSearchView;
+import gui.views.LoginView;
 import gui.views.View;
 
 import javax.swing.*;
@@ -16,18 +18,21 @@ import java.awt.event.MouseEvent;
 // TODO test this class
 
 /**
- * Das Hauptfenster der Anwendung, das nach dem Login angezeigt wird.
- * Es verwaltet die globale Navigation und die in Tabs dargestellten Inhalts-Views.
+ * Das Hauptfenster der Anwendung. Es agiert als Container, der entweder die
+ * Login-Ansicht oder die Hauptanwendungsoberfläche nach einem erfolgreichen
+ * Login anzeigt.
  *
  * @author Ihr Name
- * @version 2.0 (Tab-basiert)
+ * @version 2.1 (Mit Login-Zustandsmanagement)
  */
 public class MainWindow extends JFrame {
 
     private static MainWindow instance;
 
+    // Ein Haupt-Panel, das es uns erlaubt, einfach zwischen Login und Haupt-UI zu wechseln.
+    private final JPanel contentWrapper;
     private JTabbedPane tabbedPane;
-    private JLabel userLabel;
+    private final SessionManager sessionManager;
 
     public static synchronized MainWindow getInstance() {
         if (instance == null) {
@@ -39,130 +44,199 @@ public class MainWindow extends JFrame {
     private MainWindow() {
         setTitle("Personalmanagement Software");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1200, 800);
+        // Startgröße kann kleiner sein, wird nach Login angepasst
+        setSize(450, 550);
         setLocationRelativeTo(null);
 
-        initUI();
+        // Wir verwenden einen ServiceLocator, um lose Kopplung zu gewährleisten
+        this.sessionManager = ServiceLocator.getSessionManager();
+
+        // Statt direkt dem JFrame Komponenten hinzuzufügen, nutzen wir einen Wrapper.
+        // Das macht das Austauschen des Inhalts (Login vs. App) trivial.
+        contentWrapper = new JPanel(new BorderLayout());
+        setContentPane(contentWrapper);
     }
 
     /**
-     * Initialisiert die Hauptkomponenten der Benutzeroberfläche (Header, Navigation, Tab-Bereich).
+     * Zeigt die Login-Ansicht an. Dies ist der initiale Zustand der Anwendung.
      */
-    private void initUI() {
-        setLayout(new BorderLayout(5, 5)); // Abstände zwischen den Bereichen
+    public void showLoginView() {
+        // Alte UI-Komponenten entfernen, falls vorhanden (nach Logout)
+        contentWrapper.removeAll();
+
+        // Hier wird angenommen, dass LoginView ein JPanel ist und das MainWindow als
+        // Callback benötigt, um den Login-Erfolg zu melden.
+        LoginView loginView = new LoginView(this);
+        contentWrapper.add(loginView, BorderLayout.CENTER);
+
+        setTitle("Personalmanagement Software - Login");
+        setSize(450, 550);
+        setLocationRelativeTo(null);
+
+        revalidate();
+        repaint();
+
+        // Erst jetzt das Fenster sichtbar machen
+        if (!isVisible()) {
+            setVisible(true);
+        }
+    }
+
+    /**
+     * Diese Methode wird von der LoginView aufgerufen, nachdem die Authentifizierung erfolgreich war.
+     * Sie initialisiert die komplette Hauptansicht für den eingeloggten Benutzer.
+     */
+    public void onLoginSuccess() {
+        // Login-View entfernen
+        contentWrapper.removeAll();
+
+        // Die volle UI für den eingeloggten Zustand initialisieren
+        initializeLoggedInUI();
+
+        setTitle("Personalmanagement Software");
+        setSize(1200, 800);
+        setLocationRelativeTo(null);
+
+        revalidate();
+        repaint();
+    }
+
+    /**
+     * Initialisiert die Hauptkomponenten der Benutzeroberfläche für einen eingeloggten Benutzer.
+     */
+    private void initializeLoggedInUI() {
+        contentWrapper.setLayout(new BorderLayout(5, 5));
 
         // 1. Oberer Bereich (NORTH)
-        add(createNorthPanel(), BorderLayout.NORTH);
+        contentWrapper.add(createNorthPanel(), BorderLayout.NORTH);
 
         // 2. Linker Bereich (WEST) - Navigation
-        add(createWestPanel(), BorderLayout.WEST);
+        contentWrapper.add(createWestPanel(), BorderLayout.WEST);
 
         // 3. Zentraler Bereich (CENTER) - Tab-Paneel
         tabbedPane = new JTabbedPane();
-        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT); // Erlaubt Scrollen bei vielen Tabs
-        add(tabbedPane, BorderLayout.CENTER);
+        tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabbedPane.setBorder(new EmptyBorder(0, 5, 0, 0));
+        contentWrapper.add(tabbedPane, BorderLayout.CENTER);
 
         // 4. Standard-Tab öffnen (Dashboard), nicht schließbar
         openTab(new DashboardView(), false);
     }
 
-    /**
-     * Erstellt das obere Panel mit Benutzerinformationen und Logout-Button.
-     */
     private JPanel createNorthPanel() {
         JPanel northPanel = new JPanel(new BorderLayout());
-        northPanel.setBorder(new EmptyBorder(5, 10, 5, 10)); // Innenabstand
+        northPanel.setBorder(new EmptyBorder(8, 12, 8, 12));
+        northPanel.setBackground(new Color(230, 230, 230)); // Heller Hintergrund
 
-        userLabel = new JLabel("Angemeldet als: " + ServiceLocator.getSessionManager().getUserFirstNameAndLastName() + " (" + ServiceLocator.getSessionManager().getUserPermission() + ")");
+        JLabel userLabel = new JLabel("Angemeldet als: " + sessionManager.getUserFirstNameAndLastName() + " (" + sessionManager.getUserPermission() + ")");
         userLabel.setFont(userLabel.getFont().deriveFont(Font.BOLD));
         northPanel.add(userLabel, BorderLayout.WEST);
 
         JButton btnLogout = new JButton("Logout");
+        btnLogout.setFocusPainted(false);
         btnLogout.addActionListener(e -> {
-            // Hier würde die Logout-Logik implementiert
-            System.out.println("Logout-Prozess gestartet...");
-            // z.B. this.dispose(); LoginView.getInstance().setVisible(true);
-            JOptionPane.showMessageDialog(this, "Sie wurden abgemeldet.", "Logout", JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0); // Für dieses Beispiel beenden wir die Anwendung
+            sessionManager.logout(); // Session beenden
+            showLoginView();       // Zurück zum Login-Bildschirm
         });
         northPanel.add(btnLogout, BorderLayout.EAST);
 
         return northPanel;
     }
 
-    /**
-     * Erstellt das linke Navigationspanel basierend auf der Rolle des Benutzers.
-     */
     private JComponent createWestPanel() {
         JPanel navPanel = new JPanel();
         navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
-        navPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        navPanel.add(new JLabel("Navigation") {
-            {
-                setFont(getFont().deriveFont(Font.BOLD, 16f));
-                setBorder(new EmptyBorder(0, 0, 10, 0));
-            }
-        });
+        navPanel.setBorder(new EmptyBorder(10, 5, 10, 5));
+        navPanel.setBackground(new Color(245, 245, 245)); // Etwas dunkler als weiß
+
+        JLabel navTitle = new JLabel("Navigation");
+        navTitle.setFont(navTitle.getFont().deriveFont(Font.BOLD, 16f));
+        navTitle.setBorder(new EmptyBorder(0, 5, 15, 0));
+        navTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        navPanel.add(navTitle);
+
+        String userPermission = sessionManager.getUserPermission();
 
         // --- Aktionen für alle Rollen ---
-        addNavButton(navPanel, "Dashboard", () -> focusOrCreateTab(DashboardView.class, () -> new DashboardView(), false));
-        addNavButton(navPanel, "Mitarbeiter suchen", () -> openTab(new EmployeeSearchView(), true));
-        addNavButton(navPanel, "Mein Profil", () -> openTab(new EmployeeDetailView("Eigenes Profil"), true));
+        addNavButton(navPanel, "Dashboard", "icons/dashboard.png", () -> focusOrCreateTab(DashboardView.class, DashboardView::new, false));
+        addNavButton(navPanel, "Mitarbeiter suchen", "icons/search.png", () -> openTab(new EmployeeSearchView(), true));
+        addNavButton(navPanel, "Mein Profil", "icons/profile.png", () -> openTab(new EmployeeDetailView("Eigenes Profil"), true));
 
-        navPanel.add(Box.createVerticalStrut(20)); // Abstand
+        navPanel.add(Box.createVerticalStrut(20));
 
         // --- Rollenspezifische Aktionen ---
-        if (ServiceLocator.getSessionManager().getUserPermission().equals("HR")) {
+        if ("HR".equals(userPermission)) {
             addSectionTitle(navPanel, "HR");
-            addNavButton(navPanel, "Neuen Mitarbeiter anlegen", () -> openTab(new EmployeeDetailView(), true));
-            // addNavButton(navPanel, "Schulungsverwaltung", () -> openTab(new TrainingManagementView(), true)); TODO
+            addNavButton(navPanel, "Neuen Mitarbeiter anlegen", "icons/add_user.png", () -> openTab(new EmployeeDetailView(), true));
         }
 
-        if (ServiceLocator.getSessionManager().getUserPermission().equals("TEAM_LEAD")) {
+        if ("TEAM_LEAD".equals(userPermission)) {
             addSectionTitle(navPanel, "Teamleiter");
-            // addNavButton(navPanel, "Mein Team-Überblick", () -> openTab(new TeamOverviewView(), true)); TODO
-            // addNavButton(navPanel, "Schulungsvorschlag", () -> new SubmitTrainingSuggestionDialog(this).setVisible(true)); TODO
+            // addNavButton(navPanel, "Mein Team-Überblick", "icons/team.png", () -> openTab(new TeamOverviewView(), true));
         }
 
-        if (ServiceLocator.getSessionManager().getUserPermission().equals("ADMIN")) {
+        if ("ADMIN".equals(userPermission)) {
             addSectionTitle(navPanel, "Admin");
-            // addNavButton(navPanel, "Systemsteuerung", () -> openTab(new AdminControlPanelView(), true)); TODO
+            // addNavButton(navPanel, "Systemsteuerung", "icons/settings.png", () -> openTab(new AdminControlPanelView(), true));
         }
 
         navPanel.add(Box.createVerticalGlue()); // Füllt den restlichen Platz
 
-        // Umschließen mit einem JScrollPane, falls die Navigation zu lang wird
-        return new JScrollPane(navPanel);
+        JScrollPane scrollPane = new JScrollPane(navPanel);
+        scrollPane.setBorder(null); // Kein Rand für den ScrollPane
+        scrollPane.setPreferredSize(new Dimension(220, 0));
+        return scrollPane;
     }
 
-    /**
-     * Fügt dem Navigationspanel eine Sektionsüberschrift hinzu.
-     */
     private void addSectionTitle(JPanel panel, String title) {
-        JLabel label = new JLabel(title);
-        label.setFont(label.getFont().deriveFont(Font.ITALIC, 14f));
-        label.setBorder(new EmptyBorder(5, 0, 5, 0));
+        JLabel label = new JLabel(title.toUpperCase());
+        label.setFont(label.getFont().deriveFont(Font.BOLD, 11f));
+        label.setForeground(Color.GRAY);
+        label.setBorder(new EmptyBorder(10, 8, 5, 0));
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(label);
     }
 
     /**
-     * Hilfsmethode zum Erstellen und Hinzufügen eines Navigationsbuttons.
+     * Erstellt einen modernen, flachen Navigationsbutton (ähnlich einem Link).
      */
-    private void addNavButton(JPanel panel, String text, Runnable action) {
+    private void addNavButton(JPanel panel, String text, String iconPath, Runnable action) {
         JButton button = new JButton(text);
         button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, button.getPreferredSize().height));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setOpaque(true); // Wichtig für Hintergrundfarbe
+        button.setBackground(panel.getBackground());
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        button.setAlignmentX(Component.LEFT_ALIGNMENT);
+        button.setBorder(new EmptyBorder(0, 10, 0, 0));
+
+        // Optional: Icon hinzufügen (Pfad muss stimmen!)
+        // try {
+        //     button.setIcon(new ImageIcon(new URL(iconPath)));
+        //     button.setIconTextGap(10);
+        // } catch (Exception e) { /* Icon nicht gefunden, ignoriere */ }
+
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(new Color(220, 220, 220));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(panel.getBackground());
+            }
+        });
+
         button.addActionListener(e -> action.run());
         panel.add(button);
     }
 
-    /**
-     * Öffnet eine neue View in einem Tab. Wenn `closable` true ist, wird ein "x"-Button hinzugefügt.
-     *
-     * @param view Die anzuzeigende View-Instanz.
-     * @param closable Gibt an, ob der Tab vom Benutzer geschlossen werden kann.
-     */
     public void openTab(View view, boolean closable) {
+        // Identisch zu deiner Version, aber verwendet die Interface-Methode
         JComponent component = view.getComponent();
         String title = view.getViewTabTitle();
 
@@ -180,56 +254,33 @@ public class MainWindow extends JFrame {
 
         if (closable) {
             JButton closeButton = new JButton("x");
-            // Styling des Buttons für ein minimalistisches Aussehen
             closeButton.setMargin(new Insets(0, 2, 0, 2));
             closeButton.setFont(new Font("Arial", Font.BOLD, 12));
             closeButton.setContentAreaFilled(false);
             closeButton.setBorderPainted(false);
             closeButton.setFocusable(false);
-
-            // Hover-Effekt
             closeButton.addMouseListener(new MouseAdapter() {
-                public void mouseEntered(MouseEvent e) {
-                    closeButton.setForeground(Color.RED);
-                }
-                public void mouseExited(MouseEvent e) {
-                    closeButton.setForeground(Color.BLACK);
-                }
+                public void mouseEntered(MouseEvent e) { closeButton.setForeground(Color.RED); }
+                public void mouseExited(MouseEvent e) { closeButton.setForeground(Color.BLACK); }
             });
-
             closeButton.addActionListener(e -> {
                 int i = tabbedPane.indexOfTabComponent(tabComponent);
-                if (i != -1) {
-                    tabbedPane.remove(i);
-                }
+                if (i != -1) tabbedPane.remove(i);
             });
             tabComponent.add(closeButton);
         }
 
         tabbedPane.setTabComponentAt(index, tabComponent);
-
-        // Den neu geöffneten Tab auswählen
         tabbedPane.setSelectedComponent(component);
     }
 
-    /**
-     * Fokussiert einen bereits offenen Tab eines bestimmten Typs oder erstellt ihn neu,
-     * falls er nicht existiert. Nützlich für "Single-Instance"-Views wie das Dashboard.
-     *
-     * @param viewClass Die Klasse der zu suchenden View.
-     * @param viewSupplier Eine Funktion, die bei Bedarf eine neue Instanz der View erstellt.
-     * @param closable Gibt an, ob der Tab schließbar sein soll, falls er neu erstellt wird.
-     */
     public <T extends View> void focusOrCreateTab(Class<T> viewClass, java.util.function.Supplier<T> viewSupplier, boolean closable) {
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            Component comp = tabbedPane.getComponentAt(i);
-            if (viewClass.isInstance(comp)) {
+            if (viewClass.isInstance(tabbedPane.getComponentAt(i))) {
                 tabbedPane.setSelectedIndex(i);
-                return; // Tab gefunden und fokussiert
+                return;
             }
         }
-        // Tab nicht gefunden, also neu erstellen
         openTab(viewSupplier.get(), closable);
     }
-
 }

@@ -16,6 +16,7 @@ public class UIController {
 
     private UIController() {
         mainWindow = MainWindow.getInstance();
+        mainWindow.showLoginView();
     }
 
     public void requestTabCreation(String viewId, String[] args) {
