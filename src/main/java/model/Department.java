@@ -4,9 +4,9 @@ public class Department {
 
     private int departmentId;
     private String departmentName;
-    private Company companyId;   // wie im Diagramm benannt
+    private int companyId;   // wie im Diagramm benannt
 
-    public Department(int departmentId, String departmentName, Company companyId) {
+    public Department(int departmentId, String departmentName, int companyId) {
         this.departmentId = departmentId;
         this.departmentName = departmentName;
         this.companyId = companyId;
@@ -28,11 +28,11 @@ public class Department {
         this.departmentName = departmentName;
     }
 
-    public Company getCompanyId() {
+    public int getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(Company companyId) {
+    public void setCompanyId(int companyId) {
         this.companyId = companyId;
     }
 }

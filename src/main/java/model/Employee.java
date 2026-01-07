@@ -46,6 +46,9 @@ public class Employee {
         this.role = new RoleManager(this);
         this.training = new TrainingManager(this); 
     }
+    public Employee(){
+
+    }
 
     // Methoden
     public int getId() {

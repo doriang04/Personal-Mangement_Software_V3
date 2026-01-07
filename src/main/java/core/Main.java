@@ -127,7 +127,7 @@ public class Main {
 
         // Offene Trainings
         long openTrainings = employees.stream()
-                .mapToLong(emp -> emp.getTraining().getOpenTrainings().size())
+                .mapToLong(emp -> emp.getTraining().getOpenTrainings(emp).size())
                 .sum();
         System.out.println("📚 Offene Trainings: " + openTrainings);
     }

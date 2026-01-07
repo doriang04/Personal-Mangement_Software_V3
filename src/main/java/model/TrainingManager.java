@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.sql.*;
+
 
 public class TrainingManager {
     private Employee employee;
@@ -65,6 +67,35 @@ public class TrainingManager {
 
         openTrainings.remove(entry);
         doneTrainings.add(new TrainingEntry(trainingId, completionDate));
+    }
+
+    public void loadTrainingsForEmployee(Connection connection) throws SQLException {
+        openTrainings.clear();
+        doneTrainings.clear();
+
+        String sqlOpen = "SELECT training_id, assigning_date FROM open_trainings WHERE employee_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sqlOpen)) {
+            ps.setInt(1, this.id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String trainingId = rs.getString("training_id");
+                    Date assigningDate = new Date(rs.getTimestamp("assigning_date").getTime());
+                    openTrainings.add(new TrainingEntry(trainingId, assigningDate));
+                }
+            }
+        }
+
+        String sqlDone = "SELECT training_id, completion_date FROM done_trainings WHERE employee_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sqlDone)) {
+            ps.setInt(1, this.id);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String trainingId = rs.getString("training_id");
+                    Date completionDate = new Date(rs.getTimestamp("completion_date").getTime());
+                    doneTrainings.add(new TrainingEntry(trainingId, completionDate));
+                }
+            }
+        }
     }
 
 }

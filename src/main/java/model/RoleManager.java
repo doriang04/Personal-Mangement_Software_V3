@@ -25,6 +25,10 @@ public class RoleManager {
             return roleId;
         }
 
+        public void setRoleId(int roleId) {
+            this.roleId = roleId;
+        }
+
         public LocalDate getStartDate() {
             return startDate;
         }
@@ -46,6 +50,13 @@ public class RoleManager {
         } else {
             this.activeRole = this.roleHistory.get(this.roleHistory.size() - 1);
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 
     public List<RoleHistoryEntry> getRoleHistory() {

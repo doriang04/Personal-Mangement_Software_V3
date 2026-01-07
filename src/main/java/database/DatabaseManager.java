@@ -376,7 +376,7 @@ public class DatabaseManager {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT * FROM departments ORDER BY department_id")) {
             while (rs.next()) {
-                Department dept = new Department(rs.getString("department_name"), rs.getInt("department_id"), rs.getInt("company_id"));
+                Department dept = new Department(rs.getInt("department_id"),rs.getString("department_name"), rs.getInt("company_id"));
                 // company_id mapping falls benötigt
                 departments.add(dept);
             }
@@ -408,10 +408,9 @@ public class DatabaseManager {
                 emp.setTeamId(rs.getInt("team_id"));
 
                 // Role vollständig initialisieren
-                RoleManager roleMgr = new RoleManager();
-                Role r = roleMgr.getActiveRole();
-                r.setId(rs.getInt("role_id"));
-                r.setName(rs.getString("role_name"));
+                RoleManager roleMgr = new RoleManager(emp);
+                RoleManager.RoleHistoryEntry r = roleMgr.getActiveRole();
+                r.setRoleId(rs.getInt("role_id"));
                 roleMgr.setActiveRole(r);
                 emp.setRole(roleMgr);
 
@@ -421,10 +420,10 @@ public class DatabaseManager {
                 emp.setSkill(skillMgr);
 
                 // TrainingManager sinnvoll initialisieren mit JSON-Daten
-                TrainingManager trainingMgr = new TrainingManager();
+                TrainingManager trainingMgr = new TrainingManager(emp);
                 // Lade Trainings für diesen Mitarbeiter (verbunden mit Training.json)
 
-                trainingMgr.loadTrainingsForEmployee(emp.getId());
+                trainingMgr.loadTrainingsForEmployee(connection);
                 emp.setTraining(trainingMgr);
 
                 employees.add(emp);
@@ -435,6 +434,26 @@ public class DatabaseManager {
         }
         return employees;
     }
+    public Role getRoleById(int roleId) {
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                "SELECT * FROM roles WHERE roleid = ?")) {
+            pstmt.setInt(1, roleId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Role(
+                            rs.getInt("roleid"),
+                            rs.getString("name"),
+                            rs.getString("description"),
+                            rs.getString("permission")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error loading role by id: " + e.getMessage());
+        }
+        return null;
+    }
+
 
     public void close() {
         try {
@@ -445,4 +464,5 @@ public class DatabaseManager {
             System.err.println("❌ Error closing connection: " + e.getMessage());
         }
     }
+
 }

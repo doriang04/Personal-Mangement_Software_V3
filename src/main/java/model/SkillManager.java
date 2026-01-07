@@ -44,6 +44,9 @@ public class SkillManager {
         this.aktiveSkillHistory = new ArrayList<>();
         this.inactiveSkillHistory = new ArrayList<>();
     }
+    public SkillManager(){
+
+    }
 
     public int getId() {
         return id;
