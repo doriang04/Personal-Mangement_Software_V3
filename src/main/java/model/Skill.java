@@ -16,6 +16,10 @@ public class Skill {
         this.description = description;
     }
 
+    public Skill() {
+
+    }
+
     public int getSkillId() {
         return skillId;
     }

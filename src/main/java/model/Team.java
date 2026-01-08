@@ -13,6 +13,10 @@ public class Team {
         this.teamName = teamName;
     }
 
+    public Team() {
+
+    }
+
     public int getDepartmentId() {
         return departmentId;
     }

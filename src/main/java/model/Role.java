@@ -14,6 +14,10 @@ public class Role {
         this.permission = permission;
     }
 
+    public Role() {
+
+    }
+
     public int getId() {
         return id;
     }
