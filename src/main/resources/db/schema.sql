@@ -1,46 +1,29 @@
 -- src/main/resources/db/schema.sql
-CREATE TABLE IF NOT EXISTS companies (
-                                         id INT PRIMARY KEY AUTO_INCREMENT,
-                                         name VARCHAR(255) NOT NULL
-    );
+CREATE TABLE companies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
 
-CREATE TABLE IF NOT EXISTS departments (
-                                           id INT PRIMARY KEY AUTO_INCREMENT,
-                                           department_id INT NOT NULL,
-                                           department_name VARCHAR(255) NOT NULL,
-    company_id INT,
+CREATE TABLE departments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    company_id INT NOT NULL,
     FOREIGN KEY (company_id) REFERENCES companies(id)
-    );
+);
 
-CREATE TABLE IF NOT EXISTS teams (
-                                     id INT PRIMARY KEY AUTO_INCREMENT,
-                                     departmentId INT NOT NULL,
-                                     teamId INT NOT NULL,
-                                     teamName VARCHAR(255) NOT NULL,
+CREATE TABLE teams (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    department_id INT NOT NULL,
     FOREIGN KEY (department_id) REFERENCES departments(id)
-    );
+);
 
-CREATE TABLE IF NOT EXISTS roles (
-                                     id INT PRIMARY KEY AUTO_INCREMENT,
-                                     role_id INT NOT NULL UNIQUE,
-                                     name VARCHAR(255) NOT NULL,
-    description TEXT,
-    permission VARCHAR(100)
-    );
-
-CREATE TABLE IF NOT EXISTS skills (
-                                      id INT PRIMARY KEY AUTO_INCREMENT,
-                                      skill_id INT NOT NULL UNIQUE,
-                                      required_years VARCHAR(10),
-    description TEXT,
-    certifications TEXT  -- JSON Array as String
-    );
-
-CREATE TABLE IF NOT EXISTS employees (
-                                         id INT PRIMARY KEY AUTO_INCREMENT,
-                                         employee_id INT NOT NULL UNIQUE,
-                                         username VARCHAR(100) UNIQUE NOT NULL,
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_number INT UNIQUE NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     email VARCHAR(255),
@@ -48,22 +31,78 @@ CREATE TABLE IF NOT EXISTS employees (
     date_of_birth DATE,
     address TEXT,
     gender CHAR(1),
+
     hire_date DATE,
-    employment_status BOOLEAN DEFAULT true,
+    employment_active BOOLEAN DEFAULT TRUE,
+
     team_id INT,
     manager_id INT,
-    role_id INT,
-    FOREIGN KEY (team_id) REFERENCES teams(id),
-    FOREIGN KEY (manager_id) REFERENCES employees(id),
-    FOREIGN KEY (role_id) REFERENCES roles(id)
-    );
 
-CREATE TABLE IF NOT EXISTS trainings (
-                                         id INT PRIMARY KEY AUTO_INCREMENT,
-                                         training_id INT NOT NULL UNIQUE,
-                                         title VARCHAR(255) NOT NULL,
+    FOREIGN KEY (team_id) REFERENCES teams(id),
+    FOREIGN KEY (manager_id) REFERENCES employees(id)
+);
+
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
-    length VARCHAR(10),
-    assigning_manager_id INT,
-    FOREIGN KEY (assigning_manager_id) REFERENCES employees(id)
-    );
+    system_permission VARCHAR(100)
+);
+
+CREATE TABLE role_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    role_id INT NOT NULL,
+    assigned_at DATE NOT NULL,
+    ended_at DATE, -- Aktuelle Rolle: WHERE ended_at IS NULL
+
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+CREATE TABLE skills (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    description TEXT,
+    required_years INT,
+    certifications TEXT
+);
+
+CREATE TABLE skill_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    skill_id INT NOT NULL,
+    acquired_at DATE NOT NULL,
+
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (skill_id) REFERENCES skills(id)
+);
+
+CREATE TABLE trainings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    duration_hours INT
+);
+
+CREATE TABLE training_skills (
+    training_id INT NOT NULL,
+    skill_id INT NOT NULL,
+
+    PRIMARY KEY (training_id, skill_id),
+    FOREIGN KEY (training_id) REFERENCES trainings(id),
+    FOREIGN KEY (skill_id) REFERENCES skills(id)
+);
+
+CREATE TABLE training_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id INT NOT NULL,
+    training_id INT NOT NULL,
+
+    status ENUM('OPEN', 'DONE') NOT NULL,
+    assigned_at DATE NOT NULL,
+    completed_at DATE,
+
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (training_id) REFERENCES trainings(id)
+);
