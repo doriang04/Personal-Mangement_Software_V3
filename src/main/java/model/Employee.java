@@ -9,7 +9,6 @@ public class Employee implements IEmployee {
     private Employee managerId;
     private String username;
     private String password;
-    private String permissionString;
     private String firstName;
     private String lastName;
     private String eMail;
@@ -73,10 +72,6 @@ public class Employee implements IEmployee {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPermissionString() {
-        return permissionString;
     }
 
     public String getFirstName() {
@@ -157,6 +152,7 @@ public class Employee implements IEmployee {
 
     public void setTeamId(int teamId) {
         // ggf. Team über ID laden und zuweisen
+        // TODO implement this method
     }
 
     public int getManagerId() {

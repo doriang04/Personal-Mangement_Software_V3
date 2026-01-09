@@ -1,15 +1,23 @@
 package core;
 
 import database.DatabaseManager;
+import gui.UIController;
 import model.*;
 
 import java.util.List;
 import model.Role;
 
 public class Main {
-    private static DatabaseManager dbManager = new DatabaseManager();
+    private static DatabaseManager dbManager;
+    private static UIController uiController;
 
     public static void main(String[] args) {
+        dbManager = new DatabaseManager(); // TODO change this to be singleton?
+        uiController = UIController.getInstance();
+
+        // ------------------------------------- div line --------------------------------------------------
+
+        // TODO kann man den code below (db initializing code) in eine funktion packen?
         System.out.println("🚀 Personal Management System - Datenbank Loader");
 
         // 1. JSON → Database laden (einmalig)
@@ -32,6 +40,10 @@ public class Main {
         dbManager.close();
         System.out.println("✅ System bereit - Alle Java Klassen geladen!");
     }
+
+    // TODO welche der folgenden Funktionen sind gebraucht und welche waren nur fürs testen?
+    //      -> gebrauchten: aussehen lassen, als hätte es ein Mensch gecodet
+    //      -> fürs testen: löschen, wir wollen keine redundanzen im code
 
     private static Company loadCompany() {
         Company company = new Company(1, "Bauunternehmen XYZ GmbH");
