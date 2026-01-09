@@ -14,20 +14,40 @@
     "employmentStatus": true,
     "teamId": 12,
     "managerId": 1,
-    "roleId": 1,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 1,
+          "acquireDate": "2020-01-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 2,
+          "acquireDate": "2015-01-01",
+          "endDate": "2019-12-31"
+        },
+        {
+          "roleId": 3,
+          "acquireDate": "2010-01-01",
+          "endDate": "2014-12-31"
+        }
+      ]
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 1, "acquireDate": "2015-06-01"},
-        {"skillId": 11, "acquireDate": "2012-03-01"},
-        {"skillId": 17, "acquireDate": "2018-09-01"},
-        {"skillId": 67, "acquireDate": "2020-05-01"}
-      ]
+        { "skillId": 1, "acquireDate": "2015-06-01" },
+        { "skillId": 11, "acquireDate": "2012-03-01" },
+        { "skillId": 17, "acquireDate": "2018-09-01" },
+        { "skillId": 67, "acquireDate": "2020-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 1, "completionDate": "2023-12-01"},
-        {"trainingId": 5, "completionDate": "2024-03-15"}
+        { "trainingId": 1, "completionDate": "2023-12-01" },
+        { "trainingId": 5, "completionDate": "2024-03-15" }
       ]
     }
   },
@@ -46,18 +66,31 @@
     "employmentStatus": true,
     "teamId": 2,
     "managerId": 1,
-    "roleId": 2,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 2,
+          "acquireDate": "2015-04-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 2, "acquireDate": "2018-02-01"},
-        {"skillId": 22, "acquireDate": "2019-11-01"},
-        {"skillId": 20, "acquireDate": "2020-06-01"},
-        {"skillId": 12, "acquireDate": "2023-04-01"}
-      ]
+        { "skillId": 2, "acquireDate": "2018-02-01" },
+        { "skillId": 22, "acquireDate": "2019-11-01" },
+        { "skillId": 20, "acquireDate": "2020-06-01" },
+        { "skillId": 12, "acquireDate": "2023-04-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 3, "assigningDate": "2025-02-01"}],
-      "doneTrainings": [{"trainingId": 1, "completionDate": "2024-01-15"}]
+      "openTrainings": [
+        { "trainingId": 3, "assigningDate": "2025-02-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 1, "completionDate": "2024-01-15" }
+      ]
     }
   },
   {
@@ -75,17 +108,36 @@
     "employmentStatus": true,
     "teamId": 2,
     "managerId": 2,
-    "roleId": 3,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 51, "acquireDate": "2020-05-01"},
-        {"skillId": 49, "acquireDate": "2021-03-01"},
-        {"skillId": 16, "acquireDate": "2022-07-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 3,
+          "acquireDate": "2022-01-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 4,
+          "acquireDate": "2018-09-01",
+          "endDate": "2021-12-31"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 51, "acquireDate": "2020-05-01" },
+        { "skillId": 49, "acquireDate": "2021-03-01" },
+        { "skillId": 16, "acquireDate": "2022-07-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 2, "assigningDate": "2025-01-20"}],
-      "doneTrainings": [{"trainingId": 4, "completionDate": "2023-11-01"}]
+      "openTrainings": [
+        { "trainingId": 2, "assigningDate": "2025-01-20" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 4, "completionDate": "2023-11-01" }
+      ]
     }
   },
   {
@@ -103,17 +155,28 @@
     "employmentStatus": true,
     "teamId": 2,
     "managerId": 3,
-    "roleId": 4,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 4,
+          "acquireDate": "2020-03-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 53, "acquireDate": "2020-08-01"},
-        {"skillId": 14, "acquireDate": "2021-12-01"},
-        {"skillId": 48, "acquireDate": "2022-05-01"}
-      ]
+        { "skillId": 53, "acquireDate": "2020-08-01" },
+        { "skillId": 14, "acquireDate": "2021-12-01" },
+        { "skillId": 48, "acquireDate": "2022-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 16, "completionDate": "2024-06-01"}]
+      "doneTrainings": [
+        { "trainingId": 16, "completionDate": "2024-06-01" }
+      ]
     }
   },
   {
@@ -131,17 +194,36 @@
     "employmentStatus": true,
     "teamId": 3,
     "managerId": 2,
-    "roleId": 6,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 52, "acquireDate": "2019-04-01"},
-        {"skillId": 60, "acquireDate": "2020-10-01"},
-        {"skillId": 16, "acquireDate": "2021-08-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 6,
+          "acquireDate": "2021-03-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 7,
+          "acquireDate": "2017-06-01",
+          "endDate": "2021-02-28"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 52, "acquireDate": "2019-04-01" },
+        { "skillId": 60, "acquireDate": "2020-10-01" },
+        { "skillId": 16, "acquireDate": "2021-08-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 16, "assigningDate": "2025-03-15"}],
-      "doneTrainings": [{"trainingId": 4, "completionDate": "2022-09-01"}]
+      "openTrainings": [
+        { "trainingId": 16, "assigningDate": "2025-03-15" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 4, "completionDate": "2022-09-01" }
+      ]
     }
   },
   {
@@ -159,20 +241,37 @@
     "employmentStatus": true,
     "teamId": 4,
     "managerId": 2,
-    "roleId": 9,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 39, "acquireDate": "2017-03-01"},
-        {"skillId": 60, "acquireDate": "2018-11-01"},
-        {"skillId": 5, "acquireDate": "2020-06-01"},
-        {"skillId": 98, "acquireDate": "2023-02-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 9,
+          "acquireDate": "2020-01-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 10,
+          "acquireDate": "2016-08-01",
+          "endDate": "2019-12-31"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 39, "acquireDate": "2017-03-01" },
+        { "skillId": 60, "acquireDate": "2018-11-01" },
+        { "skillId": 5, "acquireDate": "2020-06-01" },
+        { "skillId": 98, "acquireDate": "2023-02-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 17, "assigningDate": "2025-04-01"}],
+      "openTrainings": [
+        { "trainingId": 17, "assigningDate": "2025-04-01" }
+      ],
       "doneTrainings": [
-        {"trainingId": 3, "completionDate": "2022-09-15"},
-        {"trainingId": 12, "completionDate": "2024-01-20"}
+        { "trainingId": 3, "completionDate": "2022-09-15" },
+        { "trainingId": 12, "completionDate": "2024-01-20" }
       ]
     }
   },
@@ -191,20 +290,29 @@
     "employmentStatus": true,
     "teamId": 4,
     "managerId": 6,
-    "roleId": 10,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 10,
+          "acquireDate": "2019-05-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 37, "acquireDate": "2019-09-01"},
-        {"skillId": 10, "acquireDate": "2020-04-01"},
-        {"skillId": 20, "acquireDate": "2021-03-01"},
-        {"skillId": 16, "acquireDate": "2022-08-01"}
-      ]
+        { "skillId": 37, "acquireDate": "2019-09-01" },
+        { "skillId": 10, "acquireDate": "2020-04-01" },
+        { "skillId": 20, "acquireDate": "2021-03-01" },
+        { "skillId": 16, "acquireDate": "2022-08-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 17, "completionDate": "2024-05-10"},
-        {"trainingId": 4, "completionDate": "2023-10-01"}
+        { "trainingId": 17, "completionDate": "2024-05-10" },
+        { "trainingId": 4, "completionDate": "2023-10-01" }
       ]
     }
   },
@@ -223,18 +331,31 @@
     "employmentStatus": true,
     "teamId": 4,
     "managerId": 6,
-    "roleId": 11,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 11,
+          "acquireDate": "2021-02-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 55, "acquireDate": "2021-06-01"},
-        {"skillId": 14, "acquireDate": "2022-01-01"},
-        {"skillId": 48, "acquireDate": "2022-09-01"},
-        {"skillId": 36, "acquireDate": "2023-11-01"}
-      ]
+        { "skillId": 55, "acquireDate": "2021-06-01" },
+        { "skillId": 14, "acquireDate": "2022-01-01" },
+        { "skillId": 48, "acquireDate": "2022-09-01" },
+        { "skillId": 36, "acquireDate": "2023-11-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 10, "assigningDate": "2025-05-15"}],
-      "doneTrainings": [{"trainingId": 16, "completionDate": "2024-03-20"}]
+      "openTrainings": [
+        { "trainingId": 10, "assigningDate": "2025-05-15" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 16, "completionDate": "2024-03-20" }
+      ]
     }
   },
   {
@@ -252,17 +373,30 @@
     "employmentStatus": true,
     "teamId": 4,
     "managerId": 7,
-    "roleId": 10,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 10,
+          "acquireDate": "2022-07-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 37, "acquireDate": "2022-11-01"},
-        {"skillId": 93, "acquireDate": "2023-02-01"},
-        {"skillId": 14, "acquireDate": "2023-08-01"}
-      ]
+        { "skillId": 37, "acquireDate": "2022-11-01" },
+        { "skillId": 93, "acquireDate": "2023-02-01" },
+        { "skillId": 14, "acquireDate": "2023-08-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 17, "assigningDate": "2025-06-01"}],
-      "doneTrainings": [{"trainingId": 4, "completionDate": "2023-12-15"}]
+      "openTrainings": [
+        { "trainingId": 17, "assigningDate": "2025-06-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 4, "completionDate": "2023-12-15" }
+      ]
     }
   },
   {
@@ -280,20 +414,29 @@
     "employmentStatus": true,
     "teamId": 4,
     "managerId": 6,
-    "roleId": 11,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 11,
+          "acquireDate": "2018-11-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 5, "acquireDate": "2019-05-01"},
-        {"skillId": 55, "acquireDate": "2020-09-01"},
-        {"skillId": 60, "acquireDate": "2021-12-01"},
-        {"skillId": 99, "acquireDate": "2023-07-01"}
-      ]
+        { "skillId": 5, "acquireDate": "2019-05-01" },
+        { "skillId": 55, "acquireDate": "2020-09-01" },
+        { "skillId": 60, "acquireDate": "2021-12-01" },
+        { "skillId": 99, "acquireDate": "2023-07-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 12, "completionDate": "2023-11-10"},
-        {"trainingId": 3, "completionDate": "2022-06-01"}
+        { "trainingId": 12, "completionDate": "2023-11-10" },
+        { "trainingId": 3, "completionDate": "2022-06-01" }
       ]
     }
   },
@@ -312,21 +455,38 @@
     "employmentStatus": true,
     "teamId": 6,
     "managerId": 2,
-    "roleId": 13,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 13, "acquireDate": "2018-07-01"},
-        {"skillId": 57, "acquireDate": "2019-05-01"},
-        {"skillId": 25, "acquireDate": "2020-11-01"},
-        {"skillId": 22, "acquireDate": "2022-03-01"},
-        {"skillId": 80, "acquireDate": "2023-09-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 13,
+          "acquireDate": "2020-06-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 14,
+          "acquireDate": "2017-03-01",
+          "endDate": "2020-05-31"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 13, "acquireDate": "2018-07-01" },
+        { "skillId": 57, "acquireDate": "2019-05-01" },
+        { "skillId": 25, "acquireDate": "2020-11-01" },
+        { "skillId": 22, "acquireDate": "2022-03-01" },
+        { "skillId": 80, "acquireDate": "2023-09-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 18, "assigningDate": "2025-04-20"}],
+      "openTrainings": [
+        { "trainingId": 18, "assigningDate": "2025-04-20" }
+      ],
       "doneTrainings": [
-        {"trainingId": 30, "completionDate": "2024-02-15"},
-        {"trainingId": 11, "completionDate": "2023-10-01"}
+        { "trainingId": 30, "completionDate": "2024-02-15" },
+        { "trainingId": 11, "completionDate": "2023-10-01" }
       ]
     }
   },
@@ -345,20 +505,29 @@
     "employmentStatus": true,
     "teamId": 6,
     "managerId": 11,
-    "roleId": 14,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 14,
+          "acquireDate": "2020-09-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 36, "acquireDate": "2020-12-01"},
-        {"skillId": 93, "acquireDate": "2021-04-01"},
-        {"skillId": 14, "acquireDate": "2021-11-01"},
-        {"skillId": 48, "acquireDate": "2022-06-01"}
-      ]
+        { "skillId": 36, "acquireDate": "2020-12-01" },
+        { "skillId": 93, "acquireDate": "2021-04-01" },
+        { "skillId": 14, "acquireDate": "2021-11-01" },
+        { "skillId": 48, "acquireDate": "2022-06-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 18, "completionDate": "2024-08-10"},
-        {"trainingId": 4, "completionDate": "2023-03-15"}
+        { "trainingId": 18, "completionDate": "2024-08-10" },
+        { "trainingId": 4, "completionDate": "2023-03-15" }
       ]
     }
   },
@@ -377,18 +546,31 @@
     "employmentStatus": true,
     "teamId": 6,
     "managerId": 11,
-    "roleId": 14,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 14,
+          "acquireDate": "2019-01-15"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 36, "acquireDate": "2019-04-01"},
-        {"skillId": 56, "acquireDate": "2019-08-01"},
-        {"skillId": 57, "acquireDate": "2020-05-01"},
-        {"skillId": 10, "acquireDate": "2021-02-01"}
-      ]
+        { "skillId": 36, "acquireDate": "2019-04-01" },
+        { "skillId": 56, "acquireDate": "2019-08-01" },
+        { "skillId": 57, "acquireDate": "2020-05-01" },
+        { "skillId": 10, "acquireDate": "2021-02-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 10, "assigningDate": "2025-05-15"}],
-      "doneTrainings": [{"trainingId": 18, "completionDate": "2024-01-20"}]
+      "openTrainings": [
+        { "trainingId": 10, "assigningDate": "2025-05-15" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 18, "completionDate": "2024-01-20" }
+      ]
     }
   },
   {
@@ -406,18 +588,29 @@
     "employmentStatus": true,
     "teamId": 6,
     "managerId": 11,
-    "roleId": 14,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 14,
+          "acquireDate": "2021-11-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 57, "acquireDate": "2022-02-01"},
-        {"skillId": 14, "acquireDate": "2022-07-01"},
-        {"skillId": 48, "acquireDate": "2023-01-01"},
-        {"skillId": 93, "acquireDate": "2023-05-01"}
-      ]
+        { "skillId": 57, "acquireDate": "2022-02-01" },
+        { "skillId": 14, "acquireDate": "2022-07-01" },
+        { "skillId": 48, "acquireDate": "2023-01-01" },
+        { "skillId": 93, "acquireDate": "2023-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 18, "completionDate": "2024-06-05"}]
+      "doneTrainings": [
+        { "trainingId": 18, "completionDate": "2024-06-05" }
+      ]
     }
   },
   {
@@ -435,176 +628,258 @@
     "employmentStatus": true,
     "teamId": 6,
     "managerId": 11,
-    "roleId": 13,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 13, "acquireDate": "2019-01-01"},
-        {"skillId": 25, "acquireDate": "2019-10-01"},
-        {"skillId": 80, "acquireDate": "2021-04-01"},
-        {"skillId": 23, "acquireDate": "2022-12-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 13,
+          "acquireDate": "2022-03-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 14,
+          "acquireDate": "2018-07-01",
+          "endDate": "2022-02-28"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 13, "acquireDate": "2019-01-01" },
+        { "skillId": 25, "acquireDate": "2019-10-01" },
+        { "skillId": 80, "acquireDate": "2021-04-01" },
+        { "skillId": 23, "acquireDate": "2022-12-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 32, "assigningDate": "2025-07-01"}],
+      "openTrainings": [
+        { "trainingId": 32, "assigningDate": "2025-07-01" }
+      ],
       "doneTrainings": [
-        {"trainingId": 11, "completionDate": "2023-05-15"},
-        {"trainingId": 30, "completionDate": "2024-03-10"}
+        { "trainingId": 11, "completionDate": "2023-05-15" },
+        { "trainingId": 30, "completionDate": "2024-03-10" }
       ]
     }
   },
-    {
-      "id": 16,
-      "username": "it.leiter.stefan",
-      "password": "itchef2025",
-      "firstName": "Stefan",
-      "lastName": "Gruber",
-      "eMail": "stefan.gruber@bauxyz.de",
-      "phoneNumber": "01766789012",
-      "dateOfBirth": "1978-11-05",
-      "address": "Technologiepark 5, 85748 Garching",
-      "gender": "M",
-      "hireDate": "2014-02-01",
-      "employmentStatus": true,
-      "teamId": 21,
-      "managerId": 1,
-      "roleId": 40,
-      "skill": {
-        "aktiveSkillHistory": [
-          {"skillId": 40, "acquireDate": "2015-06-01"},
-          {"skillId": 26, "acquireDate": "2016-03-01"},
-          {"skillId": 91, "acquireDate": "2018-09-01"},
-          {"skillId": 65, "acquireDate": "2021-05-01"},
-          {"skillId": 84, "acquireDate": "2023-02-01"}
-        ]
-      },
-      "training": {
-        "openTrainings": [{"trainingId": 24, "assigningDate": "2025-08-10"}],
-        "doneTrainings": [
-          {"trainingId": 9, "completionDate": "2022-11-15"},
-          {"trainingId": 28, "completionDate": "2024-04-01"}
-        ]
-      }
+  {
+    "id": 16,
+    "username": "it.leiter.stefan",
+    "password": "itchef2025",
+    "firstName": "Stefan",
+    "lastName": "Gruber",
+    "eMail": "stefan.gruber@bauxyz.de",
+    "phoneNumber": "01766789012",
+    "dateOfBirth": "1978-11-05",
+    "address": "Technologiepark 5, 85748 Garching",
+    "gender": "M",
+    "hireDate": "2014-02-01",
+    "employmentStatus": true,
+    "teamId": 21,
+    "managerId": 1,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 40,
+          "acquireDate": "2018-06-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 41,
+          "acquireDate": "2014-02-01",
+          "endDate": "2018-05-31"
+        }
+      ]
     },
-    {
-      "id": 17,
-      "username": "sysadmin.marco",
-      "password": "sysadmin123",
-      "firstName": "Marco",
-      "lastName": "Lorenz",
-      "eMail": "marco.lorenz@bauxyz.de",
-      "phoneNumber": "01767890123",
-      "dateOfBirth": "1986-04-19",
-      "address": "Serverstr. 22, 85737 Ismaning",
-      "gender": "M",
-      "hireDate": "2019-08-01",
-      "employmentStatus": true,
-      "teamId": 22,
-      "managerId": 16,
-      "roleId": 41,
-      "skill": {
-        "aktiveSkillHistory": [
-          {"skillId": 26, "acquireDate": "2020-01-01"},
-          {"skillId": 27, "acquireDate": "2020-07-01"},
-          {"skillId": 29, "acquireDate": "2021-11-01"},
-          {"skillId": 64, "acquireDate": "2023-03-01"}
-        ]
-      },
-      "training": {
-        "openTrainings": [{"trainingId": 24, "assigningDate": "2025-09-01"}],
-        "doneTrainings": [{"trainingId": 24, "completionDate": "2024-02-20"}]
-      }
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 40, "acquireDate": "2015-06-01" },
+        { "skillId": 26, "acquireDate": "2016-03-01" },
+        { "skillId": 91, "acquireDate": "2018-09-01" },
+        { "skillId": 65, "acquireDate": "2021-05-01" },
+        { "skillId": 84, "acquireDate": "2023-02-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
-    {
-      "id": 18,
-      "username": "netzwerk.tim",
-      "password": "ccna456",
-      "firstName": "Tim",
-      "lastName": "Berger",
-      "eMail": "tim.berger@bauxyz.de",
-      "phoneNumber": "01768901234",
-      "dateOfBirth": "1990-07-12",
-      "address": "Netzwerkallee 8, 85716 Unterschleißheim",
-      "gender": "M",
-      "hireDate": "2021-05-01",
-      "employmentStatus": true,
-      "teamId": 22,
-      "managerId": 16,
-      "roleId": 42,
-      "skill": {
-        "aktiveSkillHistory": [
-          {"skillId": 28, "acquireDate": "2021-09-01"},
-          {"skillId": 63, "acquireDate": "2022-02-01"},
-          {"skillId": 42, "acquireDate": "2022-10-01"},
-          {"skillId": 64, "acquireDate": "2023-06-01"}
-        ]
-      },
-      "training": {
-        "openTrainings": [{"trainingId": 25, "assigningDate": "2025-10-01"}],
-        "doneTrainings": [{"trainingId": 25, "completionDate": "2024-07-15"}]
-      }
+    "training": {
+      "openTrainings": [
+        { "trainingId": 24, "assigningDate": "2025-08-10" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 9, "completionDate": "2022-11-15" },
+        { "trainingId": 28, "completionDate": "2024-04-01" }
+      ]
+    }
+  },
+  {
+    "id": 17,
+    "username": "sysadmin.marco",
+    "password": "sysadmin123",
+    "firstName": "Marco",
+    "lastName": "Lorenz",
+    "eMail": "marco.lorenz@bauxyz.de",
+    "phoneNumber": "01767890123",
+    "dateOfBirth": "1986-04-19",
+    "address": "Serverstr. 22, 85737 Ismaning",
+    "gender": "M",
+    "hireDate": "2019-08-01",
+    "employmentStatus": true,
+    "teamId": 22,
+    "managerId": 16,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 41,
+          "acquireDate": "2019-08-01"
+        }
+      ],
+      "inactiveRoleHistory": []
     },
-    {
-      "id": 19,
-      "username": "support.lara",
-      "password": "helpdesk789",
-      "firstName": "Lara",
-      "lastName": "Vogel",
-      "eMail": "lara.vogel@bauxyz.de",
-      "phoneNumber": "01769012345",
-      "dateOfBirth": "1994-02-28",
-      "address": "Helpdesk-Center 14, 85764 Oberschleißheim",
-      "gender": "F",
-      "hireDate": "2022-03-01",
-      "employmentStatus": true,
-      "teamId": 23,
-      "managerId": 16,
-      "roleId": 43,
-      "skill": {
-        "aktiveSkillHistory": [
-          {"skillId": 62, "acquireDate": "2022-06-01"},
-          {"skillId": 70, "acquireDate": "2022-11-01"},
-          {"skillId": 14, "acquireDate": "2023-04-01"},
-          {"skillId": 48, "acquireDate": "2023-09-01"}
-        ]
-      },
-      "training": {
-        "openTrainings": [],
-        "doneTrainings": [
-          {"trainingId": 9, "completionDate": "2023-12-10"},
-          {"trainingId": 4, "completionDate": "2023-06-01"}
-        ]
-      }
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 26, "acquireDate": "2020-01-01" },
+        { "skillId": 27, "acquireDate": "2020-07-01" },
+        { "skillId": 29, "acquireDate": "2021-11-01" },
+        { "skillId": 64, "acquireDate": "2023-03-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
-    {
-      "id": 20,
-      "username": "dev.julia",
-      "password": "coder2025",
-      "firstName": "Julia",
-      "lastName": "Frank",
-      "eMail": "julia.frank@bauxyz.de",
-      "phoneNumber": "01770123456",
-      "dateOfBirth": "1989-09-03",
-      "address": "Code-Campus 7, 85748 Garching",
-      "gender": "F",
-      "hireDate": "2020-10-01",
-      "employmentStatus": true,
-      "teamId": 24,
-      "managerId": 16,
-      "roleId": 45,
-      "skill": {
-        "aktiveSkillHistory": [
-          {"skillId": 34, "acquireDate": "2021-02-01"},
-          {"skillId": 76, "acquireDate": "2021-08-01"},
-          {"skillId": 33, "acquireDate": "2022-01-01"},
-          {"skillId": 71, "acquireDate": "2023-05-01"},
-          {"skillId": 77, "acquireDate": "2024-01-01"}
-        ]
-      },
-      "training": {
-        "openTrainings": [{"trainingId": 15, "assigningDate": "2025-11-01"}],
-        "doneTrainings": [{"trainingId": 15, "completionDate": "2024-09-20"}]
-      }
+    "training": {
+      "openTrainings": [
+        { "trainingId": 24, "assigningDate": "2025-09-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 24, "completionDate": "2024-02-20" }
+      ]
+    }
+  },
+  {
+    "id": 18,
+    "username": "netzwerk.tim",
+    "password": "ccna456",
+    "firstName": "Tim",
+    "lastName": "Berger",
+    "eMail": "tim.berger@bauxyz.de",
+    "phoneNumber": "01768901234",
+    "dateOfBirth": "1990-07-12",
+    "address": "Netzwerkallee 8, 85716 Unterschleißheim",
+    "gender": "M",
+    "hireDate": "2021-05-01",
+    "employmentStatus": true,
+    "teamId": 22,
+    "managerId": 16,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 42,
+          "acquireDate": "2021-05-01"
+        }
+      ],
+      "inactiveRoleHistory": []
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 28, "acquireDate": "2021-09-01" },
+        { "skillId": 63, "acquireDate": "2022-02-01" },
+        { "skillId": 42, "acquireDate": "2022-10-01" },
+        { "skillId": 64, "acquireDate": "2023-06-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
+    "training": {
+      "openTrainings": [
+        { "trainingId": 25, "assigningDate": "2025-10-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 25, "completionDate": "2024-07-15" }
+      ]
+    }
+  },
+  {
+    "id": 19,
+    "username": "support.lara",
+    "password": "helpdesk789",
+    "firstName": "Lara",
+    "lastName": "Vogel",
+    "eMail": "lara.vogel@bauxyz.de",
+    "phoneNumber": "01769012345",
+    "dateOfBirth": "1994-02-28",
+    "address": "Helpdesk-Center 14, 85764 Oberschleißheim",
+    "gender": "F",
+    "hireDate": "2022-03-01",
+    "employmentStatus": true,
+    "teamId": 23,
+    "managerId": 16,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 43,
+          "acquireDate": "2022-03-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 62, "acquireDate": "2022-06-01" },
+        { "skillId": 70, "acquireDate": "2022-11-01" },
+        { "skillId": 14, "acquireDate": "2023-04-01" },
+        { "skillId": 48, "acquireDate": "2023-09-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
+    "training": {
+      "openTrainings": [],
+      "doneTrainings": [
+        { "trainingId": 9, "completionDate": "2023-12-10" },
+        { "trainingId": 4, "completionDate": "2023-06-01" }
+      ]
+    }
+  },
+  {
+    "id": 20,
+    "username": "dev.julia",
+    "password": "coder2025",
+    "firstName": "Julia",
+    "lastName": "Frank",
+    "eMail": "julia.frank@bauxyz.de",
+    "phoneNumber": "01770123456",
+    "dateOfBirth": "1989-09-03",
+    "address": "Code-Campus 7, 85748 Garching",
+    "gender": "F",
+    "hireDate": "2020-10-01",
+    "employmentStatus": true,
+    "teamId": 24,
+    "managerId": 16,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 45,
+          "acquireDate": "2020-10-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 34, "acquireDate": "2021-02-01" },
+        { "skillId": 76, "acquireDate": "2021-08-01" },
+        { "skillId": 33, "acquireDate": "2022-01-01" },
+        { "skillId": 71, "acquireDate": "2023-05-01" },
+        { "skillId": 77, "acquireDate": "2024-01-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
+    "training": {
+      "openTrainings": [
+        { "trainingId": 15, "assigningDate": "2025-11-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 15, "completionDate": "2024-09-20" }
+      ]
+    }
+  },
   {
     "id": 21,
     "username": "hr.leiter.eva",
@@ -620,21 +895,38 @@
     "employmentStatus": true,
     "teamId": 25,
     "managerId": 1,
-    "roleId": 47,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 41, "acquireDate": "2014-09-01"},
-        {"skillId": 42, "acquireDate": "2016-03-01"},
-        {"skillId": 44, "acquireDate": "2018-11-01"},
-        {"skillId": 59, "acquireDate": "2020-06-01"},
-        {"skillId": 48, "acquireDate": "2022-02-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 47,
+          "acquireDate": "2017-09-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 48,
+          "acquireDate": "2013-05-01",
+          "endDate": "2017-08-31"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 41, "acquireDate": "2014-09-01" },
+        { "skillId": 42, "acquireDate": "2016-03-01" },
+        { "skillId": 44, "acquireDate": "2018-11-01" },
+        { "skillId": 59, "acquireDate": "2020-06-01" },
+        { "skillId": 48, "acquireDate": "2022-02-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 20, "assigningDate": "2025-05-25"}],
+      "openTrainings": [
+        { "trainingId": 20, "assigningDate": "2025-05-25" }
+      ],
       "doneTrainings": [
-        {"trainingId": 13, "completionDate": "2023-10-15"},
-        {"trainingId": 21, "completionDate": "2024-03-01"}
+        { "trainingId": 13, "completionDate": "2023-10-15" },
+        { "trainingId": 21, "completionDate": "2024-03-01" }
       ]
     }
   },
@@ -653,21 +945,30 @@
     "employmentStatus": true,
     "teamId": 26,
     "managerId": 21,
-    "roleId": 48,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 48,
+          "acquireDate": "2019-09-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 59, "acquireDate": "2020-02-01"},
-        {"skillId": 86, "acquireDate": "2020-08-01"},
-        {"skillId": 87, "acquireDate": "2021-05-01"},
-        {"skillId": 48, "acquireDate": "2022-01-01"},
-        {"skillId": 14, "acquireDate": "2022-10-01"}
-      ]
+        { "skillId": 59, "acquireDate": "2020-02-01" },
+        { "skillId": 86, "acquireDate": "2020-08-01" },
+        { "skillId": 87, "acquireDate": "2021-05-01" },
+        { "skillId": 48, "acquireDate": "2022-01-01" },
+        { "skillId": 14, "acquireDate": "2022-10-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 20, "completionDate": "2024-09-10"},
-        {"trainingId": 13, "completionDate": "2023-12-05"}
+        { "trainingId": 20, "completionDate": "2024-09-10" },
+        { "trainingId": 13, "completionDate": "2023-12-05" }
       ]
     }
   },
@@ -686,19 +987,32 @@
     "employmentStatus": true,
     "teamId": 27,
     "managerId": 21,
-    "roleId": 49,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 49,
+          "acquireDate": "2018-04-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 24, "acquireDate": "2018-08-01"},
-        {"skillId": 44, "acquireDate": "2019-02-01"},
-        {"skillId": 42, "acquireDate": "2020-07-01"},
-        {"skillId": 14, "acquireDate": "2021-11-01"},
-        {"skillId": 45, "acquireDate": "2023-04-01"}
-      ]
+        { "skillId": 24, "acquireDate": "2018-08-01" },
+        { "skillId": 44, "acquireDate": "2019-02-01" },
+        { "skillId": 42, "acquireDate": "2020-07-01" },
+        { "skillId": 14, "acquireDate": "2021-11-01" },
+        { "skillId": 45, "acquireDate": "2023-04-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 21, "assigningDate": "2025-06-15"}],
-      "doneTrainings": [{"trainingId": 21, "completionDate": "2024-01-20"}]
+      "openTrainings": [
+        { "trainingId": 21, "assigningDate": "2025-06-15" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 21, "completionDate": "2024-01-20" }
+      ]
     }
   },
   {
@@ -716,20 +1030,29 @@
     "employmentStatus": true,
     "teamId": 28,
     "managerId": 21,
-    "roleId": 50,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 50,
+          "acquireDate": "2021-01-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 42, "acquireDate": "2021-05-01"},
-        {"skillId": 48, "acquireDate": "2021-12-01"},
-        {"skillId": 14, "acquireDate": "2022-06-01"},
-        {"skillId": 49, "acquireDate": "2023-03-01"}
-      ]
+        { "skillId": 42, "acquireDate": "2021-05-01" },
+        { "skillId": 48, "acquireDate": "2021-12-01" },
+        { "skillId": 14, "acquireDate": "2022-06-01" },
+        { "skillId": 49, "acquireDate": "2023-03-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 13, "completionDate": "2023-08-15"},
-        {"trainingId": 4, "completionDate": "2022-11-01"}
+        { "trainingId": 13, "completionDate": "2023-08-15" },
+        { "trainingId": 4, "completionDate": "2022-11-01" }
       ]
     }
   },
@@ -748,21 +1071,33 @@
     "employmentStatus": true,
     "teamId": 26,
     "managerId": 22,
-    "roleId": 48,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 48,
+          "acquireDate": "2022-07-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 86, "acquireDate": "2022-11-01"},
-        {"skillId": 87, "acquireDate": "2023-02-01"},
-        {"skillId": 48, "acquireDate": "2023-07-01"},
-        {"skillId": 14, "acquireDate": "2023-12-01"}
-      ]
+        { "skillId": 86, "acquireDate": "2022-11-01" },
+        { "skillId": 87, "acquireDate": "2023-02-01" },
+        { "skillId": 48, "acquireDate": "2023-07-01" },
+        { "skillId": 14, "acquireDate": "2023-12-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 20, "assigningDate": "2025-08-01"}],
-      "doneTrainings": [{"trainingId": 20, "completionDate": "2024-11-15"}]
+      "openTrainings": [
+        { "trainingId": 20, "assigningDate": "2025-08-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 20, "completionDate": "2024-11-15" }
+      ]
     }
-  }
-  ,
+  },
   {
     "id": 26,
     "username": "finanzen.leiter.paul",
@@ -778,21 +1113,38 @@
     "employmentStatus": true,
     "teamId": 29,
     "managerId": 1,
-    "roleId": 50,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 41, "acquireDate": "2013-04-01"},
-        {"skillId": 43, "acquireDate": "2015-10-01"},
-        {"skillId": 45, "acquireDate": "2017-03-01"},
-        {"skillId": 90, "acquireDate": "2019-08-01"},
-        {"skillId": 82, "acquireDate": "2022-02-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 50,
+          "acquireDate": "2016-03-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2012-09-01",
+          "endDate": "2016-02-29"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 41, "acquireDate": "2013-04-01" },
+        { "skillId": 43, "acquireDate": "2015-10-01" },
+        { "skillId": 45, "acquireDate": "2017-03-01" },
+        { "skillId": 90, "acquireDate": "2019-08-01" },
+        { "skillId": 82, "acquireDate": "2022-02-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 22, "assigningDate": "2025-07-01"}],
+      "openTrainings": [
+        { "trainingId": 22, "assigningDate": "2025-07-01" }
+      ],
       "doneTrainings": [
-        {"trainingId": 14, "completionDate": "2023-11-20"},
-        {"trainingId": 23, "completionDate": "2024-05-15"}
+        { "trainingId": 14, "completionDate": "2023-11-20" },
+        { "trainingId": 23, "completionDate": "2024-05-15" }
       ]
     }
   },
@@ -811,19 +1163,32 @@
     "employmentStatus": true,
     "teamId": 30,
     "managerId": 26,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2017-02-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 43, "acquireDate": "2017-08-01"},
-        {"skillId": 23, "acquireDate": "2018-05-01"},
-        {"skillId": 82, "acquireDate": "2019-12-01"},
-        {"skillId": 7, "acquireDate": "2021-06-01"},
-        {"skillId": 88, "acquireDate": "2023-04-01"}
-      ]
+        { "skillId": 43, "acquireDate": "2017-08-01" },
+        { "skillId": 23, "acquireDate": "2018-05-01" },
+        { "skillId": 82, "acquireDate": "2019-12-01" },
+        { "skillId": 7, "acquireDate": "2021-06-01" },
+        { "skillId": 88, "acquireDate": "2023-04-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 23, "assigningDate": "2025-08-20"}],
-      "doneTrainings": [{"trainingId": 23, "completionDate": "2024-03-10"}]
+      "openTrainings": [
+        { "trainingId": 23, "assigningDate": "2025-08-20" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 23, "completionDate": "2024-03-10" }
+      ]
     }
   },
   {
@@ -841,20 +1206,29 @@
     "employmentStatus": true,
     "teamId": 31,
     "managerId": 26,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2016-07-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 45, "acquireDate": "2017-01-01"},
-        {"skillId": 24, "acquireDate": "2017-09-01"},
-        {"skillId": 14, "acquireDate": "2018-04-01"},
-        {"skillId": 82, "acquireDate": "2020-11-01"}
-      ]
+        { "skillId": 45, "acquireDate": "2017-01-01" },
+        { "skillId": 24, "acquireDate": "2017-09-01" },
+        { "skillId": 14, "acquireDate": "2018-04-01" },
+        { "skillId": 82, "acquireDate": "2020-11-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 22, "completionDate": "2024-01-25"},
-        {"trainingId": 14, "completionDate": "2023-09-15"}
+        { "trainingId": 22, "completionDate": "2024-01-25" },
+        { "trainingId": 14, "completionDate": "2023-09-15" }
       ]
     }
   },
@@ -873,18 +1247,31 @@
     "employmentStatus": true,
     "teamId": 30,
     "managerId": 27,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2020-04-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 43, "acquireDate": "2020-10-01"},
-        {"skillId": 23, "acquireDate": "2021-06-01"},
-        {"skillId": 61, "acquireDate": "2022-03-01"},
-        {"skillId": 82, "acquireDate": "2023-09-01"}
-      ]
+        { "skillId": 43, "acquireDate": "2020-10-01" },
+        { "skillId": 23, "acquireDate": "2021-06-01" },
+        { "skillId": 61, "acquireDate": "2022-03-01" },
+        { "skillId": 82, "acquireDate": "2023-09-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 33, "assigningDate": "2025-09-15"}],
-      "doneTrainings": [{"trainingId": 14, "completionDate": "2024-06-20"}]
+      "openTrainings": [
+        { "trainingId": 33, "assigningDate": "2025-09-15" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 14, "completionDate": "2024-06-20" }
+      ]
     }
   },
   {
@@ -902,20 +1289,29 @@
     "employmentStatus": true,
     "teamId": 31,
     "managerId": 26,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2019-11-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 24, "acquireDate": "2020-03-01"},
-        {"skillId": 45, "acquireDate": "2020-10-01"},
-        {"skillId": 14, "acquireDate": "2021-07-01"},
-        {"skillId": 82, "acquireDate": "2023-02-01"}
-      ]
+        { "skillId": 24, "acquireDate": "2020-03-01" },
+        { "skillId": 45, "acquireDate": "2020-10-01" },
+        { "skillId": 14, "acquireDate": "2021-07-01" },
+        { "skillId": 82, "acquireDate": "2023-02-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 22, "completionDate": "2024-04-10"},
-        {"trainingId": 4, "completionDate": "2023-02-15"}
+        { "trainingId": 22, "completionDate": "2024-04-10" },
+        { "trainingId": 4, "completionDate": "2023-02-15" }
       ]
     }
   },
@@ -934,21 +1330,38 @@
     "employmentStatus": true,
     "teamId": 35,
     "managerId": 1,
-    "roleId": 51,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 41, "acquireDate": "2012-10-01"},
-        {"skillId": 47, "acquireDate": "2015-04-01"},
-        {"skillId": 18, "acquireDate": "2017-09-01"},
-        {"skillId": 85, "acquireDate": "2020-03-01"},
-        {"skillId": 82, "acquireDate": "2022-11-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2015-08-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2011-06-01",
+          "endDate": "2015-07-31"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 41, "acquireDate": "2012-10-01" },
+        { "skillId": 47, "acquireDate": "2015-04-01" },
+        { "skillId": 18, "acquireDate": "2017-09-01" },
+        { "skillId": 85, "acquireDate": "2020-03-01" },
+        { "skillId": 82, "acquireDate": "2022-11-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 34, "assigningDate": "2025-02-20"}],
+      "openTrainings": [
+        { "trainingId": 34, "assigningDate": "2025-02-20" }
+      ],
       "doneTrainings": [
-        {"trainingId": 5, "completionDate": "2023-08-15"},
-        {"trainingId": 34, "completionDate": "2024-06-10"}
+        { "trainingId": 5, "completionDate": "2023-08-15" },
+        { "trainingId": 34, "completionDate": "2024-06-10" }
       ]
     }
   },
@@ -967,21 +1380,30 @@
     "employmentStatus": true,
     "teamId": 36,
     "managerId": 31,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2018-03-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 47, "acquireDate": "2018-08-01"},
-        {"skillId": 85, "acquireDate": "2019-05-01"},
-        {"skillId": 18, "acquireDate": "2020-11-01"},
-        {"skillId": 48, "acquireDate": "2022-03-01"},
-        {"skillId": 82, "acquireDate": "2023-09-01"}
-      ]
+        { "skillId": 47, "acquireDate": "2018-08-01" },
+        { "skillId": 85, "acquireDate": "2019-05-01" },
+        { "skillId": 18, "acquireDate": "2020-11-01" },
+        { "skillId": 48, "acquireDate": "2022-03-01" },
+        { "skillId": 82, "acquireDate": "2023-09-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 34, "completionDate": "2024-11-05"},
-        {"trainingId": 13, "completionDate": "2023-10-20"}
+        { "trainingId": 34, "completionDate": "2024-11-05" },
+        { "trainingId": 13, "completionDate": "2023-10-20" }
       ]
     }
   },
@@ -1000,19 +1422,32 @@
     "employmentStatus": true,
     "teamId": 36,
     "managerId": 31,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2019-11-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 7, "acquireDate": "2020-03-01"},
-        {"skillId": 82, "acquireDate": "2021-01-01"},
-        {"skillId": 18, "acquireDate": "2021-09-01"},
-        {"skillId": 47, "acquireDate": "2022-06-01"},
-        {"skillId": 48, "acquireDate": "2023-02-01"}
-      ]
+        { "skillId": 7, "acquireDate": "2020-03-01" },
+        { "skillId": 82, "acquireDate": "2021-01-01" },
+        { "skillId": 18, "acquireDate": "2021-09-01" },
+        { "skillId": 47, "acquireDate": "2022-06-01" },
+        { "skillId": 48, "acquireDate": "2023-02-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 28, "assigningDate": "2025-10-25"}],
-      "doneTrainings": [{"trainingId": 34, "completionDate": "2024-03-15"}]
+      "openTrainings": [
+        { "trainingId": 28, "assigningDate": "2025-10-25" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 34, "completionDate": "2024-03-15" }
+      ]
     }
   },
   {
@@ -1030,20 +1465,29 @@
     "employmentStatus": true,
     "teamId": 37,
     "managerId": 31,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2021-05-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 48, "acquireDate": "2021-09-01"},
-        {"skillId": 85, "acquireDate": "2022-02-01"},
-        {"skillId": 14, "acquireDate": "2022-08-01"},
-        {"skillId": 47, "acquireDate": "2023-05-01"}
-      ]
+        { "skillId": 48, "acquireDate": "2021-09-01" },
+        { "skillId": 85, "acquireDate": "2022-02-01" },
+        { "skillId": 14, "acquireDate": "2022-08-01" },
+        { "skillId": 47, "acquireDate": "2023-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
       "doneTrainings": [
-        {"trainingId": 34, "completionDate": "2024-09-01"},
-        {"trainingId": 9, "completionDate": "2023-07-20"}
+        { "trainingId": 34, "completionDate": "2024-09-01" },
+        { "trainingId": 9, "completionDate": "2023-07-20" }
       ]
     }
   },
@@ -1062,18 +1506,31 @@
     "employmentStatus": true,
     "teamId": 37,
     "managerId": 31,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2022-09-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 48, "acquireDate": "2023-01-01"},
-        {"skillId": 85, "acquireDate": "2023-06-01"},
-        {"skillId": 14, "acquireDate": "2023-12-01"},
-        {"skillId": 62, "acquireDate": "2024-05-01"}
-      ]
+        { "skillId": 48, "acquireDate": "2023-01-01" },
+        { "skillId": 85, "acquireDate": "2023-06-01" },
+        { "skillId": 14, "acquireDate": "2023-12-01" },
+        { "skillId": 62, "acquireDate": "2024-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 9, "assigningDate": "2025-12-01"}],
-      "doneTrainings": [{"trainingId": 34, "completionDate": "2024-05-10"}]
+      "openTrainings": [
+        { "trainingId": 9, "assigningDate": "2025-12-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 34, "completionDate": "2024-05-10" }
+      ]
     }
   },
   {
@@ -1091,18 +1548,35 @@
     "employmentStatus": true,
     "teamId": 7,
     "managerId": 2,
-    "roleId": 15,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 15,
+          "acquireDate": "2019-07-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 16,
+          "acquireDate": "2016-10-01",
+          "endDate": "2019-06-30"
+        }
+      ]
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 20, "acquireDate": "2017-05-01"},
-        {"skillId": 93, "acquireDate": "2018-03-01"},
-        {"skillId": 94, "acquireDate": "2019-09-01"},
-        {"skillId": 10, "acquireDate": "2021-02-01"}
-      ]
+        { "skillId": 20, "acquireDate": "2017-05-01" },
+        { "skillId": 93, "acquireDate": "2018-03-01" },
+        { "skillId": 94, "acquireDate": "2019-09-01" },
+        { "skillId": 10, "acquireDate": "2021-02-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 4, "completionDate": "2023-06-20"}]
+      "doneTrainings": [
+        { "trainingId": 4, "completionDate": "2023-06-20" }
+      ]
     }
   },
   {
@@ -1120,18 +1594,31 @@
     "employmentStatus": true,
     "teamId": 8,
     "managerId": 2,
-    "roleId": 17,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 17,
+          "acquireDate": "2019-04-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 2, "acquireDate": "2020-01-01"},
-        {"skillId": 48, "acquireDate": "2020-10-01"},
-        {"skillId": 22, "acquireDate": "2021-07-01"},
-        {"skillId": 14, "acquireDate": "2022-03-01"}
-      ]
+        { "skillId": 2, "acquireDate": "2020-01-01" },
+        { "skillId": 48, "acquireDate": "2020-10-01" },
+        { "skillId": 22, "acquireDate": "2021-07-01" },
+        { "skillId": 14, "acquireDate": "2022-03-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 1, "assigningDate": "2025-03-01"}],
-      "doneTrainings": [{"trainingId": 5, "completionDate": "2024-01-15"}]
+      "openTrainings": [
+        { "trainingId": 1, "assigningDate": "2025-03-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 5, "completionDate": "2024-01-15" }
+      ]
     }
   },
   {
@@ -1149,18 +1636,29 @@
     "employmentStatus": true,
     "teamId": 10,
     "managerId": 19,
-    "roleId": 20,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 20,
+          "acquireDate": "2020-07-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 38, "acquireDate": "2020-11-01"},
-        {"skillId": 56, "acquireDate": "2021-02-01"},
-        {"skillId": 93, "acquireDate": "2021-08-01"},
-        {"skillId": 10, "acquireDate": "2022-04-01"}
-      ]
+        { "skillId": 38, "acquireDate": "2020-11-01" },
+        { "skillId": 56, "acquireDate": "2021-02-01" },
+        { "skillId": 93, "acquireDate": "2021-08-01" },
+        { "skillId": 10, "acquireDate": "2022-04-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 10, "completionDate": "2024-02-10"}]
+      "doneTrainings": [
+        { "trainingId": 10, "completionDate": "2024-02-10" }
+      ]
     }
   },
   {
@@ -1178,18 +1676,31 @@
     "employmentStatus": true,
     "teamId": 13,
     "managerId": 24,
-    "roleId": 25,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 25,
+          "acquireDate": "2018-11-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 14, "acquireDate": "2019-03-01"},
-        {"skillId": 22, "acquireDate": "2020-01-01"},
-        {"skillId": 80, "acquireDate": "2021-09-01"},
-        {"skillId": 48, "acquireDate": "2022-06-01"}
-      ]
+        { "skillId": 14, "acquireDate": "2019-03-01" },
+        { "skillId": 22, "acquireDate": "2020-01-01" },
+        { "skillId": 80, "acquireDate": "2021-09-01" },
+        { "skillId": 48, "acquireDate": "2022-06-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 6, "assigningDate": "2025-04-15"}],
-      "doneTrainings": [{"trainingId": 6, "completionDate": "2023-12-05"}]
+      "openTrainings": [
+        { "trainingId": 6, "assigningDate": "2025-04-15" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 6, "completionDate": "2023-12-05" }
+      ]
     }
   },
   {
@@ -1207,18 +1718,29 @@
     "employmentStatus": true,
     "teamId": 17,
     "managerId": 30,
-    "roleId": 33,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 33,
+          "acquireDate": "2017-09-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 61, "acquireDate": "2018-04-01"},
-        {"skillId": 23, "acquireDate": "2019-01-01"},
-        {"skillId": 14, "acquireDate": "2020-08-01"},
-        {"skillId": 82, "acquireDate": "2022-05-01"}
-      ]
+        { "skillId": 61, "acquireDate": "2018-04-01" },
+        { "skillId": 23, "acquireDate": "2019-01-01" },
+        { "skillId": 14, "acquireDate": "2020-08-01" },
+        { "skillId": 82, "acquireDate": "2022-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 30, "completionDate": "2024-07-20"}]
+      "doneTrainings": [
+        { "trainingId": 30, "completionDate": "2024-07-20" }
+      ]
     }
   },
   {
@@ -1236,18 +1758,29 @@
     "employmentStatus": true,
     "teamId": 19,
     "managerId": 18,
-    "roleId": 36,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 36,
+          "acquireDate": "2019-02-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 58, "acquireDate": "2019-07-01"},
-        {"skillId": 18, "acquireDate": "2020-04-01"},
-        {"skillId": 48, "acquireDate": "2021-01-01"},
-        {"skillId": 25, "acquireDate": "2022-09-01"}
-      ]
+        { "skillId": 58, "acquireDate": "2019-07-01" },
+        { "skillId": 18, "acquireDate": "2020-04-01" },
+        { "skillId": 48, "acquireDate": "2021-01-01" },
+        { "skillId": 25, "acquireDate": "2022-09-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 11, "completionDate": "2024-03-15"}]
+      "doneTrainings": [
+        { "trainingId": 11, "completionDate": "2024-03-15" }
+      ]
     }
   },
   {
@@ -1265,18 +1798,29 @@
     "employmentStatus": true,
     "teamId": 23,
     "managerId": 19,
-    "roleId": 44,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 44,
+          "acquireDate": "2022-01-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 62, "acquireDate": "2022-04-01"},
-        {"skillId": 70, "acquireDate": "2022-10-01"},
-        {"skillId": 14, "acquireDate": "2023-03-01"},
-        {"skillId": 48, "acquireDate": "2023-08-01"}
-      ]
+        { "skillId": 62, "acquireDate": "2022-04-01" },
+        { "skillId": 70, "acquireDate": "2022-10-01" },
+        { "skillId": 14, "acquireDate": "2023-03-01" },
+        { "skillId": 48, "acquireDate": "2023-08-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 9, "completionDate": "2024-01-10"}]
+      "doneTrainings": [
+        { "trainingId": 9, "completionDate": "2024-01-10" }
+      ]
     }
   },
   {
@@ -1294,18 +1838,31 @@
     "employmentStatus": true,
     "teamId": 24,
     "managerId": 20,
-    "roleId": 46,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 46,
+          "acquireDate": "2021-08-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 34, "acquireDate": "2022-01-01"},
-        {"skillId": 77, "acquireDate": "2022-07-01"},
-        {"skillId": 25, "acquireDate": "2023-02-01"},
-        {"skillId": 84, "acquireDate": "2023-11-01"}
-      ]
+        { "skillId": 34, "acquireDate": "2022-01-01" },
+        { "skillId": 77, "acquireDate": "2022-07-01" },
+        { "skillId": 25, "acquireDate": "2023-02-01" },
+        { "skillId": 84, "acquireDate": "2023-11-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 32, "assigningDate": "2025-07-10"}],
-      "doneTrainings": [{"trainingId": 15, "completionDate": "2024-05-25"}]
+      "openTrainings": [
+        { "trainingId": 32, "assigningDate": "2025-07-10" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 15, "completionDate": "2024-05-25" }
+      ]
     }
   },
   {
@@ -1323,18 +1880,29 @@
     "employmentStatus": true,
     "teamId": 7,
     "managerId": 36,
-    "roleId": 16,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 16,
+          "acquireDate": "2018-06-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 20, "acquireDate": "2019-01-01"},
-        {"skillId": 93, "acquireDate": "2019-09-01"},
-        {"skillId": 14, "acquireDate": "2020-05-01"},
-        {"skillId": 48, "acquireDate": "2021-11-01"}
-      ]
+        { "skillId": 20, "acquireDate": "2019-01-01" },
+        { "skillId": 93, "acquireDate": "2019-09-01" },
+        { "skillId": 14, "acquireDate": "2020-05-01" },
+        { "skillId": 48, "acquireDate": "2021-11-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 31, "completionDate": "2024-02-15"}]
+      "doneTrainings": [
+        { "trainingId": 31, "completionDate": "2024-02-15" }
+      ]
     }
   },
   {
@@ -1352,18 +1920,29 @@
     "employmentStatus": true,
     "teamId": 10,
     "managerId": 19,
-    "roleId": 21,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 21,
+          "acquireDate": "2020-03-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 55, "acquireDate": "2020-08-01"},
-        {"skillId": 54, "acquireDate": "2021-02-01"},
-        {"skillId": 14, "acquireDate": "2021-10-01"},
-        {"skillId": 10, "acquireDate": "2022-06-01"}
-      ]
+        { "skillId": 55, "acquireDate": "2020-08-01" },
+        { "skillId": 54, "acquireDate": "2021-02-01" },
+        { "skillId": 14, "acquireDate": "2021-10-01" },
+        { "skillId": 10, "acquireDate": "2022-06-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 10, "completionDate": "2023-11-20"}]
+      "doneTrainings": [
+        { "trainingId": 10, "completionDate": "2023-11-20" }
+      ]
     }
   },
   {
@@ -1381,18 +1960,29 @@
     "employmentStatus": true,
     "teamId": 13,
     "managerId": 39,
-    "roleId": 26,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 26,
+          "acquireDate": "2019-12-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 9, "acquireDate": "2020-04-01"},
-        {"skillId": 81, "acquireDate": "2021-01-01"},
-        {"skillId": 14, "acquireDate": "2021-09-01"},
-        {"skillId": 48, "acquireDate": "2022-05-01"}
-      ]
+        { "skillId": 9, "acquireDate": "2020-04-01" },
+        { "skillId": 81, "acquireDate": "2021-01-01" },
+        { "skillId": 14, "acquireDate": "2021-09-01" },
+        { "skillId": 48, "acquireDate": "2022-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 12, "completionDate": "2024-04-05"}]
+      "doneTrainings": [
+        { "trainingId": 12, "completionDate": "2024-04-05" }
+      ]
     }
   },
   {
@@ -1410,18 +2000,37 @@
     "employmentStatus": true,
     "teamId": 16,
     "managerId": 30,
-    "roleId": 32,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 22, "acquireDate": "2018-03-01"},
-        {"skillId": 12, "acquireDate": "2019-10-01"},
-        {"skillId": 23, "acquireDate": "2021-06-01"},
-        {"skillId": 14, "acquireDate": "2022-02-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 32,
+          "acquireDate": "2020-05-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 29,
+          "acquireDate": "2017-08-01",
+          "endDate": "2020-04-30"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 22, "acquireDate": "2018-03-01" },
+        { "skillId": 12, "acquireDate": "2019-10-01" },
+        { "skillId": 23, "acquireDate": "2021-06-01" },
+        { "skillId": 14, "acquireDate": "2022-02-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 6, "assigningDate": "2025-05-20"}],
-      "doneTrainings": [{"trainingId": 6, "completionDate": "2023-09-10"}]
+      "openTrainings": [
+        { "trainingId": 6, "assigningDate": "2025-05-20" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 6, "completionDate": "2023-09-10" }
+      ]
     }
   },
   {
@@ -1439,18 +2048,29 @@
     "employmentStatus": true,
     "teamId": 20,
     "managerId": 41,
-    "roleId": 38,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 38,
+          "acquireDate": "2021-06-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 25, "acquireDate": "2021-10-01"},
-        {"skillId": 14, "acquireDate": "2022-03-01"},
-        {"skillId": 48, "acquireDate": "2022-09-01"},
-        {"skillId": 57, "acquireDate": "2023-04-01"}
-      ]
+        { "skillId": 25, "acquireDate": "2021-10-01" },
+        { "skillId": 14, "acquireDate": "2022-03-01" },
+        { "skillId": 48, "acquireDate": "2022-09-01" },
+        { "skillId": 57, "acquireDate": "2023-04-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 11, "completionDate": "2024-01-25"}]
+      "doneTrainings": [
+        { "trainingId": 11, "completionDate": "2024-01-25" }
+      ]
     }
   },
   {
@@ -1468,18 +2088,29 @@
     "employmentStatus": true,
     "teamId": 20,
     "managerId": 41,
-    "roleId": 39,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 39,
+          "acquireDate": "2020-10-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 57, "acquireDate": "2021-02-01"},
-        {"skillId": 14, "acquireDate": "2021-08-01"},
-        {"skillId": 36, "acquireDate": "2022-04-01"},
-        {"skillId": 93, "acquireDate": "2022-11-01"}
-      ]
+        { "skillId": 57, "acquireDate": "2021-02-01" },
+        { "skillId": 14, "acquireDate": "2021-08-01" },
+        { "skillId": 36, "acquireDate": "2022-04-01" },
+        { "skillId": 93, "acquireDate": "2022-11-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 18, "completionDate": "2024-06-15"}]
+      "doneTrainings": [
+        { "trainingId": 18, "completionDate": "2024-06-15" }
+      ]
     }
   },
   {
@@ -1497,18 +2128,31 @@
     "employmentStatus": true,
     "teamId": 5,
     "managerId": 1,
-    "roleId": 2,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 2,
+          "acquireDate": "2015-01-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 2, "acquireDate": "2016-06-01"},
-        {"skillId": 22, "acquireDate": "2018-03-01"},
-        {"skillId": 20, "acquireDate": "2019-09-01"},
-        {"skillId": 12, "acquireDate": "2022-02-01"}
-      ]
+        { "skillId": 2, "acquireDate": "2016-06-01" },
+        { "skillId": 22, "acquireDate": "2018-03-01" },
+        { "skillId": 20, "acquireDate": "2019-09-01" },
+        { "skillId": 12, "acquireDate": "2022-02-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 7, "assigningDate": "2025-06-20"}],
-      "doneTrainings": [{"trainingId": 1, "completionDate": "2023-12-10"}]
+      "openTrainings": [
+        { "trainingId": 7, "assigningDate": "2025-06-20" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 1, "completionDate": "2023-12-10" }
+      ]
     }
   },
   {
@@ -1526,17 +2170,28 @@
     "employmentStatus": true,
     "teamId": 3,
     "managerId": 5,
-    "roleId": 7,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 7,
+          "acquireDate": "2019-08-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 52, "acquireDate": "2020-02-01"},
-        {"skillId": 60, "acquireDate": "2021-01-01"},
-        {"skillId": 16, "acquireDate": "2022-06-01"}
-      ]
+        { "skillId": 52, "acquireDate": "2020-02-01" },
+        { "skillId": 60, "acquireDate": "2021-01-01" },
+        { "skillId": 16, "acquireDate": "2022-06-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 16, "completionDate": "2024-02-20"}]
+      "doneTrainings": [
+        { "trainingId": 16, "completionDate": "2024-02-20" }
+      ]
     }
   },
   {
@@ -1554,16 +2209,27 @@
     "employmentStatus": true,
     "teamId": 4,
     "managerId": 7,
-    "roleId": 10,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 10,
+          "acquireDate": "2023-01-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 37, "acquireDate": "2023-04-01"},
-        {"skillId": 93, "acquireDate": "2023-08-01"},
-        {"skillId": 14, "acquireDate": "2023-12-01"}
-      ]
+        { "skillId": 37, "acquireDate": "2023-04-01" },
+        { "skillId": 93, "acquireDate": "2023-08-01" },
+        { "skillId": 14, "acquireDate": "2023-12-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 17, "assigningDate": "2025-08-01"}],
+      "openTrainings": [
+        { "trainingId": 17, "assigningDate": "2025-08-01" }
+      ],
       "doneTrainings": []
     }
   },
@@ -1582,17 +2248,28 @@
     "employmentStatus": true,
     "teamId": 6,
     "managerId": 12,
-    "roleId": 14,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 14,
+          "acquireDate": "2022-04-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 36, "acquireDate": "2022-07-01"},
-        {"skillId": 56, "acquireDate": "2022-11-01"},
-        {"skillId": 10, "acquireDate": "2023-05-01"}
-      ]
+        { "skillId": 36, "acquireDate": "2022-07-01" },
+        { "skillId": 56, "acquireDate": "2022-11-01" },
+        { "skillId": 10, "acquireDate": "2023-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 18, "completionDate": "2024-05-10"}]
+      "doneTrainings": [
+        { "trainingId": 18, "completionDate": "2024-05-10" }
+      ]
     }
   },
   {
@@ -1610,17 +2287,28 @@
     "employmentStatus": true,
     "teamId": 7,
     "managerId": 36,
-    "roleId": 16,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 16,
+          "acquireDate": "2018-10-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 20, "acquireDate": "2019-04-01"},
-        {"skillId": 93, "acquireDate": "2020-02-01"},
-        {"skillId": 14, "acquireDate": "2021-09-01"}
-      ]
+        { "skillId": 20, "acquireDate": "2019-04-01" },
+        { "skillId": 93, "acquireDate": "2020-02-01" },
+        { "skillId": 14, "acquireDate": "2021-09-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 4, "completionDate": "2023-11-15"}]
+      "doneTrainings": [
+        { "trainingId": 4, "completionDate": "2023-11-15" }
+      ]
     }
   },
   {
@@ -1638,17 +2326,28 @@
     "employmentStatus": true,
     "teamId": 11,
     "managerId": 19,
-    "roleId": 22,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 22,
+          "acquireDate": "2019-12-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 54, "acquireDate": "2020-04-01"},
-        {"skillId": 55, "acquireDate": "2021-01-01"},
-        {"skillId": 56, "acquireDate": "2021-08-01"}
-      ]
+        { "skillId": 54, "acquireDate": "2020-04-01" },
+        { "skillId": 55, "acquireDate": "2021-01-01" },
+        { "skillId": 56, "acquireDate": "2021-08-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 10, "completionDate": "2024-03-05"}]
+      "doneTrainings": [
+        { "trainingId": 10, "completionDate": "2024-03-05" }
+      ]
     }
   },
   {
@@ -1666,16 +2365,27 @@
     "employmentStatus": true,
     "teamId": 13,
     "managerId": 24,
-    "roleId": 27,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 27,
+          "acquireDate": "2021-09-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 14, "acquireDate": "2022-01-01"},
-        {"skillId": 22, "acquireDate": "2022-06-01"},
-        {"skillId": 48, "acquireDate": "2023-02-01"}
-      ]
+        { "skillId": 14, "acquireDate": "2022-01-01" },
+        { "skillId": 22, "acquireDate": "2022-06-01" },
+        { "skillId": 48, "acquireDate": "2023-02-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 6, "assigningDate": "2025-06-01"}],
+      "openTrainings": [
+        { "trainingId": 6, "assigningDate": "2025-06-01" }
+      ],
       "doneTrainings": []
     }
   },
@@ -1694,17 +2404,28 @@
     "employmentStatus": true,
     "teamId": 14,
     "managerId": 30,
-    "roleId": 28,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 28,
+          "acquireDate": "2020-02-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 23, "acquireDate": "2020-07-01"},
-        {"skillId": 14, "acquireDate": "2021-03-01"},
-        {"skillId": 22, "acquireDate": "2022-01-01"}
-      ]
+        { "skillId": 23, "acquireDate": "2020-07-01" },
+        { "skillId": 14, "acquireDate": "2021-03-01" },
+        { "skillId": 22, "acquireDate": "2022-01-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 6, "completionDate": "2024-01-20"}]
+      "doneTrainings": [
+        { "trainingId": 6, "completionDate": "2024-01-20" }
+      ]
     }
   },
   {
@@ -1722,16 +2443,27 @@
     "employmentStatus": true,
     "teamId": 16,
     "managerId": 47,
-    "roleId": 29,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 29,
+          "acquireDate": "2022-11-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 14, "acquireDate": "2023-02-01"},
-        {"skillId": 22, "acquireDate": "2023-07-01"},
-        {"skillId": 48, "acquireDate": "2023-12-01"}
-      ]
+        { "skillId": 14, "acquireDate": "2023-02-01" },
+        { "skillId": 22, "acquireDate": "2023-07-01" },
+        { "skillId": 48, "acquireDate": "2023-12-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 6, "assigningDate": "2025-07-15"}],
+      "openTrainings": [
+        { "trainingId": 6, "assigningDate": "2025-07-15" }
+      ],
       "doneTrainings": []
     }
   },
@@ -1750,23 +2482,34 @@
     "employmentStatus": true,
     "teamId": 19,
     "managerId": 41,
-    "roleId": 37,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 37,
+          "acquireDate": "2019-07-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 58, "acquireDate": "2020-01-01"},
-        {"skillId": 48, "acquireDate": "2020-09-01"},
-        {"skillId": 18, "acquireDate": "2021-05-01"}
-      ]
+        { "skillId": 58, "acquireDate": "2020-01-01" },
+        { "skillId": 48, "acquireDate": "2020-09-01" },
+        { "skillId": 18, "acquireDate": "2021-05-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 11, "completionDate": "2024-02-10"}]
+      "doneTrainings": [
+        { "trainingId": 11, "completionDate": "2024-02-10" }
+      ]
     }
   },
   {
     "id": 60,
     "username": "it.dev2.moritz",
-    "password": "dev2_456",
+    "password": "dev2456",
     "firstName": "Moritz",
     "lastName": "Lehmann",
     "eMail": "moritz.lehmann@bauxyz.de",
@@ -1778,23 +2521,36 @@
     "employmentStatus": true,
     "teamId": 24,
     "managerId": 20,
-    "roleId": 45,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 45,
+          "acquireDate": "2021-12-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 31, "acquireDate": "2022-04-01"},
-        {"skillId": 33, "acquireDate": "2022-10-01"},
-        {"skillId": 71, "acquireDate": "2023-06-01"}
-      ]
+        { "skillId": 31, "acquireDate": "2022-04-01" },
+        { "skillId": 33, "acquireDate": "2022-10-01" },
+        { "skillId": 71, "acquireDate": "2023-06-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 27, "assigningDate": "2025-10-05"}],
-      "doneTrainings": [{"trainingId": 15, "completionDate": "2024-07-20"}]
+      "openTrainings": [
+        { "trainingId": 27, "assigningDate": "2025-10-05" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 15, "completionDate": "2024-07-20" }
+      ]
     }
   },
   {
     "id": 61,
     "username": "recruiter2.micha",
-    "password": "recruit2_789",
+    "password": "recruit2789",
     "firstName": "Michaela",
     "lastName": "Gross",
     "eMail": "michaela.gross@bauxyz.de",
@@ -1806,23 +2562,34 @@
     "employmentStatus": true,
     "teamId": 26,
     "managerId": 22,
-    "roleId": 48,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 48,
+          "acquireDate": "2022-03-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 59, "acquireDate": "2022-07-01"},
-        {"skillId": 86, "acquireDate": "2023-01-01"},
-        {"skillId": 87, "acquireDate": "2023-08-01"}
-      ]
+        { "skillId": 59, "acquireDate": "2022-07-01" },
+        { "skillId": 86, "acquireDate": "2023-01-01" },
+        { "skillId": 87, "acquireDate": "2023-08-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 20, "completionDate": "2024-09-15"}]
+      "doneTrainings": [
+        { "trainingId": 20, "completionDate": "2024-09-15" }
+      ]
     }
   },
   {
     "id": 62,
     "username": "controller2.fabio",
-    "password": "ctrl2_123",
+    "password": "ctrl2123",
     "firstName": "Fabio",
     "lastName": "Rossi",
     "eMail": "fabio.rossi@bauxyz.de",
@@ -1834,17 +2601,30 @@
     "employmentStatus": true,
     "teamId": 30,
     "managerId": 27,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2020-09-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 43, "acquireDate": "2021-02-01"},
-        {"skillId": 23, "acquireDate": "2021-09-01"},
-        {"skillId": 82, "acquireDate": "2023-04-01"}
-      ]
+        { "skillId": 43, "acquireDate": "2021-02-01" },
+        { "skillId": 23, "acquireDate": "2021-09-01" },
+        { "skillId": 82, "acquireDate": "2023-04-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 23, "assigningDate": "2025-08-20"}],
-      "doneTrainings": [{"trainingId": 14, "completionDate": "2024-05-25"}]
+      "openTrainings": [
+        { "trainingId": 23, "assigningDate": "2025-08-20" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 14, "completionDate": "2024-05-25" }
+      ]
     }
   },
   {
@@ -1862,17 +2642,28 @@
     "employmentStatus": true,
     "teamId": 20,
     "managerId": 41,
-    "roleId": 37,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 37,
+          "acquireDate": "2021-10-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 58, "acquireDate": "2022-02-01"},
-        {"skillId": 25, "acquireDate": "2022-08-01"},
-        {"skillId": 14, "acquireDate": "2023-03-01"}
-      ]
+        { "skillId": 58, "acquireDate": "2022-02-01" },
+        { "skillId": 25, "acquireDate": "2022-08-01" },
+        { "skillId": 14, "acquireDate": "2023-03-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 11, "completionDate": "2024-06-10"}]
+      "doneTrainings": [
+        { "trainingId": 11, "completionDate": "2024-06-10" }
+      ]
     }
   },
   {
@@ -1890,17 +2681,36 @@
     "employmentStatus": true,
     "teamId": 33,
     "managerId": 1,
-    "roleId": 51,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 91, "acquireDate": "2019-01-01"},
-        {"skillId": 92, "acquireDate": "2020-07-01"},
-        {"skillId": 15, "acquireDate": "2022-03-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2021-03-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2018-05-01",
+          "endDate": "2021-02-28"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 91, "acquireDate": "2019-01-01" },
+        { "skillId": 92, "acquireDate": "2020-07-01" },
+        { "skillId": 15, "acquireDate": "2022-03-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 35, "assigningDate": "2025-03-10"}],
-      "doneTrainings": [{"trainingId": 8, "completionDate": "2023-12-01"}]
+      "openTrainings": [
+        { "trainingId": 35, "assigningDate": "2025-03-10" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 8, "completionDate": "2023-12-01" }
+      ]
     }
   },
   {
@@ -1918,17 +2728,28 @@
     "employmentStatus": true,
     "teamId": 34,
     "managerId": 64,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2020-03-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 30, "acquireDate": "2020-08-01"},
-        {"skillId": 92, "acquireDate": "2021-04-01"},
-        {"skillId": 14, "acquireDate": "2022-01-01"}
-      ]
+        { "skillId": 30, "acquireDate": "2020-08-01" },
+        { "skillId": 92, "acquireDate": "2021-04-01" },
+        { "skillId": 14, "acquireDate": "2022-01-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 8, "completionDate": "2024-02-15"}]
+      "doneTrainings": [
+        { "trainingId": 8, "completionDate": "2024-02-15" }
+      ]
     }
   },
   {
@@ -1946,18 +2767,31 @@
     "employmentStatus": true,
     "teamId": 33,
     "managerId": 64,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2017-09-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 46, "acquireDate": "2018-03-01"},
-        {"skillId": 96, "acquireDate": "2019-06-01"},
-        {"skillId": 4, "acquireDate": "2021-02-01"},
-        {"skillId": 48, "acquireDate": "2022-09-01"}
-      ]
+        { "skillId": 46, "acquireDate": "2018-03-01" },
+        { "skillId": 96, "acquireDate": "2019-06-01" },
+        { "skillId": 4, "acquireDate": "2021-02-01" },
+        { "skillId": 48, "acquireDate": "2022-09-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 19, "assigningDate": "2025-05-05"}],
-      "doneTrainings": [{"trainingId": 8, "completionDate": "2023-11-10"}]
+      "openTrainings": [
+        { "trainingId": 19, "assigningDate": "2025-05-05" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 8, "completionDate": "2023-11-10" }
+      ]
     }
   },
   {
@@ -1975,24 +2809,35 @@
     "employmentStatus": true,
     "teamId": 22,
     "managerId": 17,
-    "roleId": 51,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2020-06-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 29, "acquireDate": "2021-01-01"},
-        {"skillId": 91, "acquireDate": "2021-09-01"},
-        {"skillId": 92, "acquireDate": "2022-05-01"},
-        {"skillId": 64, "acquireDate": "2023-11-01"}
-      ]
+        { "skillId": 29, "acquireDate": "2021-01-01" },
+        { "skillId": 91, "acquireDate": "2021-09-01" },
+        { "skillId": 92, "acquireDate": "2022-05-01" },
+        { "skillId": 64, "acquireDate": "2023-11-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 24, "completionDate": "2024-04-20"}]
+      "doneTrainings": [
+        { "trainingId": 24, "completionDate": "2024-04-20" }
+      ]
     }
   },
   {
     "id": 68,
     "username": "sales.stratege2.marc",
-    "password": "stratege2_789",
+    "password": "stratege2789",
     "firstName": "Marc",
     "lastName": "Klein",
     "eMail": "marc.klein@bauxyz.de",
@@ -2003,18 +2848,31 @@
     "hireDate": "2021-02-01",
     "employmentStatus": true,
     "teamId": 36,
-    "managerId": 36,
-    "roleId": 51,
+    "managerId": 31,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 51,
+          "acquireDate": "2021-02-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 7, "acquireDate": "2021-07-01"},
-        {"skillId": 82, "acquireDate": "2022-03-01"},
-        {"skillId": 47, "acquireDate": "2023-01-01"}
-      ]
+        { "skillId": 7, "acquireDate": "2021-07-01" },
+        { "skillId": 82, "acquireDate": "2022-03-01" },
+        { "skillId": 47, "acquireDate": "2023-01-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 34, "assigningDate": "2025-11-01"}],
-      "doneTrainings": [{"trainingId": 34, "completionDate": "2024-07-15"}]
+      "openTrainings": [
+        { "trainingId": 34, "assigningDate": "2025-11-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 34, "completionDate": "2024-07-15" }
+      ]
     }
   },
   {
@@ -2032,16 +2890,27 @@
     "employmentStatus": true,
     "teamId": 2,
     "managerId": 50,
-    "roleId": 5,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 5,
+          "acquireDate": "2023-09-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 14, "acquireDate": "2023-12-01"},
-        {"skillId": 93, "acquireDate": "2024-03-01"},
-        {"skillId": 10, "acquireDate": "2024-06-01"}
-      ]
+        { "skillId": 14, "acquireDate": "2023-12-01" },
+        { "skillId": 93, "acquireDate": "2024-03-01" },
+        { "skillId": 10, "acquireDate": "2024-06-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 4, "assigningDate": "2025-09-01"}],
+      "openTrainings": [
+        { "trainingId": 4, "assigningDate": "2025-09-01" }
+      ],
       "doneTrainings": []
     }
   },
@@ -2060,16 +2929,27 @@
     "employmentStatus": true,
     "teamId": 3,
     "managerId": 51,
-    "roleId": 8,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 8,
+          "acquireDate": "2023-04-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 14, "acquireDate": "2023-07-01"},
-        {"skillId": 93, "acquireDate": "2023-11-01"},
-        {"skillId": 10, "acquireDate": "2024-02-01"}
-      ]
+        { "skillId": 14, "acquireDate": "2023-07-01" },
+        { "skillId": 93, "acquireDate": "2023-11-01" },
+        { "skillId": 10, "acquireDate": "2024-02-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
-      "openTrainings": [{"trainingId": 4, "assigningDate": "2025-10-01"}],
+      "openTrainings": [
+        { "trainingId": 4, "assigningDate": "2025-10-01" }
+      ],
       "doneTrainings": []
     }
   },
@@ -2088,23 +2968,34 @@
     "employmentStatus": true,
     "teamId": 8,
     "managerId": 37,
-    "roleId": 18,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 18,
+          "acquireDate": "2019-07-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 2, "acquireDate": "2020-02-01"},
-        {"skillId": 14, "acquireDate": "2021-01-01"},
-        {"skillId": 20, "acquireDate": "2022-06-01"}
-      ]
+        { "skillId": 2, "acquireDate": "2020-02-01" },
+        { "skillId": 14, "acquireDate": "2021-01-01" },
+        { "skillId": 20, "acquireDate": "2022-06-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 1, "completionDate": "2024-01-25"}]
+      "doneTrainings": [
+        { "trainingId": 1, "completionDate": "2024-01-25" }
+      ]
     }
   },
   {
     "id": 72,
     "username": "equip.head.viktor",
-    "password": "equip_leiter123",
+    "password": "equipleiter123",
     "firstName": "Viktor",
     "lastName": "Schmid",
     "eMail": "viktor.schmid@bauxyz.de",
@@ -2116,17 +3007,36 @@
     "employmentStatus": true,
     "teamId": 9,
     "managerId": 2,
-    "roleId": 19,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 40, "acquireDate": "2016-05-01"},
-        {"skillId": 55, "acquireDate": "2018-03-01"},
-        {"skillId": 56, "acquireDate": "2020-09-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 19,
+          "acquireDate": "2018-05-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 21,
+          "acquireDate": "2015-11-01",
+          "endDate": "2018-04-30"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 40, "acquireDate": "2016-05-01" },
+        { "skillId": 55, "acquireDate": "2018-03-01" },
+        { "skillId": 56, "acquireDate": "2020-09-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 10, "assigningDate": "2025-07-01"}],
-      "doneTrainings": [{"trainingId": 18, "completionDate": "2023-12-15"}]
+      "openTrainings": [
+        { "trainingId": 10, "assigningDate": "2025-07-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 18, "completionDate": "2023-12-15" }
+      ]
     }
   },
   {
@@ -2144,17 +3054,28 @@
     "employmentStatus": true,
     "teamId": 11,
     "managerId": 55,
-    "roleId": 23,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 23,
+          "acquireDate": "2021-08-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 54, "acquireDate": "2022-01-01"},
-        {"skillId": 55, "acquireDate": "2022-07-01"},
-        {"skillId": 56, "acquireDate": "2023-03-01"}
-      ]
+        { "skillId": 54, "acquireDate": "2022-01-01" },
+        { "skillId": 55, "acquireDate": "2022-07-01" },
+        { "skillId": 56, "acquireDate": "2023-03-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 10, "completionDate": "2024-05-20"}]
+      "doneTrainings": [
+        { "trainingId": 10, "completionDate": "2024-05-20" }
+      ]
     }
   },
   {
@@ -2172,23 +3093,34 @@
     "employmentStatus": true,
     "teamId": 17,
     "managerId": 40,
-    "roleId": 34,
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 34,
+          "acquireDate": "2019-05-01"
+        }
+      ],
+      "inactiveRoleHistory": []
+    },
     "skill": {
       "aktiveSkillHistory": [
-        {"skillId": 61, "acquireDate": "2019-10-01"},
-        {"skillId": 23, "acquireDate": "2021-02-01"},
-        {"skillId": 14, "acquireDate": "2022-08-01"}
-      ]
+        { "skillId": 61, "acquireDate": "2019-10-01" },
+        { "skillId": 23, "acquireDate": "2021-02-01" },
+        { "skillId": 14, "acquireDate": "2022-08-01" }
+      ],
+      "inaktiveSkillHistory": []
     },
     "training": {
       "openTrainings": [],
-      "doneTrainings": [{"trainingId": 30, "completionDate": "2024-03-10"}]
+      "doneTrainings": [
+        { "trainingId": 30, "completionDate": "2024-03-10" }
+      ]
     }
   },
   {
     "id": 75,
     "username": "procurement.head.alex",
-    "password": "einkauf_leiter123",
+    "password": "einkaufleiter123",
     "firstName": "Alex",
     "lastName": "Neumann",
     "eMail": "alex.neumann@bauxyz.de",
@@ -2200,18 +3132,37 @@
     "employmentStatus": true,
     "teamId": 18,
     "managerId": 1,
-    "roleId": 35,
-    "skill": {
-      "aktiveSkillHistory": [
-        {"skillId": 58, "acquireDate": "2017-01-01"},
-        {"skillId": 18, "acquireDate": "2018-09-01"},
-        {"skillId": 25, "acquireDate": "2020-05-01"},
-        {"skillId": 48, "acquireDate": "2022-02-01"}
+    "roleManager": {
+      "activeRoleHistory": [
+        {
+          "roleId": 35,
+          "acquireDate": "2019-08-01"
+        }
+      ],
+      "inactiveRoleHistory": [
+        {
+          "roleId": 36,
+          "acquireDate": "2016-04-01",
+          "endDate": "2019-07-31"
+        }
       ]
     },
+    "skill": {
+      "aktiveSkillHistory": [
+        { "skillId": 58, "acquireDate": "2017-01-01" },
+        { "skillId": 18, "acquireDate": "2018-09-01" },
+        { "skillId": 25, "acquireDate": "2020-05-01" },
+        { "skillId": 48, "acquireDate": "2022-02-01" }
+      ],
+      "inaktiveSkillHistory": []
+    },
     "training": {
-      "openTrainings": [{"trainingId": 11, "assigningDate": "2025-04-01"}],
-      "doneTrainings": [{"trainingId": 11, "completionDate": "2023-10-20"}]
+      "openTrainings": [
+        { "trainingId": 11, "assigningDate": "2025-04-01" }
+      ],
+      "doneTrainings": [
+        { "trainingId": 11, "completionDate": "2023-10-20" }
+      ]
     }
   }
 ]
