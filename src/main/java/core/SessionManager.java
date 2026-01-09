@@ -25,7 +25,7 @@ public class SessionManager {
     }
 
     public String getUserPermission() {
-        if (isSessionActive()) return loggedInUser.getRole().getActiveRole().getPermission();
+        if (isSessionActive()) return loggedInUser.getRole().getActiveRole().getPermissionString();
         return null;
     }
 

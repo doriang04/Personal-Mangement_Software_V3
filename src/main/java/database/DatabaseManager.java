@@ -187,7 +187,7 @@ public class DatabaseManager {
             }
 
             Team[] teams = mapper.readValue(is, Team[].class);
-            String sql = "MERGE INTO teams (departmentid, teamid, teamname) KEY (teamid) VALUES (?, ?, ?)";
+            String sql = "MERGE INTO teams (department_id, team_id, team_name) KEY (team_id) VALUES (?, ?, ?)";
 
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 for (Team team : teams) { // oder für die List-Variante
@@ -473,7 +473,7 @@ public class DatabaseManager {
                 RoleManager roleMgr = new RoleManager(emp);
                 RoleManager.RoleHistoryEntry r = roleMgr.getActiveRole();
                 if (r == null) {
-                    roleMgr.setActiveRole(new RoleManager.RoleHistoryEntry(rs.getInt("role_id"), null, null));
+                    roleMgr.setActiveRole(new RoleManager.RoleHistoryEntry(rs.getInt("role_id"), "USER", null, null)); // TODO change the permission string to get fetched from the role db
                 } else {
                     r.setRoleId(rs.getInt("role_id"));
                 }

@@ -15,10 +15,6 @@ public class Team {
     public Team() {
     }
 
-    public Team() {
-
-    }
-
     public int getDepartmentId() {
         return departmentId;
     }

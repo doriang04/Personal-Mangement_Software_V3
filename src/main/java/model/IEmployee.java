@@ -13,8 +13,6 @@ public interface IEmployee {
     String getPassword();
     void setPassword(String password);
 
-    String getPermissionString();
-
     String getFirstName();
     void setFirstName(String firstName);
 

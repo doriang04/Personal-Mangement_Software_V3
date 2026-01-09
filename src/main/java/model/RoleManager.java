@@ -13,11 +13,13 @@ public class RoleManager implements IRoleManager {
 
     public static class RoleHistoryEntry {
         private int roleId;
+        private String permissionString;
         private LocalDate startDate;
         private LocalDate endDate;
         
-        public RoleHistoryEntry(int roleId, LocalDate startDate, LocalDate endDate){
+        public RoleHistoryEntry(int roleId, String permissionString, LocalDate startDate, LocalDate endDate){
             this.roleId = roleId;
+            this.permissionString = permissionString;
             this.startDate = startDate;
             this.endDate = endDate;
         }
@@ -40,6 +42,14 @@ public class RoleManager implements IRoleManager {
 
         public void setEndDate(LocalDate endDate) {
             this.endDate = endDate;
+        }
+
+        public String getPermissionString() {
+            return permissionString;
+        }
+
+        public void setPermissionString(String permissionString) {
+            this.permissionString = permissionString;
         }
     }
 
@@ -98,6 +108,6 @@ public class RoleManager implements IRoleManager {
         // neue aktive Rolle setzen
         this.activeRole = role;
         // neuen Verlaufseintrag hinzufügen
-        roleHistory.add(new RoleHistoryEntry(role.getRoleId(), date, null));
+        roleHistory.add(new RoleHistoryEntry(role.getRoleId(), role.getPermissionString(), date, null));
     }
 }

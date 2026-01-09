@@ -22,13 +22,12 @@ public class Employee implements IEmployee {
     private TrainingManager training;
     private RoleManager role;
     
-    public Employee(int id, Team team, String username, String password, String permissionString,
+    public Employee(int id, Team team, String username, String password,
                     String firstName, String lastName, String eMail, Date dateOfBirth, String adress, char gender, Date hireDate,
-                    Employee managerId, boolean employmentStatus, int phoneNumber, SkillManager skill, TrainingManager training, RoleManager role) {
+                    Employee managerId, boolean employmentStatus, int phoneNumber, SkillManager skill, TrainingManager training) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.permissionString = permissionString;
         this.firstName = firstName;
         this.lastName = lastName;
         this.eMail = eMail;
