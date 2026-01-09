@@ -65,7 +65,6 @@ CREATE TABLE skills (
     name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     required_years INT,
-    certifications TEXT
 );
 
 CREATE TABLE skill_history (

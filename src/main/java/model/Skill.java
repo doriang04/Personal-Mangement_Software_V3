@@ -5,15 +5,16 @@ import java.util.ArrayList;
 public class Skill {
 
     private int skillId;
-    private String requiredYears;
-    private ArrayList<String> certification;
+    private String skillName;
     private String description;
+    private String requiredYears;
 
-    public Skill(int skillId, String requiredYears, ArrayList<String> certification, String description) {
+
+    public Skill(int skillId, String requiredYears,String skillName, String description) {
         this.skillId = skillId;
-        this.requiredYears = requiredYears;
-        this.certification = certification;
+        this.skillName = skillName;
         this.description = description;
+        this.requiredYears = requiredYears;
     }
 
     public Skill() {
@@ -37,12 +38,11 @@ public class Skill {
         this.requiredYears = requiredYears;
     }
 
-    public ArrayList<String> getCertification() {
-        return certification;
+    public String getSkillName() {
+        return skillName;
     }
-
-    public void setCertification(ArrayList<String> certification) {
-        this.certification = certification;
+    public void setSkillName(String skillName) {
+        this.skillName = skillName;
     }
 
     public String getDescription() {
