@@ -1,9 +1,10 @@
 package model;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoleManager {
+public class RoleManager implements IRoleManager {
 
     private List<RoleHistoryEntry> roleHistory;
     private RoleHistoryEntry activeRole;

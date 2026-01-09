@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS departments (
 
 CREATE TABLE IF NOT EXISTS teams (
                                      id INT PRIMARY KEY AUTO_INCREMENT,
-                                     department_id INT NOT NULL,
-                                     team_id INT NOT NULL,
-                                     team_name VARCHAR(255) NOT NULL,
+                                     departmentId INT NOT NULL,
+                                     teamId INT NOT NULL,
+                                     teamName VARCHAR(255) NOT NULL,
     FOREIGN KEY (department_id) REFERENCES departments(id)
     );
 

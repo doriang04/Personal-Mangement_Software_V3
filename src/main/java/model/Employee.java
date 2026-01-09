@@ -1,7 +1,7 @@
 package model;
 
 import java.util.Date;
-public class Employee {
+public class Employee implements IEmployee {
 
     // Attribute
     private int id;
