@@ -298,5 +298,11 @@
     "name": "Leiter Finanzen",
     "description": "BWL Studium, HGB & IFRS, Controlling-Erfahrung",
     "permission": "finance_manage"
+  },
+  {
+    "id": 51,
+    "name": "Error_Role",
+    "description": "Temporary Placeholder for getting the system to work",
+    "permission": "none"
   }
 ]

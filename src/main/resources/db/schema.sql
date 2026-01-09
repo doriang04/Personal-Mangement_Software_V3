@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS trainings (
                                          training_id INT NOT NULL UNIQUE,
                                          title VARCHAR(255) NOT NULL,
     description TEXT,
-    length TIME,
+    length VARCHAR(10),
     assigning_manager_id INT,
     FOREIGN KEY (assigning_manager_id) REFERENCES employees(id)
     );

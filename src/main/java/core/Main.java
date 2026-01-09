@@ -119,11 +119,11 @@ public class Main {
                 .count();
         System.out.println("💻 IT Mitarbeiter: " + itEmployees);
 
-        // Mitarbeiter mit >3 Skills
-        long skilledEmployees = employees.stream()
-                .filter(emp -> emp.getSkill().getAktiveSkillHistory().size() > 3)
-                .count();
-        System.out.println("⭐ Hochqualifizierte (>3 Skills): " + skilledEmployees);
+        // // Mitarbeiter mit >3 Skills
+        // long skilledEmployees = employees.stream()
+        //         .filter(emp -> emp.getSkill().getAktiveSkillHistory().size() > 3)
+        //         .count();
+        // System.out.println("⭐ Hochqualifizierte (>3 Skills): " + skilledEmployees);
 
         // Offene Trainings
         long openTrainings = employees.stream()

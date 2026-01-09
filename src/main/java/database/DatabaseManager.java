@@ -26,54 +26,91 @@ public class DatabaseManager {
         }
     }
 
-    private void initDatabase() {
+    private void initDatabase() { // TODO diese hier basierend auf schema.sql abwandeln (flexibler call)
         try (Statement stmt = connection.createStatement()) {
             // Schema direkt im Code (kein externes File)
             stmt.execute("""
-                CREATE TABLE IF NOT EXISTS companies (
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                    name VARCHAR(255) NOT NULL
-                )""");
+            CREATE TABLE IF NOT EXISTS companies (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                name VARCHAR(255) NOT NULL
+            )""");
 
             stmt.execute("""
-                CREATE TABLE IF NOT EXISTS departments (
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                    department_id INT NOT NULL,
-                    department_name VARCHAR(255) NOT NULL,
-                    company_id INT,
-                    FOREIGN KEY (company_id) REFERENCES companies(id)
-                )""");
+            CREATE TABLE IF NOT EXISTS departments (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                department_id INT NOT NULL,
+                department_name VARCHAR(255) NOT NULL,
+                company_id INT,
+                FOREIGN KEY (company_id) REFERENCES companies(id)
+            )""");
 
             stmt.execute("""
-                CREATE TABLE IF NOT EXISTS teams (
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                    department_id INT NOT NULL,
-                    team_id INT NOT NULL,
-                    team_name VARCHAR(255) NOT NULL,
-                    FOREIGN KEY (department_id) REFERENCES departments(id)
-                )""");
+            CREATE TABLE IF NOT EXISTS teams (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                department_id INT NOT NULL,
+                team_id INT NOT NULL,
+                team_name VARCHAR(255) NOT NULL,
+                FOREIGN KEY (department_id) REFERENCES departments(id)
+            )""");
 
             stmt.execute("""
-                CREATE TABLE IF NOT EXISTS roles (
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                    role_id INT NOT NULL UNIQUE,
-                    name VARCHAR(255) NOT NULL,
-                    description TEXT,
-                    permission VARCHAR(100)
-                )""");
+            CREATE TABLE IF NOT EXISTS roles (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                role_id INT NOT NULL UNIQUE,
+                name VARCHAR(255) NOT NULL,
+                description TEXT,
+                permission VARCHAR(100)
+            )""");
 
             stmt.execute("""
-                CREATE TABLE IF NOT EXISTS skills (
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                    skill_id INT NOT NULL UNIQUE,
-                    required_years VARCHAR(10),
-                    description TEXT,
-                    certifications TEXT
-                )""");
+            CREATE TABLE IF NOT EXISTS skills (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                skill_id INT NOT NULL UNIQUE,
+                required_years VARCHAR(10),
+                description TEXT,
+                certifications TEXT
+            )""");
+
+            // HIER DIE FEHLENDEN TABELLEN HINZUFÜGEN:
+            stmt.execute("""
+            CREATE TABLE IF NOT EXISTS employees (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                employee_id INT NOT NULL UNIQUE,
+                username VARCHAR(100) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                first_name VARCHAR(100),
+                last_name VARCHAR(100),
+                email VARCHAR(255),
+                phone_number VARCHAR(20),
+                date_of_birth DATE,
+                address TEXT,
+                gender CHAR(1),
+                hire_date DATE,
+                employment_status BOOLEAN DEFAULT true,
+                team_id INT,
+                manager_id INT,
+                role_id INT,
+                FOREIGN KEY (team_id) REFERENCES teams(id),
+                FOREIGN KEY (manager_id) REFERENCES employees(id),
+                FOREIGN KEY (role_id) REFERENCES roles(id)
+            )""");
+
+            stmt.execute("""
+            CREATE TABLE IF NOT EXISTS trainings (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                training_id INT NOT NULL UNIQUE,
+                title VARCHAR(255) NOT NULL,
+                description TEXT,
+                length VARCHAR(10),
+                assigning_manager_id INT,
+                FOREIGN KEY (assigning_manager_id) REFERENCES employees(id)
+            )""");
 
             System.out.println("✅ Database schema initialized");
         } catch (SQLException e) {
             System.err.println("❌ Schema init failed: " + e.getMessage());
+            // Es ist eine gute Idee, hier die Exception zu printen, um Fehler im SQL zu sehen
+            e.printStackTrace();
         }
     }
 
@@ -84,6 +121,8 @@ public class DatabaseManager {
         loadTeams();
         loadRoles();
         loadSkills();
+        loadTrainings();
+        loadEmployees();
         System.out.println("✅ All JSON data successfully loaded!");
     }
 
@@ -290,6 +329,7 @@ public class DatabaseManager {
         }
         return skills;
     }
+
     private void loadTrainings() {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -324,6 +364,7 @@ public class DatabaseManager {
             System.err.println("❌ Trainings loading failed: " + e.getMessage());
         }
     }
+
     private void loadEmployees() {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -334,43 +375,49 @@ public class DatabaseManager {
                 return;
             }
 
+            // Wir parsen in eine generische Map, da die JSON-Struktur komplex ist
             List<Map<String, Object>> employeesJson = mapper.readValue(is,
                     new TypeReference<List<Map<String, Object>>>() {});
 
-            String sql = "MERGE INTO employees (id, username, first_name, last_name, email, team_id, role_id, skillManager_json, trainingManager_json) "
-                       + "KEY (id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "MERGE INTO employees (employee_id, username, password, first_name, last_name, email, phone_number, date_of_birth, address, gender, hire_date, employment_status, team_id, manager_id, role_id) "
+                    + "KEY(employee_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 for (Map<String, Object> empData : employeesJson) {
-                    int id = ((Number) empData.get("id")).intValue();
-                    String username = (String) empData.get("username");
-                    String firstName = (String) empData.get("firstName");
-                    String lastName = (String) empData.get("lastName");
-                    String email = (String) empData.get("eMail");
-                    int teamId = ((Number) empData.get("teamId")).intValue();
-                    int roleId = ((Number) empData.get("roleId")).intValue();
+                    // Die IDs aus der JSON werden als employee_id in der DB verwendet
+                    pstmt.setInt(1, ((Number) empData.get("id")).intValue());
+                    pstmt.setString(2, (String) empData.get("username"));
+                    pstmt.setString(3, (String) empData.get("password"));
+                    pstmt.setString(4, (String) empData.get("firstName"));
+                    pstmt.setString(5, (String) empData.get("lastName"));
+                    pstmt.setString(6, (String) empData.get("eMail"));
+                    pstmt.setString(7, (String) empData.get("phoneNumber"));
 
-                    // SkillManager und TrainingManager als JSON speichern
-                    String skillMgrJson = mapper.writeValueAsString(empData.get("skillManager"));
-                    String trainingMgrJson = mapper.writeValueAsString(empData.get("trainingManager"));
+                    // Konvertiere String-Datum zu java.sql.Date
+                    pstmt.setDate(8, java.sql.Date.valueOf((String) empData.get("dateOfBirth")));
 
-                    pstmt.setInt(1, id);
-                    pstmt.setString(2, username);
-                    pstmt.setString(3, firstName);
-                    pstmt.setString(4, lastName);
-                    pstmt.setString(5, email);
-                    pstmt.setInt(6, teamId);
-                    pstmt.setInt(7, roleId);
-                    pstmt.setString(8, skillMgrJson);
-                    pstmt.setString(9, trainingMgrJson);
+                    pstmt.setString(9, (String) empData.get("address"));
+                    pstmt.setString(10, (String) empData.get("gender"));
+
+                    // Konvertiere String-Datum zu java.sql.Date
+                    pstmt.setDate(11, java.sql.Date.valueOf((String) empData.get("hireDate")));
+
+                    pstmt.setBoolean(12, (Boolean) empData.get("employmentStatus"));
+                    pstmt.setInt(13, ((Number) empData.get("teamId")).intValue());
+                    pstmt.setInt(14, ((Number) empData.get("managerId")).intValue());
+                    pstmt.setInt(15, ((Number) empData.get("roleId")).intValue());
+
                     pstmt.addBatch();
                 }
-                pstmt.executeBatch();
+                int[] results = pstmt.executeBatch();
+                System.out.println("✅ " + results.length + " Employees loaded");
             }
         } catch (Exception e) {
             System.err.println("❌ Employees loading failed: " + e.getMessage());
+            e.printStackTrace();
         }
-        System.out.println("✅ 75 Employees loaded");
     }
+
     public List<Department> getAllDepartments() {
         List<Department> departments = new ArrayList<>();
         try (Statement stmt = connection.createStatement();
@@ -410,20 +457,24 @@ public class DatabaseManager {
                 // Role vollständig initialisieren
                 RoleManager roleMgr = new RoleManager(emp);
                 RoleManager.RoleHistoryEntry r = roleMgr.getActiveRole();
-                r.setRoleId(rs.getInt("role_id"));
+                if (r == null) {
+                    roleMgr.setActiveRole(new RoleManager.RoleHistoryEntry(rs.getInt("role_id"), null, null));
+                } else {
+                    r.setRoleId(rs.getInt("role_id"));
+                }
                 roleMgr.setActiveRole(r);
                 emp.setRole(roleMgr);
 
                 // SkillManager initialisieren (leere Liste oder Standard)
                 SkillManager skillMgr = new SkillManager();
-                // Optional: skillMgr.loadSkillsForEmployee(emp.getId()); // Bei Bedarf nachladen
+                // skillMgr.loadSkillsForEmployee(emp.getId()); // TODO hier eine funktion schreiben damit die aktiven skills geladen werden können
                 emp.setSkill(skillMgr);
 
                 // TrainingManager sinnvoll initialisieren mit JSON-Daten
                 TrainingManager trainingMgr = new TrainingManager(emp);
                 // Lade Trainings für diesen Mitarbeiter (verbunden mit Training.json)
 
-                trainingMgr.loadTrainingsForEmployee(connection);
+                //trainingMgr.loadTrainingsForEmployee(connection); TODO add open_training table or something...
                 emp.setTraining(trainingMgr);
 
                 employees.add(emp);

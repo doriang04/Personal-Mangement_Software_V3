@@ -13,7 +13,7 @@
     "hireDate": "2010-01-01",
     "employmentStatus": true,
     "teamId": 12,
-    "managerId": 0,
+    "managerId": 1,
     "roleId": 1,
     "skill": {
       "aktiveSkillHistory": [
@@ -841,7 +841,7 @@
     "employmentStatus": true,
     "teamId": 31,
     "managerId": 26,
-    "roleId": 52,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 45, "acquireDate": "2017-01-01"},
@@ -902,7 +902,7 @@
     "employmentStatus": true,
     "teamId": 31,
     "managerId": 26,
-    "roleId": 52,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 24, "acquireDate": "2020-03-01"},
@@ -934,7 +934,7 @@
     "employmentStatus": true,
     "teamId": 35,
     "managerId": 1,
-    "roleId": 58,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 41, "acquireDate": "2012-10-01"},
@@ -967,7 +967,7 @@
     "employmentStatus": true,
     "teamId": 36,
     "managerId": 31,
-    "roleId": 59,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 47, "acquireDate": "2018-08-01"},
@@ -1000,7 +1000,7 @@
     "employmentStatus": true,
     "teamId": 36,
     "managerId": 31,
-    "roleId": 60,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 7, "acquireDate": "2020-03-01"},
@@ -1030,7 +1030,7 @@
     "employmentStatus": true,
     "teamId": 37,
     "managerId": 31,
-    "roleId": 61,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 48, "acquireDate": "2021-09-01"},
@@ -1062,7 +1062,7 @@
     "employmentStatus": true,
     "teamId": 37,
     "managerId": 31,
-    "roleId": 61,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 48, "acquireDate": "2023-01-01"},
@@ -1890,7 +1890,7 @@
     "employmentStatus": true,
     "teamId": 33,
     "managerId": 1,
-    "roleId": 53,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 91, "acquireDate": "2019-01-01"},
@@ -1918,7 +1918,7 @@
     "employmentStatus": true,
     "teamId": 34,
     "managerId": 64,
-    "roleId": 54,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 30, "acquireDate": "2020-08-01"},
@@ -1946,7 +1946,7 @@
     "employmentStatus": true,
     "teamId": 33,
     "managerId": 64,
-    "roleId": 55,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 46, "acquireDate": "2018-03-01"},
@@ -1975,7 +1975,7 @@
     "employmentStatus": true,
     "teamId": 22,
     "managerId": 17,
-    "roleId": 56,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 29, "acquireDate": "2021-01-01"},
@@ -2003,8 +2003,8 @@
     "hireDate": "2021-02-01",
     "employmentStatus": true,
     "teamId": 36,
-    "managerId": 33,
-    "roleId": 60,
+    "managerId": 36,
+    "roleId": 51,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 7, "acquireDate": "2021-07-01"},

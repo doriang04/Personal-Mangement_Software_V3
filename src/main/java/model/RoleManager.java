@@ -44,7 +44,7 @@ public class RoleManager {
 
     public RoleManager(Employee employee) {
         this.id = employee.getId();
-        this.roleHistory = new ArrayList<>(roleHistory);
+        this.roleHistory = new ArrayList<>();
         if (this.roleHistory.isEmpty()) {
             this.activeRole = null; // oder Optional
         } else {
