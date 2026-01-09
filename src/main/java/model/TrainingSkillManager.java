@@ -1,70 +1,70 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+// TODO: and again, test gpt code (or adjust, not like i care lol)
 
 public class TrainingSkillManager {
 
     public static class TrainingSkillEntry {
-        private String skillId;
-        private Date acquireDate;
+        private int trainingId;
+        private int skillId;
 
-        public TrainingSkillEntry(String skillId, Date acquireDate) {
+        public TrainingSkillEntry(int trainingId, int skillId) {
+            this.trainingId = trainingId;
             this.skillId = skillId;
-            this.acquireDate = acquireDate;
         }
 
-        public String getSkillId() {
+        public int getTrainingId() {
+            return trainingId;
+        }
+
+        public int getSkillId() {
             return skillId;
         }
-
-        public Date getAcquireDate() {
-            return acquireDate;
-        }
     }
 
-    private Training training;
-    private int id;
-    
+    private final int trainingId;
+    private final List<TrainingSkillEntry> skills = new ArrayList<>();
+
     public TrainingSkillManager(Training training) {
-        this.skillList = new ArrayList<>();
-        this.training = training;
-        this.id = training.getId();
+        this.trainingId = training.getId();
     }
 
-    private ArrayList<TrainingSkillEntry> skillList;
-
-    public ArrayList<TrainingSkillEntry> getSkillList() {
-        return skillList;
+    public int getTrainingId() {
+        return trainingId;
     }
 
-    public void setSkillList(ArrayList<TrainingSkillEntry> skillList) {
-        this.skillList = skillList;
+    public List<TrainingSkillEntry> getSkills() {
+        return new ArrayList<>(skills);
     }
 
-    // Platzhalter laut Diagramm
-    public void addSkill(Skill skill, Date date) {
-        TrainingSkillEntry entry = new TrainingSkillEntry(String.valueOf(skill.getSkillId()), date);
-        skillList.add(entry);
+    public void addSkill(Skill skill) {
+        if (skill == null) return;
+        skills.add(new TrainingSkillEntry(trainingId, skill.getSkillId()));
     }
 
     public void removeSkill(Skill skill) {
-        if (skill == null) {
-            return;
-        }
-        String id = String.valueOf(skill.getSkillId());
-        for (java.util.Iterator<TrainingSkillEntry> it = skillList.iterator(); it.hasNext();) {
-            TrainingSkillEntry entry = it.next();
-            if (id.equals(entry.getSkillId())) {
+        if (skill == null) return;
+
+        int skillId = skill.getSkillId();
+        Iterator<TrainingSkillEntry> it = skills.iterator();
+        while (it.hasNext()) {
+            if (it.next().getSkillId() == skillId) {
                 it.remove();
             }
         }
     }
-    public Training getTraining() {
-        return training;
-    }
-    public void setTraining(Training training) {
-        this.training = training;
+
+    /**
+     * Used when loading from DB.
+     */
+    public void setSkills(List<TrainingSkillEntry> entries) {
+        skills.clear();
+        if (entries != null) {
+            skills.addAll(entries);
+        }
     }
 }
-

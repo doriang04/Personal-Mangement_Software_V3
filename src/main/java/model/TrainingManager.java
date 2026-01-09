@@ -1,111 +1,147 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-import java.sql.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
+public class TrainingManager {
 
-public class TrainingManager implements ITrainingManager {
+    private final int employeeId;
+    private final List<TrainingHistoryEntry> trainingHistory = new ArrayList<>();
 
-
-    private Employee employee;
-    private int id;
-    private ArrayList<TrainingEntry> openTrainings;   // Tupel[String trainingId, Date assigningDate]
-    private ArrayList<TrainingEntry> doneTrainings;   // Tupel[String trainingId, Date completionDate]
-
-    public TrainingManager(Employee emp) {
-        this.openTrainings = new ArrayList<>();
-        this.doneTrainings = new ArrayList<>();
-        this.employee = emp;
-        this.id = emp.getId();
+    public enum Status {
+        OPEN,
+        DONE
     }
-    public static class TrainingEntry {
-        private String trainingId;
-        private Date date;
 
-        public TrainingEntry(String trainingId, Date date) {
+    public static class TrainingHistoryEntry {
+        private int historyId;          // training_history.id
+        private int trainingId;         // training_history.training_id
+        private Status status;          // OPEN / DONE
+        private LocalDate assignedAt;   // training_history.assigned_at
+        private LocalDate completedAt;  // training_history.completed_at (nullable)
+
+        public TrainingHistoryEntry(
+                int historyId,
+                int trainingId,
+                Status status,
+                LocalDate assignedAt,
+                LocalDate completedAt
+        ) {
+            this.historyId = historyId;
             this.trainingId = trainingId;
-            this.date = date;
+            this.status = status;
+            this.assignedAt = assignedAt;
+            this.completedAt = completedAt;
         }
 
-        public String getTrainingId() {
+        public TrainingHistoryEntry(int trainingId, LocalDate assignedAt) {
+            this(0, trainingId, Status.OPEN, assignedAt, null);
+        }
+
+        public int getHistoryId() {
+            return historyId;
+        }
+
+        public void setHistoryId(int historyId) {
+            this.historyId = historyId;
+        }
+
+        public int getTrainingId() {
             return trainingId;
         }
 
-        public Date getDate() {
-            return date;
+        public Status getStatus() {
+            return status;
+        }
+
+        public LocalDate getAssignedAt() {
+            return assignedAt;
+        }
+
+        public LocalDate getCompletedAt() {
+            return completedAt;
+        }
+
+        public boolean isOpen() {
+            return status == Status.OPEN;
+        }
+
+        public boolean isDone() {
+            return status == Status.DONE;
+        }
+
+        private void markDone(LocalDate completionDate) {
+            this.status = Status.DONE;
+            this.completedAt = completionDate;
         }
     }
 
-    @Override
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
+    public TrainingManager(Employee employee) {
+        this.employeeId = employee.getId();
     }
 
-    public ArrayList<TrainingEntry> getOpenTrainings(Employee emp){
-        return openTrainings;
+    public int getEmployeeId() {
+        return employeeId;
     }
 
-    public void assinTraining(Employee emp, TrainingEntry trainingEntry){
-        openTrainings.add(trainingEntry);
+    public List<TrainingHistoryEntry> getTrainingHistory() {
+        return Collections.unmodifiableList(new ArrayList<>(trainingHistory));
     }
 
-    public void setOpenTrainings(ArrayList<TrainingEntry> openTrainings) {
-        this.openTrainings = openTrainings;
-    }
-
-    public ArrayList<TrainingEntry> getDoneTrainings() {
-        return doneTrainings;
-    }
-
-    public void setDoneTrainings(ArrayList<TrainingEntry> doneTrainings) {
-        this.doneTrainings = doneTrainings;
-    }
-
-    public void addTraining(String trainingId, Date date) {
-        openTrainings.add(new TrainingEntry(trainingId, date));
-    }
-
-    public void completeTraining(String trainingId, Date completionDate) {
-        TrainingEntry entry = openTrainings.stream()
-                .filter(t -> t.getTrainingId().equals(trainingId))
-                .findFirst()
-                .orElseThrow();
-
-        openTrainings.remove(entry);
-        doneTrainings.add(new TrainingEntry(trainingId, completionDate));
-    }
-
-    public void loadTrainingsForEmployee(Connection connection) throws SQLException {
-        openTrainings.clear();
-        doneTrainings.clear();
-
-        String sqlOpen = "SELECT training_id, assigning_date FROM open_trainings WHERE employee_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sqlOpen)) {
-            ps.setInt(1, this.id);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    String trainingId = rs.getString("training_id");
-                    Date assigningDate = new Date(rs.getTimestamp("assigning_date").getTime());
-                    openTrainings.add(new TrainingEntry(trainingId, assigningDate));
-                }
+    public List<TrainingHistoryEntry> getOpenTrainings() {
+        List<TrainingHistoryEntry> open = new ArrayList<>();
+        for (TrainingHistoryEntry e : trainingHistory) {
+            if (e.isOpen()) {
+                open.add(e);
             }
         }
-
-        String sqlDone = "SELECT training_id, completion_date FROM done_trainings WHERE employee_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sqlDone)) {
-            ps.setInt(1, this.id);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    String trainingId = rs.getString("training_id");
-                    Date completionDate = new Date(rs.getTimestamp("completion_date").getTime());
-                    doneTrainings.add(new TrainingEntry(trainingId, completionDate));
-                }
-            }
-        }
+        return open;
     }
 
+    public List<TrainingHistoryEntry> getDoneTrainings() {
+        List<TrainingHistoryEntry> done = new ArrayList<>();
+        for (TrainingHistoryEntry e : trainingHistory) {
+            if (e.isDone()) {
+                done.add(e);
+            }
+        }
+        return done;
+    }
+
+    /**
+     * Assigns a training to the employee.
+     */
+    public TrainingHistoryEntry assignTraining(int trainingId, LocalDate assignedAt) {
+        TrainingHistoryEntry entry = new TrainingHistoryEntry(trainingId, assignedAt);
+        trainingHistory.add(entry);
+        return entry;
+    }
+
+    /**
+     * Completes an open training.
+     */
+    public void completeTraining(int trainingId, LocalDate completionDate) {
+        Optional<TrainingHistoryEntry> entryOpt = trainingHistory.stream()
+                .filter(e -> e.getTrainingId() == trainingId && e.isOpen())
+                .findFirst();
+
+        TrainingHistoryEntry entry = entryOpt.orElseThrow(
+                () -> new IllegalStateException("No open training found for id " + trainingId)
+        );
+
+        entry.markDone(completionDate);
+    }
+
+    /**
+     * Used when loading from DB.
+     */
+    public void setTrainingHistory(List<TrainingHistoryEntry> entries) {
+        trainingHistory.clear();
+        if (entries != null) {
+            trainingHistory.addAll(entries);
+        }
+    }
 }

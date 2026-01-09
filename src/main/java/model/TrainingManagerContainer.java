@@ -3,10 +3,9 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-// Training Manager Container
 public class TrainingManagerContainer {
     private static TrainingManagerContainer instance;
-    private List<TrainingManager> trainingManagers = new ArrayList<>();
+    private ArrayList<TrainingManager> trainingManagers = new ArrayList<>();
 
     private TrainingManagerContainer() { }
 
@@ -16,5 +15,6 @@ public class TrainingManagerContainer {
     }
 
     public void addTrainingManager(TrainingManager tm) { trainingManagers.add(tm); }
-    public List<TrainingManager> getTrainingManagers() { return new ArrayList<>(trainingManagers); }
+    public void removeTrainingManager(TrainingManager tm) { trainingManagers.remove(tm); }
+    public ArrayList<TrainingManager> getTrainingManagers() { return new ArrayList<>(trainingManagers); }
 }

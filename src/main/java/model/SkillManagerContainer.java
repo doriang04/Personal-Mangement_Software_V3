@@ -6,7 +6,7 @@ import java.util.List;
 // Skill Manager Container
 public class SkillManagerContainer {
     private static SkillManagerContainer instance;
-    private List<SkillManager> skillManagers = new ArrayList<>();
+    private ArrayList<SkillManager> skillManagers = new ArrayList<>();
 
     private SkillManagerContainer() {}
 
@@ -16,6 +16,12 @@ public class SkillManagerContainer {
     }
 
     public void addSkillManager(SkillManager sm) { skillManagers.add(sm); }
+
+    public void removeSkillManager(SkillManager sm) { skillManagers.remove(sm); }
+
+    public ArrayList<SkillManager> getSkillManagers() {
+        return skillManagers;
+    }
 }
 
 

@@ -3,7 +3,7 @@
     "id": 1,
     "title": "Bauleiter Fortbildung",
     "description": "Umfassende Schulung für Bauleiter: Projektsteuerung, Teamführung, Arbeitssicherheit, Bauvertragsrecht und MS Project",
-    "length": "40:00:00",
+    "length": 40,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 2, "acquireDate": "2025-01-15"},
@@ -18,7 +18,7 @@
     "id": 2,
     "title": "Maurer Meisterkurs",
     "description": "Vorbereitung auf Maurermeisterprüfung: Fachwissen, Personalführung, Kostenrechnung und Qualitätsmanagement",
-    "length": "80:00:00",
+    "length": 80,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 51, "acquireDate": "2025-02-01"},
@@ -31,7 +31,7 @@
     "id": 3,
     "title": "BIM Grundlagen",
     "description": "Einstieg in Building Information Modeling mit Revit: 3D-Modellierung, Kollisionsprüfung, Mengeabnahme",
-    "length": "24:00:00",
+    "length": 24,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 3, "acquireDate": "2025-03-10"},
@@ -44,7 +44,7 @@
     "id": 4,
     "title": "Arbeitssicherheit SiGeKo",
     "description": "Sicherheitskoordinator Ausbildung: Gefahrenanalyse, SiGe-Plan, Arbeitsschutzgesetz, Brandschutz",
-    "length": "16:00:00",
+    "length": 16,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 20, "acquireDate": "2025-04-05"},
@@ -57,7 +57,7 @@
     "id": 5,
     "title": "Projektmanagement PMP",
     "description": "Project Management Professional Zertifizierung: PMBOK, Risikomanagement, Stakeholder-Management",
-    "length": "60:00:00",
+    "length": 60,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 67, "acquireDate": "2025-05-12"},
@@ -70,7 +70,7 @@
     "id": 6,
     "title": "MS Project Power User",
     "description": "Fortgeschrittene MS Project Nutzung: Gantt-Diagramme, Ressourcenmanagement, Baseline-Vergleich",
-    "length": "12:00:00",
+    "length": 12,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 22, "acquireDate": "2025-06-03"},
@@ -82,7 +82,7 @@
     "id": 7,
     "title": "Lean Construction",
     "description": "Lean-Methoden im Bauwesen: Last Planner, Wertstromanalyse, Verschwendungsreduktion",
-    "length": "20:00:00",
+    "length": 20,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 12, "acquireDate": "2025-06-20"},
@@ -95,7 +95,7 @@
     "id": 8,
     "title": "DSGVO für Bauprojekte",
     "description": "Datenschutz im Bauwesen: DSGVO-Compliance, Baustellen-Dokumentation, Mitarbeiterdaten",
-    "length": "8:00:00",
+    "length": 8,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 30, "acquireDate": "2025-07-15"},
@@ -107,7 +107,7 @@
     "id": 9,
     "title": "IT-Support Spezialist",
     "description": "ITIL-zertifizierte Helpdesk Schulung: Ticket-Systeme, Netzwerk-Grundlagen, Windows/Linux",
-    "length": "32:00:00",
+    "length": 32,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 62, "acquireDate": "2025-08-10"},
@@ -120,7 +120,7 @@
     "id": 10,
     "title": "Fuhrparkmanagement",
     "description": "Baumaschinenführerscheine, Wartungsplanung, Sicherheitschecks, Hydraulik-Grundlagen",
-    "length": "24:00:00",
+    "length": 24,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 38, "acquireDate": "2025-09-01"},
@@ -133,7 +133,7 @@
     "id": 11,
     "title": "Einkäufer Zertifikat",
     "description": "Strategischer Einkauf: Lieferantenmanagement, Verhandlungen, AVA-Verfahren, ERP-Systeme",
-    "length": "28:00:00",
+    "length": 28,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 58, "acquireDate": "2025-10-05"},
@@ -146,7 +146,7 @@
     "id": 12,
     "title": "CAD AutoCAD Revit",
     "description": "2D/3D-Konstruktion: AutoCAD Grundlagen, Revit BIM, Zeichnungsmanagement",
-    "length": "36:00:00",
+    "length": 36,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 5, "acquireDate": "2025-11-12"},
@@ -158,7 +158,7 @@
     "id": 13,
     "title": "HR Management",
     "description": "Personalmanagement: Recruiting, Arbeitsrecht, Mitarbeiterführung, DATEV Lohnabrechnung",
-    "length": "40:00:00",
+    "length": 40,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 42, "acquireDate": "2025-12-01"},
@@ -171,7 +171,7 @@
     "id": 14,
     "title": "Controlling Grundlagen",
     "description": "Kostenrechnung, Budgetierung, Kennzahlen, Excel Power BI für Controller",
-    "length": "24:00:00",
+    "length": 24,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 43, "acquireDate": "2026-01-15"},
@@ -184,7 +184,7 @@
     "id": 15,
     "title": "Java Spring Boot Developer",
     "description": "Backend-Entwicklung: Java 17+, Spring Boot, REST APIs, PostgreSQL, Git CI/CD",
-    "length": "48:00:00",
+    "length": 48,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 34, "acquireDate": "2026-02-20"},
@@ -198,7 +198,7 @@
     "id": 16,
     "title": "Schalungsbau Spezialist",
     "description": "Schalungstechnik, Stahlbau, Betonbau, Sicherheit am Schalungsbau, Statik-Grundlagen",
-    "length": "32:00:00",
+    "length": 32,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 16, "acquireDate": "2026-03-10"},
@@ -211,7 +211,7 @@
     "id": 17,
     "title": "Stahlbau Schweißer",
     "description": "Schweißverfahren, Stahlbau-Konstruktion, Baustatik, Schweißnahtprüfung, Sicherheitsstandards",
-    "length": "40:00:00",
+    "length": 40,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 37, "acquireDate": "2026-04-01"},
@@ -224,7 +224,7 @@
     "id": 18,
     "title": "Logistik & Fuhrpark",
     "description": "Fuhrparkmanagement, Gabelstapler, Kranführerschein, Transportrecht, Ladeplanung",
-    "length": "20:00:00",
+    "length": 20,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 36, "acquireDate": "2026-04-20"},
@@ -237,7 +237,7 @@
     "id": 19,
     "title": "VOB/Bauvertragsrecht",
     "description": "Vergabeordnung Bauwesen, Bauverträge, Mängelhaftung, Streitbeilegung, HOAI",
-    "length": "16:00:00",
+    "length": 16,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 96, "acquireDate": "2026-05-05"},
@@ -250,7 +250,7 @@
     "id": 20,
     "title": "Recruiting & Talent Acquisition",
     "description": "LinkedIn Sourcing, Assessment Center, Onboarding, ATS-Systeme, Employer Branding",
-    "length": "24:00:00",
+    "length": 24,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 59, "acquireDate": "2026-05-25"},
@@ -263,7 +263,7 @@
     "id": 21,
     "title": "DATEV Lohnabrechnung",
     "description": "Lohnsteuer, Sozialversicherung, DATEV Personal, Krankengeld, Sonderzahlungen",
-    "length": "28:00:00",
+    "length": 28,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 24, "acquireDate": "2026-06-15"},
@@ -276,7 +276,7 @@
     "id": 22,
     "title": "Finanzbuchhaltung HGB",
     "description": "Bilanzierung, GuV, DATEV Rechnungswesen, Umsatzsteuer, Jahresabschluss",
-    "length": "32:00:00",
+    "length": 32,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 45, "acquireDate": "2026-07-01"},
@@ -289,7 +289,7 @@
     "id": 23,
     "title": "Power BI für Controller",
     "description": "Dashboards, DAX, Datenmodellierung, KPI-Design, Datenvisualisierung",
-    "length": "20:00:00",
+    "length": 20,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 82, "acquireDate": "2026-07-20"},
@@ -302,7 +302,7 @@
     "id": 24,
     "title": "Windows Server Admin",
     "description": "Active Directory, GPO, DHCP, DNS, PowerShell, Sicherheitskonfiguration",
-    "length": "36:00:00",
+    "length": 36,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 26, "acquireDate": "2026-08-10"},
@@ -315,7 +315,7 @@
     "id": 25,
     "title": "Cisco Networking CCNA",
     "description": "Routing, Switching, VLAN, OSPF, NAT, Netzwerksicherheit",
-    "length": "40:00:00",
+    "length": 40,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 28, "acquireDate": "2026-09-01"},
@@ -328,7 +328,7 @@
     "id": 26,
     "title": "Frontend Development React",
     "description": "React Hooks, Redux, TypeScript, Component Design, Performance",
-    "length": "32:00:00",
+    "length": 32,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 74, "acquireDate": "2026-09-20"},
@@ -341,7 +341,7 @@
     "id": 27,
     "title": "JavaScript Fullstack",
     "description": "Node.js, Express, MongoDB, REST APIs, Authentication, Testing",
-    "length": "36:00:00",
+    "length": 36,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 32, "acquireDate": "2026-10-05"},
@@ -354,7 +354,7 @@
     "id": 28,
     "title": "Agile Scrum Master",
     "description": "Scrum Framework, Sprint Planning, Retrospectives, SAFe, Kanban",
-    "length": "24:00:00",
+    "length": 24,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 65, "acquireDate": "2026-10-25"},
@@ -367,7 +367,7 @@
     "id": 29,
     "title": "Nachhaltiges Bauen",
     "description": "DGNB Zertifizierung, Kreislaufwirtschaft, CO2-Bilanzierung, nachhaltige Materialien",
-    "length": "28:00:00",
+    "length": 28,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 13, "acquireDate": "2026-11-10"},
@@ -380,7 +380,7 @@
     "id": 30,
     "title": "Kostenkalkulation AVA",
     "description": "AVA-Software, Leistungsverzeichnis, Kalkulationsmethoden, Ausschreibung",
-    "length": "24:00:00",
+    "length": 24,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 61, "acquireDate": "2026-11-30"},
@@ -393,7 +393,7 @@
     "id": 31,
     "title": "Brandschutzbeauftragter",
     "description": "MBO, Brandschutzkonzepte, Evakuierungspläne, Prüfprotokolle",
-    "length": "16:00:00",
+    "length": 16,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 94, "acquireDate": "2026-12-15"},
@@ -406,7 +406,7 @@
     "id": 32,
     "title": "ERP SAP Grundlagen",
     "description": "SAP Navigation, MM, FI, CO Module, Customizing, Reporting",
-    "length": "32:00:00",
+    "length": 32,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 84, "acquireDate": "2027-01-10"},
@@ -419,7 +419,7 @@
     "id": 33,
     "title": "Six Sigma Green Belt",
     "description": "DMAIC, Statistik, Prozessanalyse, FMEA, Minitab",
-    "length": "40:00:00",
+    "length": 40,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 88, "acquireDate": "2027-02-01"},
@@ -432,7 +432,7 @@
     "id": 34,
     "title": "Vertriebsakademie B2B",
     "description": "Kundenakquise, CRM, Verhandlungstechnik, Key Account Management",
-    "length": "24:00:00",
+    "length": 24,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 47, "acquireDate": "2027-02-20"},
@@ -445,7 +445,7 @@
     "id": 35,
     "title": "Compliance Manager",
     "description": "Compliance Framework, Risikomanagement, ISO 37301, Whistleblower-Systeme",
-    "length": "28:00:00",
+    "length": 28,
     "skill": {
       "aktiveSkillHistory": [
         {"skillId": 91, "acquireDate": "2027-03-10"},

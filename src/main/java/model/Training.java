@@ -1,17 +1,15 @@
 package model;
 
-import java.sql.Time;
-
 public class Training {
 
     private int id;
     private String title;
     private String description;
-    private Time length;
+    private int length;
     private TrainingSkillManager skillList;
     private Employee assigningManager;
 
-    public Training(int id, String title, String description, Time length, TrainingSkillManager skillList) {
+    public Training(int id, String title, String description, int length, TrainingSkillManager skillList) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -43,11 +41,11 @@ public class Training {
         this.description = description;
     }
 
-    public Time getLength() {
+    public int getLength() {
         return length;
     }
 
-    public void setLength(Time length) {
+    public void setLength(int length) {
         this.length = length;
     }
 

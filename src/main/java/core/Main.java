@@ -64,7 +64,7 @@ public class Main {
         List<Team> teams = dbManager.getAllTeams();
         System.out.println("👥 Teams: " + teams.size());
         teams.subList(0, Math.min(5, teams.size())).forEach(team ->
-                System.out.println("  → Team " + team.getTeamId() + ": " + team.getTeamName())
+                System.out.println("  → Team " + team.getId() + ": " + team.getName())
         );
         return teams;
     }
@@ -93,7 +93,7 @@ public class Main {
         System.out.println("👷 Employees: " + employees.size());
         employees.subList(0, Math.min(5, employees.size())).forEach(emp ->
                 System.out.println("  → " + emp.getFirstName() + " " + emp.getLastName() +
-                        " (Role: " + emp.getRole().getRolemanagerid() + ", Team: " + emp.getTeamId() + ")")
+                        " (Role: " + emp.getRoleManager().getRolemanagerid() + ", Team: " + emp.getTeam() + ")")
         );
         return employees;
     }
@@ -111,7 +111,7 @@ public class Main {
 
         // Team-Belegung
         long teamsWithEmployees = employees.stream()
-                .map(Employee::getTeamId)
+                .map(Employee::getTeam)
                 .distinct().count();
         System.out.println("📈 Teams mit Mitarbeitern: " + teamsWithEmployees + "/" + teams.size());
     }
@@ -121,13 +121,13 @@ public class Main {
 
         // Bauleiter finden
         long bauleiter = employees.stream()
-                .filter(emp -> emp.getRole().getRolemanagerid() == 2)
+                .filter(emp -> emp.getRoleManager().getRolemanagerid() == 2)
                 .count();
         System.out.println("👷 Bauleiter: " + bauleiter);
 
         // IT Mitarbeiter (Team 21-24)
         long itEmployees = employees.stream()
-                .filter(emp -> emp.getTeamId() >= 21 && emp.getTeamId() <= 24)
+                .filter(emp -> emp.getTeam() >= 21 && emp.getTeam() <= 24)
                 .count();
         System.out.println("💻 IT Mitarbeiter: " + itEmployees);
 
@@ -139,7 +139,7 @@ public class Main {
 
         // Offene Trainings
         long openTrainings = employees.stream()
-                .mapToLong(emp -> emp.getTraining().getOpenTrainings(emp).size())
+                .mapToLong(emp -> emp.getOpenTrainingManager().getOpenTrainings(emp).size())
                 .sum();
         System.out.println("📚 Offene Trainings: " + openTrainings);
     }

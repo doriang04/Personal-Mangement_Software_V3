@@ -1,30 +1,34 @@
 package model;
 
 import java.util.Date;
-public class Employee implements IEmployee {
+public class Employee {
 
-    // Attribute
     private int id;
-    private Team team;
-    private Employee managerId;
     private String username;
     private String password;
+
     private String firstName;
     private String lastName;
     private String eMail;
-    private int phoneNumber;
+    private String phoneNumber;
     private Date dateOfBirth;
     private String address;
     private char gender;
+
     private Date hireDate;
     private boolean employmentStatus;
-    private SkillManager skill;
-    private TrainingManager training;
-    private RoleManager role;
+
+    private Team team;
+    private Employee managerId;
+
+    private SkillManager skillManager;
+    private TrainingManager openTrainingManager;
+    private TrainingManager doneTrainingManager;
+    private RoleManager roleManager;
     
     public Employee(int id, Team team, String username, String password,
                     String firstName, String lastName, String eMail, Date dateOfBirth, String adress, char gender, Date hireDate,
-                    Employee managerId, boolean employmentStatus, int phoneNumber, SkillManager skill, TrainingManager training) {
+                    Employee managerId, boolean employmentStatus, String phoneNumber, SkillManager skillManager, TrainingManager openTrainingManager, TrainingManager doneTrainingManager) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -39,16 +43,15 @@ public class Employee implements IEmployee {
         this.managerId = managerId;
         this.employmentStatus = employmentStatus;
         this.phoneNumber = phoneNumber;
-        this.skill = skill;
-        this.training = training;
-        this.role = new RoleManager(this);
-        this.training = new TrainingManager(this); 
+        this.skillManager = skillManager;
+        this.openTrainingManager = openTrainingManager;
+        this.doneTrainingManager = doneTrainingManager;
+        this.roleManager = new RoleManager(this);
     }
-    public Employee(){
+    public Employee() {
 
     }
 
-    // Methoden
     public int getId() {
         return id;
     }
@@ -89,27 +92,27 @@ public class Employee implements IEmployee {
         this.lastName = lastName;
     }
 
-    public String geteMail() {
+    public String getEMail() {
         return eMail;
     }
 
-    public void seteMail(String eMail) {
+    public void setEMail(String eMail) {
         this.eMail = eMail;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public java.util.Date getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(java.util.Date dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -129,11 +132,11 @@ public class Employee implements IEmployee {
         this.gender = gender;
     }
 
-    public java.util.Date getHireDate() {
+    public Date getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(java.util.Date hireDate) {
+    public void setHireDate(Date hireDate) {
         this.hireDate = hireDate;
     }
 
@@ -145,13 +148,12 @@ public class Employee implements IEmployee {
         this.employmentStatus = employmentStatus;
     }
 
-    public int getTeamId() {
-        return team != null ? team.getTeamId() : 0;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setTeamId(int teamId) {
-        // ggf. Team über ID laden und zuweisen
-        // TODO implement this method
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public int getManagerId() {
@@ -162,28 +164,36 @@ public class Employee implements IEmployee {
         this.managerId = managerId;
     }
 
-    public SkillManager getSkill() {
-        return skill;
+    public SkillManager getSkillManager() {
+        return skillManager;
     }
 
-    public void setSkill(SkillManager skill) {
-        this.skill = skill;
+    public void setSkillManager(SkillManager skillManager) {
+        this.skillManager = skillManager;
     }
 
-    public TrainingManager getTraining() {
-        return training;
+    public TrainingManager getOpenTrainingManager() {
+        return openTrainingManager;
     }
 
-    public void setTraining(TrainingManager training) {
-        this.training = training;
+    public void setOpenTrainingManager(TrainingManager openTrainingManager) {
+        this.openTrainingManager = openTrainingManager;
     }
 
-    public RoleManager getRole() {
-        return role;
+    public TrainingManager getDoneTrainingManager() {
+        return doneTrainingManager;
     }
 
-    public void setRole(RoleManager role) {
-        this.role = role;
+    public void setDoneTrainingManager(TrainingManager doneTrainingManager) {
+        this.doneTrainingManager = doneTrainingManager;
+    }
+
+    public RoleManager getRoleManager() {
+        return roleManager;
+    }
+
+    public void setRoleManager(RoleManager roleManager) {
+        this.roleManager = roleManager;
     }
 }
 

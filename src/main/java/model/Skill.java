@@ -7,10 +7,10 @@ public class Skill {
     private int skillId;
     private String skillName;
     private String description;
-    private String requiredYears;
+    private int requiredYears;
 
 
-    public Skill(int skillId, String requiredYears,String skillName, String description) {
+    public Skill(int skillId, int requiredYears,String skillName, String description) {
         this.skillId = skillId;
         this.skillName = skillName;
         this.description = description;
@@ -29,12 +29,12 @@ public class Skill {
         this.skillId = skillId;
     }
 
-    public String getRequiredYears() {
+    public int getRequiredYears() {
         return requiredYears;
     }
 
 
-    public void setRequiredYears(String requiredYears) {
+    public void setRequiredYears(int requiredYears) {
         this.requiredYears = requiredYears;
     }
 

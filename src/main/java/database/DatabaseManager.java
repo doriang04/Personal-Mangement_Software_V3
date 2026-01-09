@@ -1,20 +1,21 @@
 package database;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import model.*;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import org.h2.tools.RunScript;
 
+// TODO check this class if it works as intended (gpt code cannot be trusted by itself lol
+
+/**
+ * DatabaseManager: initialisiert DB-Schema, schreibt Daten aus ServiceLocator in die DB
+ * und bietet (Skelett-)Methoden zum Einlesen kompletter Daten aus JSON-Dateien.
+ */
 public class DatabaseManager {
     private static final String DB_URL = "jdbc:h2:~/personalmanagement;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
     private static final String USER = "sa";
@@ -30,497 +31,328 @@ public class DatabaseManager {
         }
     }
 
-    private void initDatabase() { // TODO diese hier basierend auf schema.sql abwandeln (flexibler call)
-        try (Statement stmt = connection.createStatement()) {
-            // Schema direkt im Code (kein externes File)
-            stmt.execute("""
-            CREATE TABLE IF NOT EXISTS companies (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                name VARCHAR(255) NOT NULL
-            )""");
-
-            stmt.execute("""
-            CREATE TABLE IF NOT EXISTS departments (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                department_id INT NOT NULL,
-                department_name VARCHAR(255) NOT NULL,
-                company_id INT,
-                FOREIGN KEY (company_id) REFERENCES companies(id)
-            )""");
-
-            stmt.execute("""
-            CREATE TABLE IF NOT EXISTS teams (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                department_id INT NOT NULL,
-                team_id INT NOT NULL,
-                team_name VARCHAR(255) NOT NULL,
-                FOREIGN KEY (department_id) REFERENCES departments(id)
-            )""");
-
-            stmt.execute("""
-            CREATE TABLE IF NOT EXISTS roles (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                role_id INT NOT NULL UNIQUE,
-                name VARCHAR(255) NOT NULL,
-                description TEXT,
-                permission VARCHAR(100)
-            )""");
-
-            stmt.execute("""
-            CREATE TABLE IF NOT EXISTS skills (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                skill_id INT NOT NULL UNIQUE,
-                required_years VARCHAR(10),
-                description TEXT,
-                certifications TEXT
-            )""");
-
-            // HIER DIE FEHLENDEN TABELLEN HINZUFÜGEN:
-            stmt.execute("""
-            CREATE TABLE IF NOT EXISTS employees (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                employee_id INT NOT NULL UNIQUE,
-                username VARCHAR(100) UNIQUE NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                first_name VARCHAR(100),
-                last_name VARCHAR(100),
-                email VARCHAR(255),
-                phone_number VARCHAR(20),
-                date_of_birth DATE,
-                address TEXT,
-                gender CHAR(1),
-                hire_date DATE,
-                employment_status BOOLEAN DEFAULT true,
-                team_id INT,
-                manager_id INT,
-                role_id INT,
-                FOREIGN KEY (team_id) REFERENCES teams(id),
-                FOREIGN KEY (manager_id) REFERENCES employees(id),
-                FOREIGN KEY (role_id) REFERENCES roles(id)
-            )""");
-
-            stmt.execute("""
-            CREATE TABLE IF NOT EXISTS trainings (
-                id INT PRIMARY KEY AUTO_INCREMENT,
-                training_id INT NOT NULL UNIQUE,
-                title VARCHAR(255) NOT NULL,
-                description TEXT,
-                length VARCHAR(10),
-                assigning_manager_id INT,
-                FOREIGN KEY (assigning_manager_id) REFERENCES employees(id)
-            )""");
-
-            System.out.println("✅ Database schema initialized");
-        } catch (SQLException e) {
+    /**
+     * Lädt das Schema aus der externen .sql Datei
+     */
+    private void initDatabase() {
+        try {
+            InputStream is = getClass().getClassLoader().getResourceAsStream("db/schema.sql");
+            if (is == null) {
+                throw new RuntimeException("Schema file not found: db/schema.sql");
+            }
+            // H2 RunScript führt das gesamte SQL File aus
+            RunScript.execute(connection, new InputStreamReader(is));
+            System.out.println("✅ Database schema initialized from schema.sql");
+        } catch (Exception e) {
             System.err.println("❌ Schema init failed: " + e.getMessage());
-            // Es ist eine gute Idee, hier die Exception zu printen, um Fehler im SQL zu sehen
             e.printStackTrace();
         }
     }
 
-    public void loadJsonData() {
-        System.out.println("📂 Loading JSON data to database...");
-        loadCompanies();
-        loadDepartments();
-        loadTeams();
-        loadRoles();
-        loadSkills();
-        loadTrainings();
-        loadEmployees();
-        System.out.println("✅ All JSON data successfully loaded!");
-    }
-
-    private void loadCompanies() {
+    /**
+     * Hauptmethode, um alle Daten aus dem ServiceLocator in die DB zu schreiben.
+     * Die Operation läuft innerhalb einer DB-Transaktion; bei Fehlern wird zurückgerollt.
+     */
+    public void syncWithServiceLocator() {
+        System.out.println("🔄 Syncing ServiceLocator data to database...");
+        boolean previousAutoCommit = true;
         try {
-            String sql = "MERGE INTO companies (name) KEY (name) VALUES (?)"; // H2 Syntax
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                String[] companyNames = {"Bauunternehmen XYZ GmbH"};
-                for (String name : companyNames) {
-                    pstmt.setString(1, name);
-                    pstmt.addBatch();
-                }
-                pstmt.executeBatch();
-                System.out.println("✅ Companies loaded");
-            }
-        } catch (Exception e) {
-            System.err.println("❌ Companies loading failed: " + e.getMessage());
-        }
-    }
+            previousAutoCommit = connection.getAutoCommit();
+            connection.setAutoCommit(false); // Start transaction
 
-    private void loadDepartments() {
-        try {
-            String sql = "MERGE INTO departments (department_id, department_name, company_id) KEY (department_id) VALUES (?, ?, ?)";
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                Object[][] departments = {
-                        {1, "Bauabteilung", 1},
-                        {2, "Projektmanagement", 1},
-                        {3, "Einkauf", 1},
-                        {4, "IT", 1},
-                        {5, "HR", 1},
-                        {6, "Finanzen", 1},
-                        {7, "Compliance & Recht", 1},
-                        {8, "Vertrieb", 1}
-                };
-                for (Object[] dept : departments) {
-                    pstmt.setInt(1, (int) dept[0]);
-                    pstmt.setString(2, (String) dept[1]);
-                    pstmt.setInt(3, (int) dept[2]);
-                    pstmt.addBatch();
-                }
-                pstmt.executeBatch();
-                System.out.println("✅ Departments loaded");
-            }
-        } catch (Exception e) {
-            System.err.println("❌ Departments loading failed: " + e.getMessage());
-        }
-    }
+            // Reihenfolge wichtig wg. FK-Constraints
+            saveCompanies(ServiceLocator.getCompanyContainer().getCompanies());
+            saveDepartments(ServiceLocator.getDepartmentContainer().getDepartments());
+            saveTeams(ServiceLocator.getTeamContainer().getTeams());
+            saveRoles(ServiceLocator.getRoleContainer().getRoles());
+            saveSkills(ServiceLocator.getSkillContainer().getSkills());
+            // Mitarbeiter hängen oft an Teams, daher erst nach Teams speichern
+            saveEmployees(ServiceLocator.getEmployeeContainer().getEmployees());
+            saveTrainings(ServiceLocator.getTrainingContainer().getTrainings());
 
-    private void loadTeams() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            // ✅ Korrigierte JSON-Ladung
-            InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("json/Team.json");
-            if (is == null) {
-                System.err.println("❌ Team.json not found in src/main/resources/json/");
-                return;
-            }
+            // Hinweis / TODO:
+            // Falls euer Modell History- oder Join-Entitäten enthält (role_history, skill_history,
+            // training_history, training_skills), dann hier die entsprechenden saveX(...) Methoden
+            // aufrufen. Beispiel (falls vorhanden):
+            // saveRoleHistory(ServiceLocator.getRoleHistoryContainer().getRoleHistories());
+            // saveSkillHistory(ServiceLocator.getSkillHistoryContainer().getSkillHistories());
+            // saveTrainingHistory(ServiceLocator.getTrainingHistoryContainer().getTrainingHistories());
+            // saveTrainingSkills(ServiceLocator.getTrainingContainer().getTrainingSkills());
 
-            Team[] teams = mapper.readValue(is, Team[].class);
-            String sql = "MERGE INTO teams (department_id, team_id, team_name) KEY (team_id) VALUES (?, ?, ?)";
-
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                for (Team team : teams) { // oder für die List-Variante
-                    pstmt.setInt(1, team.getDepartmentId());
-                    pstmt.setInt(2, team.getTeamId());
-                    pstmt.setString(3, team.getTeamName());
-                    pstmt.addBatch();
-                }
-                int[] results = pstmt.executeBatch();
-                System.out.println(results.length + " Teams loaded");
-            }
-
-        } catch (StreamReadException ex) {
-            throw new RuntimeException(ex);
-        } catch (DatabindException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-     catch (Exception e) {
-            System.err.println("❌ Teams loading failed: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void loadRoles() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("json/Role.json");
-            if (is == null) {
-                System.err.println("❌ Role.json not found");
-                return;
-            }
-
-            Role[] roles = mapper.readValue(is, Role[].class);
-            String sql = "MERGE INTO roles (role_id, name, description, permission) KEY (role_id) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                for (Role role : roles) {
-                    pstmt.setInt(1, role.getId());
-                    pstmt.setString(2, role.getName());
-                    pstmt.setString(3, role.getDescription());
-                    pstmt.setString(4, role.getPermission());
-                    pstmt.addBatch();
-                }
-                int[] results = pstmt.executeBatch();
-                System.out.println("✅ " + results.length + " Roles loaded");
-            }
-        } catch (Exception e) {
-            System.err.println("❌ Roles loading failed: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void loadSkills() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("json/Skills.json");
-            if (is == null) {
-                System.err.println("❌ Skills.json not found");
-                return;
-            }
-
-            Skill[] skills = mapper.readValue(is, Skill[].class);
-            String sql = "MERGE INTO skills (skill_id, required_years, description, certifications) KEY (skill_id) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                for (Skill skill : skills) {
-                    pstmt.setInt(1, skill.getSkillId());
-                    pstmt.setString(2, skill.getRequiredYears());
-                    pstmt.setString(3, skill.getDescription());
-                    pstmt.setString(4, mapper.writeValueAsString(skill.getCertification()));
-                    pstmt.addBatch();
-                }
-                int[] results = pstmt.executeBatch();
-                System.out.println("✅ " + results.length + " Skills loaded");
-            }
-        } catch (Exception e) {
-            System.err.println("❌ Skills loading failed: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    // Getter Methoden (unverändert)
-    public List<Team> getAllTeams() {
-        List<Team> teams = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM teams ORDER BY team_id")) {
-            while (rs.next()) {
-                Team team = new Team(rs.getInt("department_id"), rs.getInt("team_id"), rs.getString("team_name"));
-                teams.add(team);
-            }
+            connection.commit();
+            System.out.println("✅ Sync complete!");
         } catch (SQLException e) {
-            System.err.println("❌ Error loading teams: " + e.getMessage());
-        }
-        return teams;
-    }
-    // ✅ In DatabaseManager.java - vollständige Getter hinzufügen
-
-    public List<Role> getAllRoles() {
-        List<Role> roles = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM roles ORDER BY role_id")) {
-
-            while (rs.next()) {
-                Role role = new Role(rs.getInt("role_id"), 
-                                     rs.getString("name"), 
-                                     rs.getString("description"), 
-                                     rs.getString("permission"));
-                roles.add(role);
+            System.err.println("❌ Sync failed: " + e.getMessage());
+            try {
+                connection.rollback();
+                System.err.println("↩️ Rolled back transaction.");
+            } catch (SQLException ex) {
+                System.err.println("❌ Rollback failed: " + ex.getMessage());
             }
-            System.out.println("✅ Loaded " + roles.size() + " roles from database");
-        } catch (SQLException e) {
-            System.err.println("❌ Error loading roles: " + e.getMessage());
-        }
-        return roles;
-    }
-
-    public List<Skill> getAllSkills() {
-        List<Skill> skills = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM skills ORDER BY skill_id")) {
-
-            ObjectMapper mapper = new ObjectMapper();
-            while (rs.next()) {
-                // Lese einfache Felder
-                int skillId = rs.getInt("skill_id");
-                String requiredYears = rs.getString("required_years");
-                String description = rs.getString("description");
-
-                // ✅ JSON-String → ArrayList<String> Konvertierung
-                String certJson = rs.getString("certifications");
-                ArrayList<String> certifications = new ArrayList<>();
-                if (certJson != null && !certJson.isEmpty() && !"[]".equals(certJson)) {
-                    try {
-                        String[] certArray = mapper.readValue(certJson, String[].class);
-                        if (certArray != null) {
-                            certifications = new ArrayList<>(Arrays.asList(certArray));
-                        }
-                    } catch (Exception e) {
-                        certifications = new ArrayList<>(); // Empty bei Parse-Fehler
-                    }
-                }
-
-                Skill skill = new Skill(skillId, requiredYears, certifications, description);
-                skills.add(skill);
+        } finally {
+            try {
+                connection.setAutoCommit(previousAutoCommit);
+            } catch (SQLException e) {
+                System.err.println("❌ Could not restore auto-commit: " + e.getMessage());
             }
-            System.out.println("✅ Loaded " + skills.size() + " skills from database");
-        } catch (Exception e) {
-            System.err.println("❌ Error loading skills: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return skills;
-    }
-
-    private void loadTrainings() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("json/Training.json");
-            if (is == null) {
-                System.err.println("❌ Training.json not found");
-                return;
-            }
-
-            List<Map<String, Object>> trainingsJson = mapper.readValue(is,
-                    new TypeReference<List<Map<String, Object>>>() {});
-
-            String sql = "MERGE INTO trainings (training_id, title, description, length) KEY (training_id) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                for (Map<String, Object> trainingData : trainingsJson) {
-                    int id = ((Number) trainingData.get("id")).intValue();
-                    String title = (String) trainingData.get("title");
-                    String desc = (String) trainingData.get("description");
-                    String length = (String) trainingData.get("length");
-
-                    pstmt.setInt(1, id);
-                    pstmt.setString(2, title);
-                    pstmt.setString(3, desc);
-                    pstmt.setString(4, length);
-                    pstmt.addBatch();
-                }
-                int[] results = pstmt.executeBatch();
-                System.out.println("✅ " + results.length + " Trainings loaded");
-            }
-        } catch (Exception e) {
-            System.err.println("❌ Trainings loading failed: " + e.getMessage());
         }
     }
 
-    private void loadEmployees() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            InputStream is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream("json/Employee.json");
-            if (is == null) {
-                System.err.println("❌ Employee.json not found");
-                return;
+    private void saveCompanies(ArrayList<Company> companies) throws SQLException {
+        if (companies == null || companies.isEmpty()) return;
+        String sql = "MERGE INTO companies (id, name) KEY (id) VALUES (?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Company c : companies) {
+                pstmt.setInt(1, c.getId());
+                pstmt.setString(2, c.getName());
+                pstmt.addBatch();
             }
-
-            // Wir parsen in eine generische Map, da die JSON-Struktur komplex ist
-            List<Map<String, Object>> employeesJson = mapper.readValue(is,
-                    new TypeReference<List<Map<String, Object>>>() {});
-
-            String sql = "MERGE INTO employees (employee_id, username, password, first_name, last_name, email, phone_number, date_of_birth, address, gender, hire_date, employment_status, team_id, manager_id, role_id) "
-                    + "KEY(employee_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                for (Map<String, Object> empData : employeesJson) {
-                    // Die IDs aus der JSON werden als employee_id in der DB verwendet
-                    pstmt.setInt(1, ((Number) empData.get("id")).intValue());
-                    pstmt.setString(2, (String) empData.get("username"));
-                    pstmt.setString(3, (String) empData.get("password"));
-                    pstmt.setString(4, (String) empData.get("firstName"));
-                    pstmt.setString(5, (String) empData.get("lastName"));
-                    pstmt.setString(6, (String) empData.get("eMail"));
-                    pstmt.setString(7, (String) empData.get("phoneNumber"));
-
-                    // Konvertiere String-Datum zu java.sql.Date
-                    pstmt.setDate(8, java.sql.Date.valueOf((String) empData.get("dateOfBirth")));
-
-                    pstmt.setString(9, (String) empData.get("address"));
-                    pstmt.setString(10, (String) empData.get("gender"));
-
-                    // Konvertiere String-Datum zu java.sql.Date
-                    pstmt.setDate(11, java.sql.Date.valueOf((String) empData.get("hireDate")));
-
-                    pstmt.setBoolean(12, (Boolean) empData.get("employmentStatus"));
-                    pstmt.setInt(13, ((Number) empData.get("teamId")).intValue());
-                    pstmt.setInt(14, ((Number) empData.get("managerId")).intValue());
-                    pstmt.setInt(15, ((Number) empData.get("roleId")).intValue());
-
-                    pstmt.addBatch();
-                }
-                int[] results = pstmt.executeBatch();
-                System.out.println("✅ " + results.length + " Employees loaded");
-            }
-        } catch (Exception e) {
-            System.err.println("❌ Employees loading failed: " + e.getMessage());
-            e.printStackTrace();
+            pstmt.executeBatch();
         }
     }
 
-    public List<Department> getAllDepartments() {
-        List<Department> departments = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM departments ORDER BY department_id")) {
-            while (rs.next()) {
-                Department dept = new Department(rs.getInt("department_id"),rs.getString("department_name"), rs.getInt("company_id"));
-                // company_id mapping falls benötigt
-                departments.add(dept);
+    private void saveDepartments(ArrayList<Department> departments) throws SQLException {
+        if (departments == null || departments.isEmpty()) return;
+        String sql = "MERGE INTO departments (id, name, company_id) KEY (id) VALUES (?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Department d : departments) {
+                pstmt.setInt(1, d.getId());
+                pstmt.setString(2, d.getName());
+                pstmt.setInt(3, d.getCompanyId());
+                pstmt.addBatch();
             }
-        } catch (SQLException e) {
-            System.err.println("❌ Error loading departments: " + e.getMessage());
+            pstmt.executeBatch();
         }
-        return departments;
     }
 
-    public List<Employee> getAllEmployees() {
-        List<Employee> employees = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("""
-             SELECT e.*, r.id as role_id, r.name as role_name, 
-                    t.team_id, t.team_name 
-             FROM employees e 
-             LEFT JOIN roles r ON e.role_id = r.id 
-             LEFT JOIN teams t ON e.team_id = t.id 
-             ORDER BY e.id
-             """)) {
+    private void saveTeams(ArrayList<Team> teams) throws SQLException {
+        if (teams == null || teams.isEmpty()) return;
+        String sql = "MERGE INTO teams (id, name, department_id) KEY (id) VALUES (?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Team t : teams) {
+                pstmt.setInt(1, t.getId());
+                pstmt.setString(2, t.getName());
+                pstmt.setInt(3, t.getDepartmentId());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        }
+    }
 
-            while (rs.next()) {
-                Employee emp = new Employee();
-                emp.setId(rs.getInt("id"));  // Korrigiert: "id" statt "employee_id"
-                emp.setUsername(rs.getString("username"));
-                emp.setFirstName(rs.getString("first_name"));
-                emp.setLastName(rs.getString("last_name"));
-                emp.seteMail(rs.getString("email"));
-                emp.setTeamId(rs.getInt("team_id"));
+    private void saveRoles(ArrayList<Role> roles) throws SQLException {
+        if (roles == null || roles.isEmpty()) return;
+        String sql = "MERGE INTO roles (id, name, description, system_permission) KEY (id) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Role r : roles) {
+                pstmt.setInt(1, r.getId());
+                pstmt.setString(2, r.getName());
+                pstmt.setString(3, r.getDescription());
+                pstmt.setString(4, r.getSystemPermission());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        }
+    }
 
-                // Role vollständig initialisieren
-                RoleManager roleMgr = new RoleManager(emp);
-                RoleManager.RoleHistoryEntry r = roleMgr.getActiveRole();
-                if (r == null) {
-                    roleMgr.setActiveRole(new RoleManager.RoleHistoryEntry(rs.getInt("role_id"), "USER", null, null)); // TODO change the permission string to get fetched from the role db
+    private void saveSkills(ArrayList<Skill> skills) throws SQLException {
+        if (skills == null || skills.isEmpty()) return;
+        String sql = "MERGE INTO skills (id, name, description, required_years) KEY (id) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Skill s : skills) {
+                // Annahme: Modell-Methoden getSkillId/getSkillName existieren wie im Original.
+                pstmt.setInt(1, s.getSkillId());
+                pstmt.setString(2, s.getSkillName());
+                pstmt.setString(3, s.getDescription());
+                pstmt.setInt(4, s.getRequiredYears());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        }
+    }
+
+    private void saveEmployees(ArrayList<Employee> employees) throws SQLException {
+        if (employees == null || employees.isEmpty()) return;
+        String sql = """
+            MERGE INTO employees (id, username, password, first_name, last_name,
+            email, phone_number, date_of_birth, address, gender, hire_date, employment_active,
+            team_id, manager_id) KEY (id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           """;
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Employee e : employees) {
+                pstmt.setInt(1, e.getId());
+                pstmt.setString(2, e.getUsername());
+                pstmt.setString(3, e.getPassword());
+                pstmt.setString(4, e.getFirstName());
+                pstmt.setString(5, e.getLastName());
+                pstmt.setString(6, e.getEMail());
+                pstmt.setString(7, e.getPhoneNumber());
+
+                // Datum-Felder defensiv behandeln (können null sein)
+                if (e.getDateOfBirth() != null) {
+                    // erwartet wird ein java.time.LocalDate oder ähnliches -> anpassen falls Modell anders ist
+                    pstmt.setDate(8, java.sql.Date.valueOf(e.getDateOfBirth().toString()));
                 } else {
-                    r.setRoleId(rs.getInt("role_id"));
+                    pstmt.setNull(8, Types.DATE);
                 }
-                roleMgr.setActiveRole(r);
-                emp.setRole(roleMgr);
 
-                // SkillManager initialisieren (leere Liste oder Standard)
-                SkillManager skillMgr = new SkillManager();
-                // skillMgr.loadSkillsForEmployee(emp.getId()); // TODO hier eine funktion schreiben damit die aktiven skills geladen werden können
-                emp.setSkill(skillMgr);
+                pstmt.setString(9, e.getAddress());
+                pstmt.setString(10, String.valueOf(e.getGender()));
 
-                // TrainingManager sinnvoll initialisieren mit JSON-Daten
-                TrainingManager trainingMgr = new TrainingManager(emp);
-                // Lade Trainings für diesen Mitarbeiter (verbunden mit Training.json)
-
-                //trainingMgr.loadTrainingsForEmployee(connection); TODO add open_training table or something...
-                emp.setTraining(trainingMgr);
-
-                employees.add(emp);
-            }
-            System.out.println("✅ Loaded " + employees.size() + " employees from database [file:1]");
-        } catch (SQLException e) {
-            System.err.println("❌ Error loading employees: " + e.getMessage());
-        }
-        return employees;
-    }
-    public Role getRoleById(int roleId) {
-        try (PreparedStatement pstmt = connection.prepareStatement(
-                "SELECT * FROM roles WHERE roleid = ?")) {
-            pstmt.setInt(1, roleId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Role(
-                            rs.getInt("roleid"),
-                            rs.getString("name"),
-                            rs.getString("description"),
-                            rs.getString("permission")
-                    );
+                if (e.getHireDate() != null) {
+                    pstmt.setDate(11, java.sql.Date.valueOf(e.getHireDate().toString()));
+                } else {
+                    pstmt.setNull(11, Types.DATE);
                 }
+
+                pstmt.setBoolean(12, e.isEmploymentStatus());
+
+                // team_id und manager_id können null sein; setObject erlaubt null
+                pstmt.setObject(13, e.getTeam(), Types.INTEGER);
+                pstmt.setObject(14, e.getManagerId(), Types.INTEGER);
+
+                pstmt.addBatch();
             }
-        } catch (SQLException e) {
-            System.err.println("Error loading role by id: " + e.getMessage());
+            pstmt.executeBatch();
         }
-        return null;
     }
 
+    private void saveTrainings(ArrayList<Training> trainings) throws SQLException {
+        if (trainings == null || trainings.isEmpty()) return;
+        String sql = "MERGE INTO trainings (id, title, description, duration_hours) KEY (id) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            for (Training t : trainings) {
+                pstmt.setInt(1, t.getId());
+                pstmt.setString(2, t.getTitle());
+                pstmt.setString(3, t.getDescription());
+                pstmt.setInt(4, t.getLength());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        }
+    }
 
+    /**
+     * Importiert komplette Datensätze aus JSON-Dateien in einem Verzeichnis.
+     * Erwartete Dateinamen (konventionell):
+     * - companies.json
+     * - departments.json
+     * - teams.json
+     * - roles.json
+     * - skills.json
+     * - employees.json
+     * - trainings.json
+     * - training_skills.json (optional)
+     * - role_history.json (optional)
+     * - skill_history.json (optional)
+     * - training_history.json (optional)
+     *
+     * Die Loader-Methoden sind als SKELETTE implementiert (TODO).
+     */
+    public void importFromJson(Path dir) throws IOException, SQLException {
+        if (dir == null || !Files.isDirectory(dir)) {
+            throw new IllegalArgumentException("dir must be an existing directory");
+        }
+
+        // Beispiel: lade companies.json
+        Path companiesFile = dir.resolve("companies.json");
+        ArrayList<Company> companies;
+        if (Files.exists(companiesFile)) {
+            companies = loadCompaniesFromJson(companiesFile);
+            saveCompanies(companies);
+        }
+
+        Path departmentsFile = dir.resolve("departments.json");
+        if (Files.exists(departmentsFile)) {
+            ArrayList<Department> departments = loadDepartmentsFromJson(departmentsFile);
+            saveDepartments(departments);
+        }
+
+        Path teamsFile = dir.resolve("teams.json");
+        if (Files.exists(teamsFile)) {
+            ArrayList<Team> teams = loadTeamsFromJson(teamsFile);
+            saveTeams(teams);
+        }
+
+        Path rolesFile = dir.resolve("roles.json");
+        if (Files.exists(rolesFile)) {
+            ArrayList<Role> roles = loadRolesFromJson(rolesFile);
+            saveRoles(roles);
+        }
+
+        Path skillsFile = dir.resolve("skills.json");
+        if (Files.exists(skillsFile)) {
+            ArrayList<Skill> skills = loadSkillsFromJson(skillsFile);
+            saveSkills(skills);
+        }
+
+        Path employeesFile = dir.resolve("employees.json");
+        if (Files.exists(employeesFile)) {
+            ArrayList<Employee> employees = loadEmployeesFromJson(employeesFile);
+            saveEmployees(employees);
+        }
+
+        Path trainingsFile = dir.resolve("trainings.json");
+        if (Files.exists(trainingsFile)) {
+            ArrayList<Training> trainings = loadTrainingsFromJson(trainingsFile);
+            saveTrainings(trainings);
+        }
+
+        // Optional: training_skills, role_history, skill_history, training_history
+        // TODO: Falls ihr die Modelle/Container/Tabellen für diese Entities habt, implementiert Loader und Save-Methoden.
+    }
+
+    // ----------------------------
+    // SKELETT-LADER (TODOs)
+    // ----------------------------
+    // Diese Methoden liefern aktuell leere Listen zurück. Füge hier die JSON-Parsing-Logik hinzu.
+    // Empfehlung: Jackson ObjectMapper (com.fasterxml.jackson.databind.ObjectMapper) verwenden.
+    // Beispiel (kommentiert):
+    // ObjectMapper mapper = new ObjectMapper();
+    // ArrayList<Company> companies = mapper.readValue(file.toFile(), new TypeReference<ArrayList<Company>>() {});
+
+    private ArrayList<Company> loadCompaniesFromJson(Path file) throws IOException {
+        // TODO: parse companies.json -> ArrayList<Company>
+        // Beispiel (kommentiert):
+        // ObjectMapper mapper = new ObjectMapper();
+        // return mapper.readValue(file.toFile(), new TypeReference<ArrayList<Company>>() {});
+        return new ArrayList<>();
+    }
+
+    private ArrayList<Department> loadDepartmentsFromJson(Path file) throws IOException {
+        // TODO: parse departments.json -> ArrayList<Department>
+        return new ArrayList<>();
+    }
+
+    private ArrayList<Team> loadTeamsFromJson(Path file) throws IOException {
+        // TODO: parse teams.json -> ArrayList<Team>
+        return new ArrayList<>();
+    }
+
+    private ArrayList<Role> loadRolesFromJson(Path file) throws IOException {
+        // TODO: parse roles.json -> ArrayList<Role>
+        return new ArrayList<>();
+    }
+
+    private ArrayList<Skill> loadSkillsFromJson(Path file) throws IOException {
+        // TODO: parse skills.json -> ArrayList<Skill>
+        return new ArrayList<>();
+    }
+
+    private ArrayList<Employee> loadEmployeesFromJson(Path file) throws IOException {
+        // TODO: parse employees.json -> ArrayList<Employee>
+        // Achtung: JSON-Datumsformat ggf. anpassen (z.B. "yyyy-MM-dd") und in das Modell (LocalDate) mappen.
+        return new ArrayList<>();
+    }
+
+    private ArrayList<Training> loadTrainingsFromJson(Path file) throws IOException {
+        // TODO: parse trainings.json -> ArrayList<Training>
+        return new ArrayList<>();
+    }
+
+    // ----------------------------
+    // Helper / cleanup
+    // ----------------------------
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {
@@ -530,5 +362,4 @@ public class DatabaseManager {
             System.err.println("❌ Error closing connection: " + e.getMessage());
         }
     }
-
 }

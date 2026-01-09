@@ -8,12 +8,12 @@ public class ServiceLocator {
         return RoleManagerContainer.getInstance();
     }
 
-    public static EmployeeManagerContainer getEmployeeManagerContainer() {
-        return EmployeeManagerContainer.getInstance();
+    public static EmployeeContainer getEmployeeContainer() {
+        return EmployeeContainer.getInstance();
     }
 
-    public static TeamManagerContainer getTeamManagerContainer() {
-        return TeamManagerContainer.getInstance();
+    public static TeamContainer getTeamManagerContainer() {
+        return TeamContainer.getInstance();
     }
 
     public static CompanyContainer getCompanyContainer() {
@@ -31,4 +31,25 @@ public class ServiceLocator {
     public static SessionManager getSessionManager() {
         return SessionManager.getInstance();
     }
+
+    public static RoleContainer getRoleContainer() {
+        return RoleContainer.getInstance();
+    }
+
+    public static DepartmentContainer getDepartmentContainer() {
+        return DepartmentContainer.getInstance();
+    }
+
+    public static TeamContainer getTeamContainer() {
+        return TeamContainer.getInstance();
+    }
+
+    public static SkillContainer getSkillContainer() {
+        return SkillContainer.getInstance();
+    }
+
+    public static TrainingContainer getTrainingContainer() {
+        return TrainingContainer.getInstance();
+    }
+
 }

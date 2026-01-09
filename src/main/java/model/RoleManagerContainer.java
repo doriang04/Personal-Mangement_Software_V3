@@ -5,7 +5,7 @@ import java.util.List;
 
 public class RoleManagerContainer {
     private static RoleManagerContainer instance;
-    private List<RoleManager> roleManagers = new ArrayList<>();
+    private ArrayList<RoleManager> roleManagers = new ArrayList<>();
 
     private RoleManagerContainer() {}
 
@@ -18,7 +18,11 @@ public class RoleManagerContainer {
         this.roleManagers.add(rm);
     }
 
-    public List<RoleManager> getRoleManagers() {
+    public void removeRoleManager(RoleManager rm) {
+        this.roleManagers.remove(rm);
+    }
+
+    public ArrayList<RoleManager> getRoleManagers() {
         return roleManagers;
     }
 }

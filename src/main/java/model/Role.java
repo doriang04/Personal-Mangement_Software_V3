@@ -5,17 +5,15 @@ public class Role {
     private int id;
     private String name;
     private String description;
-    private String permission;
+    private String systemPermission;
 
-    public Role(int id, String name, String description, String permission) {
+    public Role() {}
+
+    public Role(int id, String name, String description, String systemPermission) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.permission = permission;
-    }
-
-    public Role() {
-
+        this.systemPermission = systemPermission;
     }
 
     public int getId() {
@@ -42,11 +40,21 @@ public class Role {
         this.description = description;
     }
 
-    public String getPermission() {
-        return permission;
+    public String getSystemPermission() {
+        return systemPermission;
     }
 
-    public void setPermission(String permission) {
-        this.permission = permission;
+    public void setSystemPermission(String systemPermission) {
+        this.systemPermission = systemPermission;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", systemPermission='" + systemPermission + '\'' +
+                '}';
     }
 }

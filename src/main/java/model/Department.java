@@ -2,30 +2,30 @@ package model;
 
 public class Department {
 
-    private int departmentId;
-    private String departmentName;
-    private int companyId;   // wie im Diagramm benannt
+    private int id;
+    private String name;
+    private int companyId;
 
-    public Department(int departmentId, String departmentName, int companyId) {
-        this.departmentId = departmentId;
-        this.departmentName = departmentName;
+    public Department(int id, String name, int companyId) {
+        this.id = id;
+        this.name = name;
         this.companyId = companyId;
     }
 
-    public int getDepartmentId() {
-        return departmentId;
+    public int getId() {
+        return id;
     }
 
-    public void setDepartmentId(int departmentId) {
-        this.departmentId = departmentId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getDepartmentName() {
-        return departmentName;
+    public String getName() {
+        return name;
     }
 
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getCompanyId() {
@@ -36,4 +36,3 @@ public class Department {
         this.companyId = companyId;
     }
 }
-

@@ -2,20 +2,20 @@ package model;
 
 public class Company {
 
-    private int companyId;
+    private int id;
     private String name;
 
-    public Company(int companyId, String name) {
-        this.companyId = companyId;
+    public Company(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
-    public int getCompanyId() {
-        return companyId;
+    public int getId() {
+        return id;
     }
 
-    public void setCompanyId(int companyId) {
-        this.companyId = companyId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -24,6 +24,10 @@ public class Company {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String toString() {
+        return getId() + "_(" + getName() + ")";
     }
 }
 

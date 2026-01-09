@@ -2,16 +2,18 @@ package model;
 
 public class Team {
 
+    private int id;
+    private String name;
     private int departmentId;
-    private int teamId;
-    private String teamName;
     // TODO: Teams können Teams haben (Hierarchie)
+    // TODO: note for above: leck ei
     
-    public Team(int departmentId, int teamId, String teamName) {
+    public Team(int id, String name, int departmentId) {
+        this.id = id;
+        this.name = name;
         this.departmentId = departmentId;
-        this.teamId = teamId;
-        this.teamName = teamName;
     }
+
     public Team() {
     }
 
@@ -23,20 +25,20 @@ public class Team {
         this.departmentId = departmentId;
     }
 
-    public int getTeamId() {
-        return teamId;
+    public int getId() {
+        return id;
     }
 
-    public void setTeamId(int teamId) {
-        this.teamId = teamId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getTeamName() {
-        return teamName;
+    public String getName() {
+        return name;
     }
 
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
+    public void setName(String name) {
+        this.name = name;
     }
 }
 
