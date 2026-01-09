@@ -12,6 +12,8 @@ public class Team {
         this.teamId = teamId;
         this.teamName = teamName;
     }
+    public Team() {
+    }
 
     public int getDepartmentId() {
         return departmentId;

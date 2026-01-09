@@ -1,8 +1,12 @@
 package database;
 
+import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.*;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.*;
@@ -144,18 +148,29 @@ public class DatabaseManager {
             }
 
             Team[] teams = mapper.readValue(is, Team[].class);
-            String sql = "MERGE INTO teams (department_id, team_id, team_name) KEY (team_id) VALUES (?, ?, ?)";
+            String sql = "MERGE INTO teams (departmentid, teamid, teamname) KEY (teamid) VALUES (?, ?, ?)";
+
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                for (Team team : teams) {
+                for (Team team : teams) { // oder für die List-Variante
                     pstmt.setInt(1, team.getDepartmentId());
                     pstmt.setInt(2, team.getTeamId());
                     pstmt.setString(3, team.getTeamName());
                     pstmt.addBatch();
                 }
                 int[] results = pstmt.executeBatch();
-                System.out.println("✅ " + results.length + " Teams loaded");
+                System.out.println(results.length + " Teams loaded");
             }
-        } catch (Exception e) {
+
+        } catch (StreamReadException ex) {
+            throw new RuntimeException(ex);
+        } catch (DatabindException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+     catch (Exception e) {
             System.err.println("❌ Teams loading failed: " + e.getMessage());
             e.printStackTrace();
         }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
-public class SkillManager {
+public class SkillManager implements ISkillManager {
 
     public static class SkillHistoryEntry {
         private int skillId;

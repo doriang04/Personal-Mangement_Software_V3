@@ -5,7 +5,9 @@ import java.util.Date;
 import java.sql.*;
 
 
-public class TrainingManager {
+public class TrainingManager implements ITrainingManager {
+
+
     private Employee employee;
     private int id;
     private ArrayList<TrainingEntry> openTrainings;   // Tupel[String trainingId, Date assigningDate]
@@ -34,7 +36,15 @@ public class TrainingManager {
             return date;
         }
     }
-   
+
+    @Override
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public ArrayList<TrainingEntry> getOpenTrainings(Employee emp){
         return openTrainings;
     }
