@@ -17,6 +17,10 @@ public class TrainingSkillManager {
             this.skillId = skillId;
         }
 
+        public TrainingSkillEntry() {
+
+        }
+
         public int getTrainingId() {
             return trainingId;
         }
@@ -26,11 +30,15 @@ public class TrainingSkillManager {
         }
     }
 
-    private final int trainingId;
+    private int trainingId; // war mal final
     private final List<TrainingSkillEntry> skills = new ArrayList<>();
 
     public TrainingSkillManager(Training training) {
         this.trainingId = training.getId();
+    }
+
+    public TrainingSkillManager() {
+
     }
 
     public int getTrainingId() {
@@ -43,13 +51,13 @@ public class TrainingSkillManager {
 
     public void addSkill(Skill skill) {
         if (skill == null) return;
-        skills.add(new TrainingSkillEntry(trainingId, skill.getSkillId()));
+        skills.add(new TrainingSkillEntry(trainingId, skill.getId()));
     }
 
     public void removeSkill(Skill skill) {
         if (skill == null) return;
 
-        int skillId = skill.getSkillId();
+        int skillId = skill.getId();
         Iterator<TrainingSkillEntry> it = skills.iterator();
         while (it.hasNext()) {
             if (it.next().getSkillId() == skillId) {

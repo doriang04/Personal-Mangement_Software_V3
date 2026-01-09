@@ -17,6 +17,10 @@ public class Training {
         this.skillList = skillList;
     }
 
+    public Training() {
+
+    }
+
     public int getId() {
         return id;
     }

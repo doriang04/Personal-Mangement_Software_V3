@@ -3,35 +3,35 @@ package model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-// TODO test this goofy ahh gpt code (was zu faul lowkey)
+public class RoleManager {
 
-public class RoleManager  {
-
-    private final int employeeId;               // corresponds to role_history.employee_id / employees.id
+    private int employeeId; // corresponds to role_history.employee_id / employees.id  // war mal final
     private final List<RoleHistoryEntry> roleHistory = new ArrayList<>();
-    private RoleHistoryEntry activeRole;        // latest entry where endDate == null
 
     /**
      * Represents one entry from role_history table.
      * historyId is nullable (0 if unknown / not persisted yet).
      */
     public static class RoleHistoryEntry {
-        private int historyId;      // corresponds to role_history.id (0 if not set)
-        private int roleId;         // corresponds to role_history.role_id
-        private LocalDate assignedAt; // corresponds to role_history.assigned_at
-        private LocalDate endedAt;    // corresponds to role_history.ended_at (nullable)
+        private int historyId;
+        private int roleId;
+        private LocalDate acquireDate;
+        private LocalDate endDate;
 
-        public RoleHistoryEntry(int historyId, int roleId, LocalDate assignedAt, LocalDate endedAt) {
+        public RoleHistoryEntry(int historyId, int roleId, LocalDate acquireDate, LocalDate endDate) {
             this.historyId = historyId;
             this.roleId = roleId;
-            this.assignedAt = assignedAt;
-            this.endedAt = endedAt;
+            this.acquireDate = acquireDate;
+            this.endDate = endDate;
         }
 
-        public RoleHistoryEntry(int roleId, LocalDate assignedAt, LocalDate endedAt) {
-            this(0, roleId, assignedAt, endedAt);
+        public RoleHistoryEntry(int roleId, LocalDate acquireDate, LocalDate endDate) {
+            this(0, roleId, acquireDate, endDate);
+        }
+
+        public RoleHistoryEntry() {
+
         }
 
         public int getHistoryId() {
@@ -50,24 +50,24 @@ public class RoleManager  {
             this.roleId = roleId;
         }
 
-        public LocalDate getAssignedAt() {
-            return assignedAt;
+        public LocalDate getAcquireDate() {
+            return acquireDate;
         }
 
-        public void setAssignedAt(LocalDate assignedAt) {
-            this.assignedAt = assignedAt;
+        public void setAcquireDate(LocalDate acquireDate) {
+            this.acquireDate = acquireDate;
         }
 
-        public LocalDate getEndedAt() {
-            return endedAt;
+        public LocalDate getEndDate() {
+            return endDate;
         }
 
-        public void setEndedAt(LocalDate endedAt) {
-            this.endedAt = endedAt;
+        public void setEndDate(LocalDate endDate) {
+            this.endDate = endDate;
         }
 
         public boolean isActive() {
-            return this.endedAt == null;
+            return endDate == null;
         }
 
         @Override
@@ -75,44 +75,32 @@ public class RoleManager  {
             return "RoleHistoryEntry{" +
                     "historyId=" + historyId +
                     ", roleId=" + roleId +
-                    ", assignedAt=" + assignedAt +
-                    ", endedAt=" + endedAt +
+                    ", assignedAt=" + acquireDate +
+                    ", endedAt=" + endDate +
                     '}';
         }
     }
 
     public RoleManager(Employee employee) {
         this.employeeId = employee.getId();
-        // roleHistory list starts empty; if you load persisted entries afterwards, call setRoleHistory(...)
-        this.activeRole = null;
+    }
+
+    public RoleManager() {
     }
 
     /**
-     * If you already have persisted role history for the employee, load it here.
-     * The list should be ordered by assignedAt ascending (oldest -> newest).
+     * Loads persisted role history.
+     * Expected order: assignedAt ASC (oldest -> newest)
      */
-    public void setRoleHistory(ArrayList<RoleHistoryEntry> entries) {
+    public void setRoleHistory(List<RoleHistoryEntry> entries) {
         roleHistory.clear();
         if (entries != null) {
             roleHistory.addAll(entries);
         }
-        // determine active role (last entry with endedAt == null)
-        this.activeRole = null;
-        for (int i = roleHistory.size() - 1; i >= 0; i--) {
-            RoleHistoryEntry e = roleHistory.get(i);
-            if (e.getEndedAt() == null) {
-                this.activeRole = e;
-                break;
-            }
-        }
     }
 
-    public ArrayList<RoleHistoryEntry> getRoleHistory() {
+    public List<RoleHistoryEntry> getRoleHistory() {
         return new ArrayList<>(roleHistory);
-    }
-
-    public Optional<RoleHistoryEntry> getActiveRole() {
-        return Optional.ofNullable(activeRole);
     }
 
     public int getEmployeeId() {
@@ -120,46 +108,75 @@ public class RoleManager  {
     }
 
     /**
-     * Assigns a new role starting on assignedAt.
-     * Closes the previous active role (if any) by setting its endedAt to assignedAt.minusDays(1).
-     * Then creates and activates a new RoleHistoryEntry with endedAt == null.
+     * Dynamically resolves the currently active Role.
+     *
+     * Logic:
+     * - Find the newest RoleHistoryEntry where endedAt == null
+     * - Ask ServiceLocator.RoleContainer for the Role by roleId
+     * - If no such history entry exists -> Optional.empty()
+     */
+    public Role getActiveRole() {
+        RoleHistoryEntry activeEntry = null;
+
+        // newest entry wins → iterate backwards
+        for (int i = roleHistory.size() - 1; i >= 0; i--) {
+            RoleHistoryEntry entry = roleHistory.get(i);
+            if (entry.isActive()) {
+                activeEntry = entry;
+                break;
+            }
+        }
+
+        if (activeEntry == null) {
+            return null;
+        }
+
+        return ServiceLocator
+                .getRoleContainer()
+                .getRoleById(activeEntry.getRoleId());
+    }
+
+    /**
+     * Assigns a new role starting at assignedAt.
+     * Automatically closes the previous active role.
      */
     public RoleHistoryEntry assignRole(int roleId, LocalDate assignedAt) {
         if (assignedAt == null) {
             throw new IllegalArgumentException("assignedAt must not be null");
         }
 
-        // close currently active role if exists
-        if (activeRole != null) {
-            // set end date to day before new assignment
-            LocalDate endDate = assignedAt.minusDays(1);
-            activeRole.setEndedAt(endDate);
+        // close existing active role
+        for (int i = roleHistory.size() - 1; i >= 0; i--) {
+            RoleHistoryEntry entry = roleHistory.get(i);
+            if (entry.isActive()) {
+                entry.setEndDate(assignedAt.minusDays(1));
+                break;
+            }
         }
 
         RoleHistoryEntry newEntry = new RoleHistoryEntry(roleId, assignedAt, null);
         roleHistory.add(newEntry);
-        activeRole = newEntry;
         return newEntry;
     }
 
     /**
-     * Ends the active role on the given date. If there is no active role, does nothing.
+     * Ends the currently active role.
      */
     public void endActiveRole(LocalDate endedAt) {
-        if (activeRole == null) return;
-        if (endedAt == null) throw new IllegalArgumentException("endedAt must not be null");
-        // ensure endedAt is >= assignedAt; if not, adjust or throw
-        if (endedAt.isBefore(activeRole.getAssignedAt())) {
-            throw new IllegalArgumentException("endedAt cannot be before assignedAt of the active role");
+        if (endedAt == null) {
+            throw new IllegalArgumentException("endedAt must not be null");
         }
-        activeRole.setEndedAt(endedAt);
-        activeRole = null;
+
+        for (int i = roleHistory.size() - 1; i >= 0; i--) {
+            RoleHistoryEntry entry = roleHistory.get(i);
+            if (entry.isActive()) {
+                if (endedAt.isBefore(entry.getAcquireDate())) {
+                    throw new IllegalArgumentException("endedAt cannot be before assignedAt");
+                }
+                entry.setEndDate(endedAt);
+                return;
+            }
+        }
     }
 
-    /**
-     * Convenience: returns the currently active role id or -1 if none.
-     */
-    public int getCurrentRoleIdOrMinusOne() {
-        return (activeRole != null) ? activeRole.getRoleId() : -1;
-    }
 }

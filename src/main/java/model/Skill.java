@@ -1,48 +1,45 @@
 package model;
 
-import java.util.ArrayList;
-
 public class Skill {
 
-    private int skillId;
-    private String skillName;
+    private int id;
+    private String name;
     private String description;
-    private int requiredYears;
+    private int required_years;
 
 
-    public Skill(int skillId, int requiredYears,String skillName, String description) {
-        this.skillId = skillId;
-        this.skillName = skillName;
+    public Skill(int id, int required_years, String name, String description) {
+        this.id = id;
+        this.name = name;
         this.description = description;
-        this.requiredYears = requiredYears;
+        this.required_years = required_years;
     }
 
     public Skill() {
 
     }
 
-    public int getSkillId() {
-        return skillId;
+    public int getId() {
+        return id;
     }
 
-    public void setSkillId(int skillId) {
-        this.skillId = skillId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getRequiredYears() {
-        return requiredYears;
+    public int getRequired_years() {
+        return required_years;
     }
 
-
-    public void setRequiredYears(int requiredYears) {
-        this.requiredYears = requiredYears;
+    public void setRequired_years(int required_years) {
+        this.required_years = required_years;
     }
 
-    public String getSkillName() {
-        return skillName;
+    public String getName() {
+        return name;
     }
-    public void setSkillName(String skillName) {
-        this.skillName = skillName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

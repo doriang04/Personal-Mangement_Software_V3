@@ -4,6 +4,9 @@ import database.DatabaseManager;
 import gui.UIController;
 import model.*;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.List;
 import model.Role;
 
@@ -11,7 +14,7 @@ public class Main {
     private static DatabaseManager dbManager;
     private static UIController uiController;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, IOException {
         dbManager = new DatabaseManager(); // TODO change this to be singleton?
         uiController = UIController.getInstance();
 
@@ -21,127 +24,83 @@ public class Main {
         System.out.println("🚀 Personal Management System - Datenbank Loader");
 
         // 1. JSON → Database laden (einmalig)
-        dbManager.loadJsonData();
-
-        // 2. Alle Daten als Java Klassen laden
-        Company company = loadCompany();
-        List<Department> departments = loadDepartments();
-        List<Team> teams = loadTeams();
-        List<Role> roles = loadRoles();
-        List<Skill> skills = loadSkills();
-        List<Employee> employees = loadEmployees();
-
-        // 3. Daten anzeigen + Statistiken
-        displayStatistics(company, departments, teams, roles, skills, employees);
-
-        // 4. Beispiel: Spezifische Abfragen
-        displayExampleQueries(employees);
-
+        try {
+        } catch (Exception e) {
+            System.out.println(" ~ ERROR: " + e);
+        }
+        dbManager.importFromJson(Path.of("src/main/resources/json"));
         dbManager.close();
         System.out.println("✅ System bereit - Alle Java Klassen geladen!");
+
+        // ------------------------------------- div line --------------------------------------------------
+
+        // ===================== Employees =====================
+        System.out.println("Employees:");
+        for (Employee employee : ServiceLocator.getEmployeeContainer().getEmployees()) {
+            System.out.println(" - " + employee.getUsername() + " | " + employee.getPassword());
+        }
+
+        // ===================== Roles =====================
+        System.out.println("\nRoles:");
+        for (Role role : ServiceLocator.getRoleContainer().getRoles()) {
+            System.out.println(" - " + role.getId() + " | " + role.getName());
+        }
+
+        // ===================== Role Managers =====================
+        System.out.println("\nRole Managers:");
+        for (RoleManager rm : ServiceLocator.getRoleManagerContainer().getRoleManagers()) {
+            System.out.println(" - EmployeeId: " + rm.getEmployeeId());
+        }
+
+        // ===================== Teams =====================
+        System.out.println("\nTeams:");
+        for (Team team : ServiceLocator.getTeamContainer().getTeams()) {
+            System.out.println(" - " + team.getId() + " | " + team.getName());
+        }
+
+        // ===================== Departments =====================
+        System.out.println("\nDepartments:");
+        for (Department dept : ServiceLocator.getDepartmentContainer().getDepartments()) {
+            System.out.println(" - " + dept.getId() + " | " + dept.getName());
+        }
+
+        // ===================== Companies =====================
+        System.out.println("\nCompanies:");
+        for (Company company : ServiceLocator.getCompanyContainer().getCompanies()) {
+            System.out.println(" - " + company.getId() + " | " + company.getName());
+        }
+
+        // ===================== Skills =====================
+        System.out.println("\nSkills:");
+        for (Skill skill : ServiceLocator.getSkillContainer().getSkills()) {
+            System.out.println(" - " + skill.getId() + " | " + skill.getName());
+        }
+
+        // ===================== Skill Managers =====================
+        System.out.println("\nSkill Managers:");
+        for (SkillManager sm : ServiceLocator.getSkillManagerContainer().getSkillManagers()) {
+            System.out.println(" - EmployeeId: " + sm.getEmployeeId());
+        }
+
+        // ===================== Trainings =====================
+        System.out.println("\nTrainings:");
+        for (Training training : ServiceLocator.getTrainingContainer().getTrainings()) {
+            System.out.println(" - " + training.getId() + " | " + training.getTitle());
+        }
+
+        // ===================== Training Managers =====================
+        System.out.println("\nTraining Managers:");
+        for (TrainingManager tm : ServiceLocator.getTrainingManagerContainer().getTrainingManagers()) {
+            System.out.println(" - EmployeeId: " + tm.getEmployeeId());
+        }
+
+        // ===================== Session =====================
+        System.out.println("\nSession:");
+        System.out.println(" - Current user: "
+                + (ServiceLocator.getSessionManager().getUserFirstNameAndLastName() != null
+                ? ServiceLocator.getSessionManager().getUserFirstNameAndLastName()
+                : "none"));
     }
 
-    // TODO welche der folgenden Funktionen sind gebraucht und welche waren nur fürs testen?
-    //      -> gebrauchten: aussehen lassen, als hätte es ein Mensch gecodet
-    //      -> fürs testen: löschen, wir wollen keine redundanzen im code
-
-    private static Company loadCompany() {
-        Company company = new Company(1, "Bauunternehmen XYZ GmbH");
-        System.out.println("🏢 Company: " + company.getName());
-        return company;
-    }
-
-    private static List<Department> loadDepartments() {
-        List<Department> departments = dbManager.getAllDepartments();
-        System.out.println("🏛️  Departments: " + departments.size());
-        departments.forEach(d ->
-                System.out.println("  → " + d.getDepartmentId() + ": " + d.getDepartmentName())
-        );
-        return departments;
-    }
-
-    private static List<Team> loadTeams() {
-        List<Team> teams = dbManager.getAllTeams();
-        System.out.println("👥 Teams: " + teams.size());
-        teams.subList(0, Math.min(5, teams.size())).forEach(team ->
-                System.out.println("  → Team " + team.getId() + ": " + team.getName())
-        );
-        return teams;
-    }
-
-    private static List<Role> loadRoles() {
-        List<Role> roles = dbManager.getAllRoles();
-        System.out.println("🎭 Roles: " + roles.size());
-        roles.subList(0, Math.min(5, roles.size())).forEach(role ->
-                System.out.println("  → Role " + role.getId() + ": " + role.getName())
-        );
-        return roles;
-    }
-
-    private static List<Skill> loadSkills() {
-        List<Skill> skills = dbManager.getAllSkills();
-        System.out.println("🎓 Skills: " + skills.size());
-        skills.subList(0, Math.min(5, skills.size())).forEach(skill ->
-                System.out.println("  → Skill " + skill.getSkillId() + ": " + skill.getDescription() +
-                        " (" + skill.getRequiredYears() + " Jahre)")
-        );
-        return skills;
-    }
-
-    private static List<Employee> loadEmployees() {
-        List<Employee> employees = dbManager.getAllEmployees();
-        System.out.println("👷 Employees: " + employees.size());
-        employees.subList(0, Math.min(5, employees.size())).forEach(emp ->
-                System.out.println("  → " + emp.getFirstName() + " " + emp.getLastName() +
-                        " (Role: " + emp.getRoleManager().getRolemanagerid() + ", Team: " + emp.getTeam() + ")")
-        );
-        return employees;
-    }
-
-    private static void displayStatistics(Company company, List<Department> departments,
-                                          List<Team> teams, List<Role> roles,
-                                          List<Skill> skills, List<Employee> employees) {
-        System.out.println("\n📊 STATISTIKEN:");
-        System.out.println("🏢 Unternehmen: " + company.getName());
-        System.out.println("🏛️  Abteilungen: " + departments.size());
-        System.out.println("👥 Teams: " + teams.size());
-        System.out.println("🎭 Rollen: " + roles.size());
-        System.out.println("🎓 Skills: " + skills.size());
-        System.out.println("👷 Mitarbeiter: " + employees.size());
-
-        // Team-Belegung
-        long teamsWithEmployees = employees.stream()
-                .map(Employee::getTeam)
-                .distinct().count();
-        System.out.println("📈 Teams mit Mitarbeitern: " + teamsWithEmployees + "/" + teams.size());
-    }
-
-    private static void displayExampleQueries(List<Employee> employees) {
-        System.out.println("\n🔍 BEISPIEL-ABFRAGEN:");
-
-        // Bauleiter finden
-        long bauleiter = employees.stream()
-                .filter(emp -> emp.getRoleManager().getRolemanagerid() == 2)
-                .count();
-        System.out.println("👷 Bauleiter: " + bauleiter);
-
-        // IT Mitarbeiter (Team 21-24)
-        long itEmployees = employees.stream()
-                .filter(emp -> emp.getTeam() >= 21 && emp.getTeam() <= 24)
-                .count();
-        System.out.println("💻 IT Mitarbeiter: " + itEmployees);
-
-        // // Mitarbeiter mit >3 Skills
-        // long skilledEmployees = employees.stream()
-        //         .filter(emp -> emp.getSkill().getAktiveSkillHistory().size() > 3)
-        //         .count();
-        // System.out.println("⭐ Hochqualifizierte (>3 Skills): " + skilledEmployees);
-
-        // Offene Trainings
-        long openTrainings = employees.stream()
-                .mapToLong(emp -> emp.getOpenTrainingManager().getOpenTrainings(emp).size())
-                .sum();
-        System.out.println("📚 Offene Trainings: " + openTrainings);
-    }
 }
 

@@ -1,0 +1,187 @@
+[
+  {
+    "departmentId": 1,
+    "id": 1,
+    "name": "Bauausführung Leitung"
+  },
+  {
+    "departmentId": 1,
+    "id": 2,
+    "name": "Masonry Team"
+  },
+  {
+    "departmentId": 1,
+    "id": 3,
+    "name": "Concrete Team"
+  },
+  {
+    "departmentId": 1,
+    "id": 4,
+    "name": "Steelwork Team"
+  },
+  {
+    "departmentId": 1,
+    "id": 5,
+    "name": "Baustellenbetrieb Leitung"
+  },
+  {
+    "departmentId": 1,
+    "id": 6,
+    "name": "Site Logistics Team"
+  },
+  {
+    "departmentId": 1,
+    "id": 7,
+    "name": "Safety Team"
+  },
+  {
+    "departmentId": 1,
+    "id": 8,
+    "name": "Site Management Team"
+  },
+  {
+    "departmentId": 1,
+    "id": 9,
+    "name": "Geräte & Fuhrpark Leitung"
+  },
+  {
+    "departmentId": 1,
+    "id": 10,
+    "name": "Machinery Team"
+  },
+  {
+    "departmentId": 1,
+    "id": 11,
+    "name": "Fleet Maintenance Team"
+  },
+  {
+    "departmentId": 2,
+    "id": 12,
+    "name": "Projektmanagement Leitung"
+  },
+  {
+    "departmentId": 2,
+    "id": 13,
+    "name": "Projektadministration"
+  },
+  {
+    "departmentId": 2,
+    "id": 14,
+    "name": "Resource Coordination Team"
+  },
+  {
+    "departmentId": 2,
+    "id": 15,
+    "name": "Planung & Kalkulation Leitung"
+  },
+  {
+    "departmentId": 2,
+    "id": 16,
+    "name": "Scheduling Team"
+  },
+  {
+    "departmentId": 2,
+    "id": 17,
+    "name": "Cost Estimation Team"
+  },
+  {
+    "departmentId": 3,
+    "id": 18,
+    "name": "Einkauf Leitung"
+  },
+  {
+    "departmentId": 3,
+    "id": 19,
+    "name": "Supplier Management Team"
+  },
+  {
+    "departmentId": 3,
+    "id": 20,
+    "name": "Material Orders Team"
+  },
+  {
+    "departmentId": 4,
+    "id": 21,
+    "name": "IT Leitung"
+  },
+  {
+    "departmentId": 4,
+    "id": 22,
+    "name": "IT Infrastructure Team"
+  },
+  {
+    "departmentId": 4,
+    "id": 23,
+    "name": "IT Support Team"
+  },
+  {
+    "departmentId": 4,
+    "id": 24,
+    "name": "IT Development Team"
+  },
+  {
+    "departmentId": 5,
+    "id": 25,
+    "name": "HR Leitung"
+  },
+  {
+    "departmentId": 5,
+    "id": 26,
+    "name": "Recruiting Team"
+  },
+  {
+    "departmentId": 5,
+    "id": 27,
+    "name": "Payroll Team"
+  },
+  {
+    "departmentId": 5,
+    "id": 28,
+    "name": "Employee Services Team"
+  },
+  {
+    "departmentId": 6,
+    "id": 29,
+    "name": "Finanzen Leitung"
+  },
+  {
+    "departmentId": 6,
+    "id": 30,
+    "name": "Controlling Team"
+  },
+  {
+    "departmentId": 6,
+    "id": 31,
+    "name": "Accounting Team"
+  },
+  {
+    "departmentId": 7,
+    "id": 32,
+    "name": "Compliance & Recht Leitung"
+  },
+  {
+    "departmentId": 7,
+    "id": 33,
+    "name": "Legal Team"
+  },
+  {
+    "departmentId": 7,
+    "id": 34,
+    "name": "Data Protection Team"
+  },
+  {
+    "departmentId": 8,
+    "id": 35,
+    "name": "Vertrieb Leitung"
+  },
+  {
+    "departmentId": 8,
+    "id": 36,
+    "name": "B2B Sales Team"
+  },
+  {
+    "departmentId": 8,
+    "id": 37,
+    "name": "Customer Service Team"
+  }
+]

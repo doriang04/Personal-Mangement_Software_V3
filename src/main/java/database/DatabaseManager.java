@@ -1,5 +1,9 @@
 package database;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import model.*;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,10 +21,11 @@ import org.h2.tools.RunScript;
  * und bietet (Skelett-)Methoden zum Einlesen kompletter Daten aus JSON-Dateien.
  */
 public class DatabaseManager {
-    private static final String DB_URL = "jdbc:h2:~/personalmanagement;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
+    private static final String DB_URL = "jdbc:h2:~/h2_db_files/personalmanagement;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
     private static final String USER = "sa";
     private static final String PASSWORD = "";
     private Connection connection;
+    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     public DatabaseManager() {
         try {
@@ -160,10 +165,10 @@ public class DatabaseManager {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Skill s : skills) {
                 // Annahme: Modell-Methoden getSkillId/getSkillName existieren wie im Original.
-                pstmt.setInt(1, s.getSkillId());
-                pstmt.setString(2, s.getSkillName());
+                pstmt.setInt(1, s.getId());
+                pstmt.setString(2, s.getName());
                 pstmt.setString(3, s.getDescription());
-                pstmt.setInt(4, s.getRequiredYears());
+                pstmt.setInt(4, s.getRequired_years());
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
@@ -191,7 +196,7 @@ public class DatabaseManager {
                 // Datum-Felder defensiv behandeln (können null sein)
                 if (e.getDateOfBirth() != null) {
                     // erwartet wird ein java.time.LocalDate oder ähnliches -> anpassen falls Modell anders ist
-                    pstmt.setDate(8, java.sql.Date.valueOf(e.getDateOfBirth().toString()));
+                    pstmt.setDate(8, new java.sql.Date(e.getDateOfBirth().getTime()));
                 } else {
                     pstmt.setNull(8, Types.DATE);
                 }
@@ -200,7 +205,7 @@ public class DatabaseManager {
                 pstmt.setString(10, String.valueOf(e.getGender()));
 
                 if (e.getHireDate() != null) {
-                    pstmt.setDate(11, java.sql.Date.valueOf(e.getHireDate().toString()));
+                    pstmt.setDate(11, new java.sql.Date(e.getHireDate().getTime()));
                 } else {
                     pstmt.setNull(11, Types.DATE);
                 }
@@ -208,7 +213,7 @@ public class DatabaseManager {
                 pstmt.setBoolean(12, e.isEmploymentStatus());
 
                 // team_id und manager_id können null sein; setObject erlaubt null
-                pstmt.setObject(13, e.getTeam(), Types.INTEGER);
+                pstmt.setObject(13, e.getTeamId(), Types.INTEGER);
                 pstmt.setObject(14, e.getManagerId(), Types.INTEGER);
 
                 pstmt.addBatch();
@@ -232,127 +237,170 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Importiert komplette Datensätze aus JSON-Dateien in einem Verzeichnis.
-     * Erwartete Dateinamen (konventionell):
-     * - companies.json
-     * - departments.json
-     * - teams.json
-     * - roles.json
-     * - skills.json
-     * - employees.json
-     * - trainings.json
-     * - training_skills.json (optional)
-     * - role_history.json (optional)
-     * - skill_history.json (optional)
-     * - training_history.json (optional)
-     *
-     * Die Loader-Methoden sind als SKELETTE implementiert (TODO).
-     */
     public void importFromJson(Path dir) throws IOException, SQLException {
         if (dir == null || !Files.isDirectory(dir)) {
             throw new IllegalArgumentException("dir must be an existing directory");
         }
 
-        // Beispiel: lade companies.json
-        Path companiesFile = dir.resolve("companies.json");
-        ArrayList<Company> companies;
-        if (Files.exists(companiesFile)) {
-            companies = loadCompaniesFromJson(companiesFile);
-            saveCompanies(companies);
-        }
+        connection.setAutoCommit(false);
+        try {
+            saveCompanies(loadCompaniesFromJson(dir.resolve("companies.json")));
+            saveDepartments(loadDepartmentsFromJson(dir.resolve("departments.json")));
+            saveTeams(loadTeamsFromJson(dir.resolve("teams.json")));
+            saveRoles(loadRolesFromJson(dir.resolve("roles.json")));
+            saveSkills(loadSkillsFromJson(dir.resolve("skills.json")));
+            saveTrainings(loadTrainingsFromJson(dir.resolve("trainings.json")));
 
-        Path departmentsFile = dir.resolve("departments.json");
-        if (Files.exists(departmentsFile)) {
-            ArrayList<Department> departments = loadDepartmentsFromJson(departmentsFile);
-            saveDepartments(departments);
-        }
-
-        Path teamsFile = dir.resolve("teams.json");
-        if (Files.exists(teamsFile)) {
-            ArrayList<Team> teams = loadTeamsFromJson(teamsFile);
-            saveTeams(teams);
-        }
-
-        Path rolesFile = dir.resolve("roles.json");
-        if (Files.exists(rolesFile)) {
-            ArrayList<Role> roles = loadRolesFromJson(rolesFile);
-            saveRoles(roles);
-        }
-
-        Path skillsFile = dir.resolve("skills.json");
-        if (Files.exists(skillsFile)) {
-            ArrayList<Skill> skills = loadSkillsFromJson(skillsFile);
-            saveSkills(skills);
-        }
-
-        Path employeesFile = dir.resolve("employees.json");
-        if (Files.exists(employeesFile)) {
-            ArrayList<Employee> employees = loadEmployeesFromJson(employeesFile);
+            // Employees + Histories
+            ArrayList<Employee> employees = loadEmployeesFromJson(dir.resolve("employees.json"));
             saveEmployees(employees);
-        }
 
-        Path trainingsFile = dir.resolve("trainings.json");
-        if (Files.exists(trainingsFile)) {
-            ArrayList<Training> trainings = loadTrainingsFromJson(trainingsFile);
-            saveTrainings(trainings);
-        }
+            // Trainings → Skills (N:M)
+            saveTrainingSkillsFromJson(dir.resolve("trainings.json"));
 
-        // Optional: training_skills, role_history, skill_history, training_history
-        // TODO: Falls ihr die Modelle/Container/Tabellen für diese Entities habt, implementiert Loader und Save-Methoden.
+            // This last to avoid Foreign Key Issues
+            saveEmployeeHistoriesFromJson(employees);
+
+            connection.commit();
+            System.out.println("✅ JSON → DB import complete");
+        } catch (Exception e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(true);
+        }
     }
 
-    // ----------------------------
-    // SKELETT-LADER (TODOs)
-    // ----------------------------
-    // Diese Methoden liefern aktuell leere Listen zurück. Füge hier die JSON-Parsing-Logik hinzu.
-    // Empfehlung: Jackson ObjectMapper (com.fasterxml.jackson.databind.ObjectMapper) verwenden.
-    // Beispiel (kommentiert):
-    // ObjectMapper mapper = new ObjectMapper();
-    // ArrayList<Company> companies = mapper.readValue(file.toFile(), new TypeReference<ArrayList<Company>>() {});
-
+    // TODO find a way to do this in a pretty way
     private ArrayList<Company> loadCompaniesFromJson(Path file) throws IOException {
-        // TODO: parse companies.json -> ArrayList<Company>
-        // Beispiel (kommentiert):
-        // ObjectMapper mapper = new ObjectMapper();
-        // return mapper.readValue(file.toFile(), new TypeReference<ArrayList<Company>>() {});
-        return new ArrayList<>();
+        return mapper.readValue(file.toFile(),
+                new TypeReference<>() {
+                });
     }
 
     private ArrayList<Department> loadDepartmentsFromJson(Path file) throws IOException {
-        // TODO: parse departments.json -> ArrayList<Department>
-        return new ArrayList<>();
+        return mapper.readValue(file.toFile(),
+                new TypeReference<>() {
+                });
     }
 
     private ArrayList<Team> loadTeamsFromJson(Path file) throws IOException {
-        // TODO: parse teams.json -> ArrayList<Team>
-        return new ArrayList<>();
+        return mapper.readValue(file.toFile(),
+                new TypeReference<>() {
+                });
     }
 
     private ArrayList<Role> loadRolesFromJson(Path file) throws IOException {
-        // TODO: parse roles.json -> ArrayList<Role>
-        return new ArrayList<>();
+        return mapper.readValue(file.toFile(),
+                new TypeReference<>() {
+                });
     }
 
     private ArrayList<Skill> loadSkillsFromJson(Path file) throws IOException {
-        // TODO: parse skills.json -> ArrayList<Skill>
-        return new ArrayList<>();
+        return mapper.readValue(file.toFile(),
+                new TypeReference<>() {
+                });
     }
 
     private ArrayList<Employee> loadEmployeesFromJson(Path file) throws IOException {
-        // TODO: parse employees.json -> ArrayList<Employee>
-        // Achtung: JSON-Datumsformat ggf. anpassen (z.B. "yyyy-MM-dd") und in das Modell (LocalDate) mappen.
-        return new ArrayList<>();
+        return mapper.readValue(file.toFile(),
+                new TypeReference<>() {
+                });
     }
 
     private ArrayList<Training> loadTrainingsFromJson(Path file) throws IOException {
-        // TODO: parse trainings.json -> ArrayList<Training>
-        return new ArrayList<>();
+        return mapper.readValue(file.toFile(),
+                new TypeReference<>() {
+                });
     }
 
-    // ----------------------------
-    // Helper / cleanup
-    // ----------------------------
+    private void saveEmployeeHistoriesFromJson(ArrayList<Employee> employees) throws SQLException {
+        String roleSql = """
+        INSERT INTO role_history (employee_id, role_id, assigned_at, ended_at)
+        VALUES (?, ?, ?, ?)
+    """;
+
+        String skillSql = """
+        INSERT INTO skill_history (employee_id, skill_id, acquire_date)
+        VALUES (?, ?, ?)
+    """;
+
+        String trainingSql = """
+        INSERT INTO training_history
+        (employee_id, training_id, status, assigned_at, completed_at)
+        VALUES (?, ?, ?, ?, ?)
+    """;
+
+        try (
+                PreparedStatement roleStmt = connection.prepareStatement(roleSql);
+                PreparedStatement skillStmt = connection.prepareStatement(skillSql);
+                PreparedStatement trainingStmt = connection.prepareStatement(trainingSql)
+        ) {
+            for (Employee e : employees) {
+
+                // -------- ROLE HISTORY --------
+                var rm = e.getRoleManager();
+
+                for (var entry : rm.getRoleHistory()) {
+                    roleStmt.setInt(1, e.getId());
+                    roleStmt.setInt(2, entry.getRoleId());
+                    roleStmt.setDate(3, Date.valueOf(entry.getAcquireDate()));
+                    if (entry.getEndDate() != null) {
+                        roleStmt.setDate(4, Date.valueOf(entry.getEndDate()));
+                    } else {
+                        roleStmt.setNull(4, Types.DATE);
+                    }
+                    roleStmt.addBatch();
+                }
+
+                // -------- SKILL HISTORY --------
+                for (var sh : e.getSkillManager().getSkillHistory()) {
+                    skillStmt.setInt(1, e.getId());
+                    skillStmt.setInt(2, sh.getSkillId());
+                    skillStmt.setDate(3, Date.valueOf(sh.getAcquireDate()));
+                    skillStmt.addBatch();
+                }
+
+                // -------- TRAINING HISTORY --------
+                for (var th : e.getOpenTrainingManager().getTrainingHistory()) {
+                    trainingStmt.setInt(1, e.getId());
+                    trainingStmt.setInt(2, th.getTrainingId());
+                    trainingStmt.setString(3, th.isDone() ? "DONE" : "OPEN");
+                    trainingStmt.setDate(4, Date.valueOf(th.getAssignedAt()));
+                    if (th.getCompletedAt() != null) {
+                        trainingStmt.setDate(5, Date.valueOf(th.getCompletedAt()));
+                    } else {
+                        trainingStmt.setNull(5, Types.DATE);
+                    }
+                    trainingStmt.addBatch();
+                }
+            }
+
+            roleStmt.executeBatch();
+            skillStmt.executeBatch();
+            trainingStmt.executeBatch();
+        }
+    }
+
+    private void saveTrainingSkillsFromJson(Path file) throws IOException, SQLException {
+        JsonNode root = mapper.readTree(file.toFile());
+
+        String sql = "INSERT INTO training_skills (training_id, skill_id) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (JsonNode training : root) {
+                int trainingId = training.get("id").asInt();
+                JsonNode skills = training.path("skill").path("aktiveSkillHistory");
+
+                for (JsonNode s : skills) {
+                    stmt.setInt(1, trainingId);
+                    stmt.setInt(2, s.get("skillId").asInt());
+                    stmt.addBatch();
+                }
+            }
+            stmt.executeBatch();
+        }
+    }
+
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {

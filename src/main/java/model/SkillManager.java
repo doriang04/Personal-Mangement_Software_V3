@@ -12,7 +12,7 @@ import java.util.Iterator;
  */
 public class SkillManager {
 
-    private final int employeeId;
+    private int employeeId; // was final
     private final ArrayList<SkillHistoryEntry> skillHistory = new ArrayList<>();
 
     /**
@@ -21,16 +21,20 @@ public class SkillManager {
     public static class SkillHistoryEntry {
         private int historyId;        // skill_history.id (0 if not persisted yet)
         private int skillId;          // skill_history.skill_id
-        private LocalDate acquiredAt; // skill_history.acquired_at
+        private LocalDate acquireDate; // skill_history.acquired_at
 
-        public SkillHistoryEntry(int historyId, int skillId, LocalDate acquiredAt) {
+        public SkillHistoryEntry(int historyId, int skillId, LocalDate acquireDate) {
             this.historyId = historyId;
             this.skillId = skillId;
-            this.acquiredAt = acquiredAt;
+            this.acquireDate = acquireDate;
         }
 
-        public SkillHistoryEntry(int skillId, LocalDate acquiredAt) {
-            this(0, skillId, acquiredAt);
+        public SkillHistoryEntry(int skillId, LocalDate acquireDate) {
+            this(0, skillId, acquireDate);
+        }
+
+        public SkillHistoryEntry() {
+
         }
 
         public int getHistoryId() {
@@ -49,19 +53,19 @@ public class SkillManager {
             this.skillId = skillId;
         }
 
-        public LocalDate getAcquiredAt() {
-            return acquiredAt;
+        public LocalDate getAcquireDate() {
+            return acquireDate;
         }
 
-        public void setAcquiredAt(LocalDate acquiredAt) {
-            this.acquiredAt = acquiredAt;
+        public void setAcquireDate(LocalDate acquireDate) {
+            this.acquireDate = acquireDate;
         }
 
         /**
          * Skill expires after 3 years.
          */
         public boolean isExpired() {
-            return acquiredAt.plusYears(3).isBefore(LocalDate.now());
+            return acquireDate.plusYears(3).isBefore(LocalDate.now());
         }
 
         @Override
@@ -69,7 +73,7 @@ public class SkillManager {
             return "SkillHistoryEntry{" +
                     "historyId=" + historyId +
                     ", skillId=" + skillId +
-                    ", acquiredAt=" + acquiredAt +
+                    ", acquiredAt=" + acquireDate +
                     '}';
         }
     }
@@ -78,8 +82,8 @@ public class SkillManager {
         this.employeeId = employee.getId();
     }
 
-    public SkillManager(int employeeId) {
-        this.employeeId = employeeId;
+    public SkillManager() {
+
     }
 
     public int getEmployeeId() {
@@ -142,7 +146,7 @@ public class SkillManager {
      * Convenience overload using Skill object.
      */
     public SkillHistoryEntry addSkill(Skill skill, LocalDate acquiredAt) {
-        return addSkill(skill.getSkillId(), acquiredAt);
+        return addSkill(skill.getId(), acquiredAt);
     }
 
     /**

@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class RoleContainer {
 
@@ -24,4 +25,10 @@ public class RoleContainer {
         return roles;
     }
 
+    public Role getRoleById(int roleId) {
+        for (Role role: roles) {
+            if (role.getId() == roleId) return role;
+        }
+        return null;
+    }
 }

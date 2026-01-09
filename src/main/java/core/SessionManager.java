@@ -25,7 +25,7 @@ public class SessionManager {
     }
 
     public String getUserPermission() {
-        if (isSessionActive()) return loggedInUser.getRoleManager().getActiveRole().getPermissionString();
+        if (isSessionActive()) return loggedInUser.getRoleManager().getActiveRole().getSystemPermission();
         return null;
     }
 
@@ -48,15 +48,20 @@ public class SessionManager {
 
     public void login(String username, String password) throws AuthenticationException {
         AuthenticationException error_to_throw = new AuthenticationException("Username or Password do not match. Please provide correct credentials.");
-        for (Employee employee: ServiceLocator.getEmployeeManagerContainer().getEmployees()) {
+        System.out.println("\n--- login attempt ---");
+        for (Employee employee: ServiceLocator.getEmployeeContainer().getEmployees()) {
+            System.out.println("empl expects: (" + employee.getUsername() + ", " + employee.getPassword() + ")");
+            System.out.println("attempt with: (" + username + ", " + password);
             if (employee.getUsername().equals(username)) {
                 if (employee.getPassword().equals(password)) {
                     loggedInUser = employee;
                     break;
                 }
+                System.out.println(" -> password incorrect");
                 throw error_to_throw;
             }
         }
+        System.out.println(" -> user not found");
         throw error_to_throw;
     }
 

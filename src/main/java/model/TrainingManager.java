@@ -1,15 +1,13 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 public class TrainingManager {
 
-    private final int employeeId;
-    private final List<TrainingHistoryEntry> trainingHistory = new ArrayList<>();
+    private int employeeId; // was final
+    private final ArrayList<TrainingHistoryEntry> trainingHistory = new ArrayList<>();
 
     public enum Status {
         OPEN,
@@ -39,6 +37,10 @@ public class TrainingManager {
 
         public TrainingHistoryEntry(int trainingId, LocalDate assignedAt) {
             this(0, trainingId, Status.OPEN, assignedAt, null);
+        }
+
+        public TrainingHistoryEntry() {
+
         }
 
         public int getHistoryId() {
@@ -83,32 +85,16 @@ public class TrainingManager {
         this.employeeId = employee.getId();
     }
 
+    public TrainingManager() {
+
+    }
+
     public int getEmployeeId() {
         return employeeId;
     }
 
-    public List<TrainingHistoryEntry> getTrainingHistory() {
-        return Collections.unmodifiableList(new ArrayList<>(trainingHistory));
-    }
-
-    public List<TrainingHistoryEntry> getOpenTrainings() {
-        List<TrainingHistoryEntry> open = new ArrayList<>();
-        for (TrainingHistoryEntry e : trainingHistory) {
-            if (e.isOpen()) {
-                open.add(e);
-            }
-        }
-        return open;
-    }
-
-    public List<TrainingHistoryEntry> getDoneTrainings() {
-        List<TrainingHistoryEntry> done = new ArrayList<>();
-        for (TrainingHistoryEntry e : trainingHistory) {
-            if (e.isDone()) {
-                done.add(e);
-            }
-        }
-        return done;
+    public ArrayList<TrainingHistoryEntry> getTrainingHistory() {
+        return trainingHistory;
     }
 
     /**
@@ -138,7 +124,7 @@ public class TrainingManager {
     /**
      * Used when loading from DB.
      */
-    public void setTrainingHistory(List<TrainingHistoryEntry> entries) {
+    public void setTrainingHistory(ArrayList<TrainingHistoryEntry> entries) {
         trainingHistory.clear();
         if (entries != null) {
             trainingHistory.addAll(entries);

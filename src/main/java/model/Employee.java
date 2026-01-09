@@ -9,7 +9,7 @@ public class Employee {
 
     private String firstName;
     private String lastName;
-    private String eMail;
+    private String email;
     private String phoneNumber;
     private Date dateOfBirth;
     private String address;
@@ -18,28 +18,28 @@ public class Employee {
     private Date hireDate;
     private boolean employmentStatus;
 
-    private Team team;
-    private Employee managerId;
+    private int teamId;
+    private int managerId;
 
     private SkillManager skillManager;
     private TrainingManager openTrainingManager;
     private TrainingManager doneTrainingManager;
     private RoleManager roleManager;
     
-    public Employee(int id, Team team, String username, String password,
-                    String firstName, String lastName, String eMail, Date dateOfBirth, String adress, char gender, Date hireDate,
-                    Employee managerId, boolean employmentStatus, String phoneNumber, SkillManager skillManager, TrainingManager openTrainingManager, TrainingManager doneTrainingManager) {
+    public Employee(int id, int teamId, String username, String password,
+                    String firstName, String lastName, String email, Date dateOfBirth, String adress, char gender, Date hireDate,
+                    int managerId, boolean employmentStatus, String phoneNumber, SkillManager skillManager, TrainingManager openTrainingManager, TrainingManager doneTrainingManager) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.eMail = eMail;
+        this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.address = adress;
         this.gender = gender;
         this.hireDate = hireDate;
-        this.team = team;
+        this.teamId = teamId;
         this.managerId = managerId;
         this.employmentStatus = employmentStatus;
         this.phoneNumber = phoneNumber;
@@ -93,11 +93,11 @@ public class Employee {
     }
 
     public String getEMail() {
-        return eMail;
+        return email;
     }
 
     public void setEMail(String eMail) {
-        this.eMail = eMail;
+        this.email = eMail;
     }
 
     public String getPhoneNumber() {
@@ -148,19 +148,19 @@ public class Employee {
         this.employmentStatus = employmentStatus;
     }
 
-    public Team getTeam() {
-        return team;
+    public int getTeamId() {
+        return teamId;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
     }
 
     public int getManagerId() {
-        return managerId != null ? managerId.getId() : 0;
+        return managerId;
     }
 
-    public void setManagerId(Employee managerId) {
+    public void setManagerId(int managerId) {
         this.managerId = managerId;
     }
 
