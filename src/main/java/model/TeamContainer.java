@@ -22,11 +22,9 @@ public class TeamContainer {
         return teams;
     }
 
-    public Team getTeamById(int Teamid) {
-        for (Team Team: teams) {
-            if (Team.getId() == Teamid) {
-                return Team;
-            }
+    public Team getTeamById(int id) {
+        for (Team t : teams) {
+            if (t.getId() == id) return t;
         }
         return null;
     }

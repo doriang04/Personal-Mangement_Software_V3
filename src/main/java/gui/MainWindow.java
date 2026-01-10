@@ -180,11 +180,15 @@ public class MainWindow extends JFrame {
 
     public boolean selectTabIfExists(View view) {
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            if (view.equals(tabbedPane.getComponentAt(i))) {
+            View tab_component = (View) tabbedPane.getComponentAt(i);
+            System.out.println("name: " + tab_component.getViewTabTitle());
+            if (view.equals(tab_component)) {
                 tabbedPane.setSelectedIndex(i);
+                System.out.println("selectTabIfExists true");
                 return true;
             }
         }
+        System.out.println("selectTabIfExists false");
         return false;
     }
 

@@ -26,11 +26,10 @@ public class DepartmentContainer {
         return departments;
     }
 
-    public Department getdepartmentById(int DepartmentId) {
-        for (Department Department: departments) {
-            if (Department.getId() == DepartmentId) return Department;
+    public Department getDepartmentById(int id) {
+        for (Department d : departments) {
+            if (d.getId() == id) return d;
         }
         return null;
     }
-
 }

@@ -36,8 +36,17 @@ public class DatabaseManager {
 
     private DatabaseManager() {
         try {
-            connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+            openConnection();
             initDatabase();
+        } catch (SQLException e) {
+            System.err.println("❌ Database initialisation failed: " + e.getMessage());
+        }
+
+    }
+
+    private void openConnection() throws SQLException {
+        try {
+            connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
         } catch (SQLException e) {
             System.err.println("❌ Database connection failed: " + e.getMessage());
         }
@@ -709,6 +718,7 @@ public class DatabaseManager {
     public void saveAllData() {
         System.out.println("💾 Speichere Daten in die Datenbank...");
         try {
+            openConnection();
             for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
                 updateEmployeeBaseData(e);
                 updateRoleHistory(e);
@@ -719,9 +729,9 @@ public class DatabaseManager {
             System.err.println("❌ Fehler beim Speichern: " + e.getMessage());
             e.printStackTrace();
         }
+        closeConnection();
     }
 
-    // 1. Basisdaten (Profil) updaten
     private void updateEmployeeBaseData(Employee e) throws SQLException {
         String sql = "UPDATE employees SET first_name=?, last_name=?, email=?, phone_number=?, address=?, password=?, team_id=? WHERE id=?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -806,7 +816,7 @@ public class DatabaseManager {
         }
     }
 
-    public void close() {
+    public void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
