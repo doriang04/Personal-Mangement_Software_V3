@@ -703,6 +703,108 @@ public class DatabaseManager {
             stmt.executeUpdate();
         }
     }
+    /**
+     * Speichert alle relevanten Änderungen aus dem RAM zurück in die Datenbank.
+     */
+    public void saveAllData() {
+        System.out.println("💾 Speichere Daten in die Datenbank...");
+        try {
+            for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
+                updateEmployeeBaseData(e);
+                updateRoleHistory(e);
+                updateTrainingHistory(e);
+            }
+            System.out.println("✅ Speichern erfolgreich!");
+        } catch (SQLException e) {
+            System.err.println("❌ Fehler beim Speichern: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // 1. Basisdaten (Profil) updaten
+    private void updateEmployeeBaseData(Employee e) throws SQLException {
+        String sql = "UPDATE employees SET first_name=?, last_name=?, email=?, phone_number=?, address=?, password=?, team_id=? WHERE id=?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, e.getFirstName());
+            stmt.setString(2, e.getLastName());
+            stmt.setString(3, e.getEMail());
+            stmt.setString(4, e.getPhoneNumber());
+            stmt.setString(5, e.getAddress());
+            stmt.setString(6, e.getPassword());
+
+            if (e.getTeamId() > 0) stmt.setInt(7, e.getTeamId());
+            else stmt.setNull(7, Types.INTEGER);
+
+            stmt.setInt(8, e.getId());
+            stmt.executeUpdate();
+        }
+    }
+
+    // 2. Rollenhistorie synchronisieren
+    // Strategie: Alte Einträge für diesen User löschen, aktuelle Liste aus RAM neu schreiben.
+    private void updateRoleHistory(Employee e) throws SQLException {
+        // A) Löschen
+        String deleteSql = "DELETE FROM role_history WHERE employee_id=?";
+        try (PreparedStatement delStmt = connection.prepareStatement(deleteSql)) {
+            delStmt.setInt(1, e.getId());
+            delStmt.executeUpdate();
+        }
+
+        // B) Neu Einfügen
+        String insertSql = "INSERT INTO role_history (employee_id, role_id, assigned_at, ended_at) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+            if (e.getRoleManager() != null) {
+                for (RoleManager.RoleHistoryEntry entry : e.getRoleManager().getRoleHistory()) {
+                    insertStmt.setInt(1, e.getId());
+                    insertStmt.setInt(2, entry.getRoleId());
+                    insertStmt.setDate(3, Date.valueOf(entry.getAcquireDate()));
+
+                    if (entry.getEndDate() != null) {
+                        insertStmt.setDate(4, Date.valueOf(entry.getEndDate()));
+                    } else {
+                        insertStmt.setNull(4, Types.DATE);
+                    }
+                    insertStmt.addBatch();
+                }
+                insertStmt.executeBatch();
+            }
+        }
+    }
+
+    // 3. Schulungshistorie synchronisieren
+    private void updateTrainingHistory(Employee e) throws SQLException {
+        // A) Löschen
+        String deleteSql = "DELETE FROM training_history WHERE employee_id=?";
+        try (PreparedStatement delStmt = connection.prepareStatement(deleteSql)) {
+            delStmt.setInt(1, e.getId());
+            delStmt.executeUpdate();
+        }
+
+        // B) Neu Einfügen
+        String insertSql = "INSERT INTO training_history (employee_id, training_id, status, assigned_at, completed_at) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+            if (e.getOpenTrainingManager() != null) {
+                for (TrainingManager.TrainingHistoryEntry entry : e.getOpenTrainingManager().getTrainingHistory()) {
+                    insertStmt.setInt(1, e.getId());
+                    insertStmt.setInt(2, entry.getTrainingId());
+
+                    // Status als String speichern (OPEN/DONE)
+                    String statusStr = (entry.getStatus() != null) ? entry.getStatus().name() : "OPEN";
+                    insertStmt.setString(3, statusStr);
+
+                    insertStmt.setDate(4, Date.valueOf(entry.getAssignedAt()));
+
+                    if (entry.getCompletedAt() != null) {
+                        insertStmt.setDate(5, Date.valueOf(entry.getCompletedAt()));
+                    } else {
+                        insertStmt.setNull(5, Types.DATE);
+                    }
+                    insertStmt.addBatch();
+                }
+                insertStmt.executeBatch();
+            }
+        }
+    }
 
     public void close() {
         try {

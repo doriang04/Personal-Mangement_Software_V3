@@ -39,6 +39,7 @@ public class UIController {
     }
 
     public void logout() {
+        database.DatabaseManager.getInstance().saveAllData();
         sessionManager.logout();
         showLoginScreen();
     }
@@ -49,7 +50,7 @@ public class UIController {
         mainWindow.addNavigationEntry("Mitarbeiter suchen",
                 () -> openTabOrFocus(new EmployeeSearchView(), true));
         mainWindow.addNavigationEntry("Mein Profil",
-                () -> openTabOrFocus(new EmployeeDetailView("Eigenes Profil"), true));
+                () -> openTabOrFocus(new MyProfileView(), true));
         mainWindow.addNavigationEntry("Meine Schulungen",
                 () -> openTabOrFocus(new MyTrainingsView(), true));
 
@@ -74,7 +75,7 @@ public class UIController {
             // mainWindow.addNavigationEntry("Einstellungen", ...);
         }
 
-        if ("HR".equals(role) || "TEAM_LEAD".equals(role)) {
+        if ("HR".equals(role) || "TEAM_LEAD".equals(role) || "ADMIN".equals(role)) {
             mainWindow.addNavigationEntry("Schulungsverwaltung",
                     () -> openTabOrFocus(new TrainingManagementView(), true));
         }
@@ -88,6 +89,18 @@ public class UIController {
 
     private void openTabOrFocus(View view, boolean closable) {
         if (!mainWindow.selectTabIfExists(view)) mainWindow.openTab(view, closable);
+    }
+
+    /**
+     * Öffnet das Profil eines Mitarbeiters in einem neuen Tab.
+     * Wird von EmployeeSearchView per Doppelklick aufgerufen.
+     */
+    public void openEmployeeDetailTab(int employeeId) {
+        // Wir brauchen das Employee Objekt hier nicht mehr suchen,
+        // da die View jetzt schlau genug ist, nur mit der ID zu arbeiten.
+
+        // Einfach ID an die View übergeben:
+        gui.views.EmployeeDetailView view = new gui.views.EmployeeDetailView(employeeId);
     }
 
     // Falls du komplexere Anforderungen hast (wie im originalen requestTabCreation): TODO is this needed?

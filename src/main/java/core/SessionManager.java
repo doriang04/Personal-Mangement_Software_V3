@@ -91,6 +91,9 @@ public class SessionManager {
     public void logout() {
         loggedInUser = null;
     }
+    public Employee getCurrentUser() {
+        return loggedInUser;
+    }
 
     public void login(String username, String password) throws AuthenticationException {
         AuthenticationException error_normal =
