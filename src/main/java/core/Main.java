@@ -29,8 +29,16 @@ public class Main {
             System.out.println(" ~ ERROR: " + e);
         }
         dbManager.importFromJson(Path.of("src/main/resources/json"));
+        try {
+            dbManager.loadDataFromDb();
+
+        } catch (Exception e) {
+            System.out.println(" ~ ERROR: " + e);
+            e.printStackTrace();
+        }
         dbManager.close();
         System.out.println("✅ System bereit - Alle Java Klassen geladen!");
+
 
         // ------------------------------------- div line --------------------------------------------------
 

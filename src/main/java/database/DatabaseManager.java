@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.h2.tools.RunScript;
 
 // TODO check this class if it works as intended (gpt code cannot be trusted by itself lol
@@ -398,6 +400,287 @@ public class DatabaseManager {
                 }
             }
             stmt.executeBatch();
+        }
+    }
+
+    public void loadDataFromDb() throws SQLException {
+        System.out.println("📥 Lade Daten aus der Datenbank in den Speicher...");
+
+        // 1. Basis-Entitäten laden (Reihenfolge ist wichtig wegen Abhängigkeiten)
+        loadCompanies();
+        loadDepartments();
+        loadTeams();
+        loadRoles();
+        loadSkills();
+        loadTrainings(); // Lädt auch TrainingSkills
+
+        // 2. Mitarbeiter laden (Basisdaten)
+        loadEmployees();
+
+        // 3. Historien und Verknüpfungen laden
+        loadRoleHistories();
+        loadSkillHistories();
+        loadTrainingHistories();
+
+        System.out.println("✅ Alle Daten erfolgreich geladen!");
+    }
+
+    private void loadCompanies() throws SQLException {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM companies")) {
+            var container = ServiceLocator.getCompanyContainer();
+            while (rs.next()) {
+                Company c = new Company(rs.getInt("id"), rs.getString("name"));
+                container.addCompany(c);
+            }
+        }
+    }
+
+    private void loadDepartments() throws SQLException {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM departments")) {
+            var container = ServiceLocator.getDepartmentContainer();
+            while (rs.next()) {
+                Department d = new Department(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("company_id")
+                );
+                container.addDepartment(d);
+            }
+        }
+    }
+
+    private void loadTeams() throws SQLException {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM teams")) {
+            var container = ServiceLocator.getTeamContainer();
+            while (rs.next()) {
+                Team t = new Team(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("department_id")
+                );
+                container.addTeam(t);
+            }
+        }
+    }
+
+    private void loadRoles() throws SQLException {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM roles")) {
+            var container = ServiceLocator.getRoleContainer();
+            while (rs.next()) {
+                Role r = new Role(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("system_permission")
+                );
+                container.addRole(r);
+            }
+        }
+    }
+
+    private void loadSkills() throws SQLException {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM skills")) {
+            var container = ServiceLocator.getSkillContainer();
+            while (rs.next()) {
+                Skill s = new Skill(
+                        rs.getInt("id"),
+                        rs.getInt("required_years"),
+                        rs.getString("name"),
+                        rs.getString("description")
+                );
+                container.addSkill(s);
+            }
+        }
+    }
+
+    private void loadTrainings() throws SQLException {
+        // Zuerst Training-Objekte erstellen
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT * FROM trainings")) {
+            var container = ServiceLocator.getTrainingContainer();
+            while (rs.next()) {
+                Training t = new Training();
+                t.setId(rs.getInt("id"));
+                t.setTitle(rs.getString("title"));
+                t.setDescription(rs.getString("description"));
+                t.setLength(rs.getInt("duration_hours"));
+
+                // SkillManager für das Training initialisieren
+                t.setSkills(new TrainingSkillManager(t));
+
+                container.addTraining(t);
+            }
+        }
+
+        // Jetzt die Training-Skills (N:M) verknüpfen
+        String sql = "SELECT * FROM training_skills";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            var container = ServiceLocator.getTrainingContainer();
+            while (rs.next()) {
+                int tId = rs.getInt("training_id");
+                int sId = rs.getInt("skill_id");
+
+                // Wir suchen das Training im Container (etwas ineffizient O(n), aber ok für kleine Mengen)
+                for (Training t : container.getTrainings()) {
+                    if (t.getId() == tId) {
+                        // Da wir keinen vollen Skill haben, laden wir ihn aus dem SkillContainer
+                        // Oder wir fügen nur die ID hinzu, wenn TrainingSkillManager das unterstützt.
+                        // Deine TrainingSkillManager.addSkill Methode erwartet ein Skill Objekt.
+                        for(Skill s : ServiceLocator.getSkillContainer().getSkills()) {
+                            if(s.getId() == sId) {
+                                t.getSkills().addSkill(s);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void loadEmployees() throws SQLException {
+        String sql = "SELECT * FROM employees";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            var container = ServiceLocator.getEmployeeContainer();
+
+            while (rs.next()) {
+                Employee e = new Employee();
+                e.setId(rs.getInt("id"));
+                e.setUsername(rs.getString("username"));
+                e.setPassword(rs.getString("password"));
+                e.setFirstName(rs.getString("first_name"));
+                e.setLastName(rs.getString("last_name"));
+                e.setEMail(rs.getString("email"));
+                e.setPhoneNumber(rs.getString("phone_number"));
+                e.setAddress(rs.getString("address"));
+
+                String genderStr = rs.getString("gender");
+                if (genderStr != null && !genderStr.isEmpty()) {
+                    e.setGender(genderStr.charAt(0));
+                }
+
+                e.setEmploymentStatus(rs.getBoolean("employment_active"));
+
+                // Date handling (SQL Date -> Java Util Date)
+                if (rs.getDate("date_of_birth") != null)
+                    e.setDateOfBirth(new java.util.Date(rs.getDate("date_of_birth").getTime()));
+
+                if (rs.getDate("hire_date") != null)
+                    e.setHireDate(new java.util.Date(rs.getDate("hire_date").getTime()));
+
+                // FKs (können null sein, was rs.getInt als 0 zurückgibt, wenn NULL)
+                int teamId = rs.getInt("team_id");
+                if (!rs.wasNull()) e.setTeamId(teamId);
+
+                int managerId = rs.getInt("manager_id");
+                if (!rs.wasNull()) e.setManagerId(managerId);
+
+                // WICHTIG: Manager initialisieren, damit wir sie gleich befüllen können
+                e.setRoleManager(new RoleManager(e));
+                e.setSkillManager(new SkillManager(e));
+                e.setOpenTrainingManager(new TrainingManager(e));
+                // e.setDoneTrainingManager(new TrainingManager(e)); // Optional, falls getrennt gewünscht
+
+                // Auch in die globalen Manager-Container packen (falls nötig)
+                ServiceLocator.getRoleManagerContainer().addRoleManager(e.getRoleManager());
+                ServiceLocator.getSkillManagerContainer().addSkillManager(e.getSkillManager());
+                ServiceLocator.getTrainingManagerContainer().addTrainingManager(e.getOpenTrainingManager());
+
+                container.addEmployee(e);
+            }
+        }
+    }
+
+    private void loadRoleHistories() throws SQLException {
+        String sql = "SELECT * FROM role_history ORDER BY assigned_at ASC";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            var employees = ServiceLocator.getEmployeeContainer().getEmployees();
+
+            while (rs.next()) {
+                int empId = rs.getInt("employee_id");
+                // Finde Mitarbeiter
+                Employee emp = employees.stream().filter(e -> e.getId() == empId).findFirst().orElse(null);
+
+                if (emp != null) {
+                    var entry = new RoleManager.RoleHistoryEntry();
+                    entry.setHistoryId(rs.getInt("id"));
+                    entry.setRoleId(rs.getInt("role_id"));
+                    entry.setAcquireDate(rs.getDate("assigned_at").toLocalDate());
+
+                    if (rs.getDate("ended_at") != null) {
+                        entry.setEndDate(rs.getDate("ended_at").toLocalDate());
+                    }
+
+                    // Trick: Wir nutzen die interne Liste nicht direkt, sondern bauen eine auf
+                    // oder nutzen Reflection. Aber RoleManager hat keine addHistoryEntry Methode,
+                    // nur setRoleHistory(List).
+                    // Wir holen die aktuelle Liste, fügen hinzu, und setzen neu.
+                    List<RoleManager.RoleHistoryEntry> currentList = emp.getRoleManager().getRoleHistory();
+                    currentList.add(entry);
+                    emp.getRoleManager().setRoleHistory(currentList);
+                }
+            }
+        }
+    }
+
+    private void loadSkillHistories() throws SQLException {
+        String sql = "SELECT * FROM skill_history";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            var employees = ServiceLocator.getEmployeeContainer().getEmployees();
+
+            while (rs.next()) {
+                int empId = rs.getInt("employee_id");
+                Employee emp = employees.stream().filter(e -> e.getId() == empId).findFirst().orElse(null);
+
+                if (emp != null) {
+                    var entry = new SkillManager.SkillHistoryEntry();
+                    entry.setHistoryId(rs.getInt("id"));
+                    entry.setSkillId(rs.getInt("skill_id"));
+                    entry.setAcquireDate(rs.getDate("acquire_date").toLocalDate());
+
+                    emp.getSkillManager().addSkill(entry.getSkillId(), entry.getAcquireDate());
+                }
+            }
+        }
+    }
+
+    private void loadTrainingHistories() throws SQLException {
+        String sql = "SELECT * FROM training_history";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            var employees = ServiceLocator.getEmployeeContainer().getEmployees();
+
+            while (rs.next()) {
+                int empId = rs.getInt("employee_id");
+                Employee emp = employees.stream().filter(e -> e.getId() == empId).findFirst().orElse(null);
+
+                if (emp != null) {
+                    TrainingManager.Status status = TrainingManager.Status.valueOf(rs.getString("status"));
+
+                    var entry = new TrainingManager.TrainingHistoryEntry(
+                            rs.getInt("id"),
+                            rs.getInt("training_id"),
+                            status,
+                            rs.getDate("assigned_at").toLocalDate(),
+                            rs.getDate("completed_at") != null ? rs.getDate("completed_at").toLocalDate() : null
+                    );
+
+                    // Wir nutzen hier einfach den "openTrainingManager" als Hauptspeicher für alles
+                    emp.getOpenTrainingManager().getTrainingHistory().add(entry);
+                }
+            }
         }
     }
 
