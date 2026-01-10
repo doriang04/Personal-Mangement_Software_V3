@@ -4,6 +4,9 @@ import model.Employee;
 import model.ServiceLocator;
 
 import javax.naming.AuthenticationException;
+import java.io.*;
+import java.nio.file.*;
+import java.util.Properties;
 
 public class SessionManager {
 
@@ -11,6 +14,10 @@ public class SessionManager {
 
     private Employee loggedInUser;
     private boolean maintenanceModeActive;
+
+    private static final String PROPERTIES_DIR = "src/main/resources/db";
+    private static final String FILE_NAME = "system.properties";
+    private static final String MAINTENANCE_KEY = "maintenanceMode";
 
     public static synchronized SessionManager getInstance() {
         if (instance == null) {
@@ -21,16 +28,59 @@ public class SessionManager {
 
     private SessionManager() {
         loggedInUser = null;
-        maintenanceModeActive = false; // TODO hier eine persistente speichermethode verwenden um es über programm restart hinaus drin zu lassen
+        loadMaintenanceMode();
+    }
+
+    public boolean isMaintenanceModeActive() {
+        return maintenanceModeActive;
+    }
+
+    public void setMaintenanceModeActive(boolean active) {
+        this.maintenanceModeActive = active;
+        saveMaintenanceMode();
+    }
+
+    private void loadMaintenanceMode() {
+        Properties props = new Properties();
+        Path path = Paths.get(PROPERTIES_DIR, FILE_NAME);
+
+        if (Files.exists(path)) {
+            try (InputStream in = Files.newInputStream(path)) {
+                props.load(in);
+                maintenanceModeActive = Boolean.parseBoolean(
+                        props.getProperty(MAINTENANCE_KEY, "false")
+                );
+            } catch (IOException e) {
+                maintenanceModeActive = false;
+            }
+        } else {
+            maintenanceModeActive = false;
+            saveMaintenanceMode();
+        }
+    }
+
+    private void saveMaintenanceMode() {
+        Properties props = new Properties();
+        props.setProperty(MAINTENANCE_KEY, String.valueOf(maintenanceModeActive));
+
+        try {
+            Files.createDirectories(Paths.get(PROPERTIES_DIR));
+            try (OutputStream out = Files.newOutputStream(Paths.get(PROPERTIES_DIR, FILE_NAME))) {
+                props.store(out, "System configuration");
+            }
+        } catch (IOException ignored) {
+        }
     }
 
     public String getUserPermission() {
-        if (isSessionActive()) return loggedInUser.getRoleManager().getActiveRole().getSystemPermission();
+        if (isSessionActive())
+            return loggedInUser.getRoleManager().getActiveRole().getSystemPermission();
         return null;
     }
 
     public String getUserFirstNameAndLastName() {
-        if (isSessionActive()) return loggedInUser.getFirstName() + loggedInUser.getLastName();
+        if (isSessionActive())
+            return loggedInUser.getFirstName() + " " + loggedInUser.getLastName();
         return null;
     }
 
@@ -42,39 +92,28 @@ public class SessionManager {
         loggedInUser = null;
     }
 
-    public boolean isMaintenanceModeActive() {
-        return maintenanceModeActive;
-    }
-
     public void login(String username, String password) throws AuthenticationException {
-        AuthenticationException error_to_throw = new AuthenticationException("Username or Password do not match. Please provide correct credentials.");
+        AuthenticationException error_normal =
+                new AuthenticationException("Username or Password do not match. Please provide correct credentials.");
+        AuthenticationException error_maintenance =
+                new AuthenticationException("Maintenance mode is active. Login only possible for admins.");
 
-        System.out.println("\n--- login attempt ---");
-
-        for (Employee employee: ServiceLocator.getEmployeeContainer().getEmployees()) {
-            // Debugging Output
-            // System.out.println("checking: " + employee.getUsername());
-
+        for (Employee employee : ServiceLocator.getEmployeeContainer().getEmployees()) {
             if (employee.getUsername().equals(username)) {
                 if (employee.getPassword().equals(password)) {
-                    // 1. User setzen
+                    if (isMaintenanceModeActive()) {
+                         if (employee.getRoleManager().getActiveRole().getSystemPermission().equals("ADMIN")) {
+                             loggedInUser = employee;
+                             return;
+                         }
+                         throw error_maintenance;
+                    }
                     loggedInUser = employee;
-                    System.out.println("✅ Login success for: " + username);
-
-                    // 2. WICHTIG: Methode hier verlassen!
-                    // Nicht 'break', sonst läuft er unten in den Fehler rein.
                     return;
                 }
-
-                // Passwort falsch -> Exception werfen
-                System.out.println(" -> password incorrect");
-                throw error_to_throw;
+                throw error_normal;
             }
         }
-
-        // Wenn der Loop durchläuft ohne return, wurde der Username nicht gefunden
-        System.out.println(" -> user not found in database");
-        throw error_to_throw;
+        throw error_normal;
     }
-
 }

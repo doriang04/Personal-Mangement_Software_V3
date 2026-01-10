@@ -1,13 +1,14 @@
 package gui;
 
-import gui.views.Temp_Example_View;
-import gui.views.View;
+import model.ServiceLocator;
+import core.SessionManager;
+import gui.views.*;
 
 public class UIController {
 
-    private final MainWindow mainWindow;
-
     private static UIController instance;
+    private final MainWindow mainWindow;
+    private final SessionManager sessionManager;
 
     public static synchronized UIController getInstance() {
         if (instance == null) instance = new UIController();
@@ -15,25 +16,76 @@ public class UIController {
     }
 
     private UIController() {
-        mainWindow = MainWindow.getInstance();
-        mainWindow.showLoginView();
+        this.mainWindow = MainWindow.getInstance();
+        this.sessionManager = ServiceLocator.getSessionManager();
     }
 
-    public void requestTabCreation(String viewId, String[] args) {
-        // TODO implement request filtering and such in here before asking MainWindow to change its View
-        View newView = null;
+    public void startApplication() {
+        showLoginScreen();
+    }
 
-        switch(viewId) {
-            case "asdf" -> {
-                // TODO here you would implement things that need to be done for that specific view
-                //      like objects that need to be fetched and such, based on the args
-            }
-            default -> newView = new Temp_Example_View();
+    private void showLoginScreen() {
+        LoginView loginView = new LoginView();
+        mainWindow.showSingleView(loginView, loginView.getViewTabTitle(), 450, 550);
+    }
+
+    public void onLoginSuccess() {
+        String name = sessionManager.getUserFirstNameAndLastName();
+        String role = sessionManager.getUserPermission();
+
+        mainWindow.setupMainLayout(name, role, _ -> logout());
+        buildNavigation(role);
+        openDashboard();
+    }
+
+    public void logout() {
+        sessionManager.logout();
+        showLoginScreen();
+    }
+
+    private void buildNavigation(String role) { // TODO finish this method to include all needed navigation
+        // --- Standard für alle ---
+        mainWindow.addNavigationEntry("Dashboard", this::openDashboard);
+        mainWindow.addNavigationEntry("Mitarbeiter suchen",
+                () -> openTabOrFocus(new EmployeeSearchView(), true));
+        mainWindow.addNavigationEntry("Mein Profil",
+                () -> openTabOrFocus(new EmployeeDetailView("Eigenes Profil"), true));
+
+        mainWindow.addSpacerToNav();
+
+        // --- Rollenspezifisch ---
+        if ("HR".equals(role)) {
+            mainWindow.addNavigationSection("HR Management");
+            mainWindow.addNavigationEntry("Neuen Mitarbeiter anlegen",
+                    () -> openTabOrFocus(new EmployeeDetailView(), true));
         }
 
-        if (newView == null) newView = new Temp_Example_View();
+        if ("TEAM_LEAD".equals(role)) {
+            mainWindow.addNavigationSection("Teamleitung");
+            // Beispiel:
+            // mainWindow.addNavigationEntry("Mein Team", "icons/team.png",
+            //      () -> openTabOrFocus(TeamOverviewView.class, TeamOverviewView::new, true));
+        }
 
-        mainWindow.openTab(newView, true); // TODO make closable dynamic
+        if ("ADMIN".equals(role)) {
+            mainWindow.addNavigationSection("Administration");
+            // mainWindow.addNavigationEntry("Einstellungen", ...);
+        }
+
+        mainWindow.addGlueToNav();
     }
 
+    private void openDashboard() {
+        openTabOrFocus(new DashboardView(), false);
+    }
+
+    private void openTabOrFocus(View view, boolean closable) {
+        if (!mainWindow.selectTabIfExists(view)) mainWindow.openTab(view, closable);
+    }
+
+    // Falls du komplexere Anforderungen hast (wie im originalen requestTabCreation): TODO is this needed?
+    public void requestSpecificView(String viewIdentifier, Object payload) {
+        // Hier könnte Logik stehen, die z.B. Daten lädt, bevor der Tab geöffnet wird
+        // ...
+    }
 }

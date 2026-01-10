@@ -5,5 +5,6 @@ import javax.swing.*;
 public interface View {
     String getViewId();
     String getViewTabTitle();
-    JComponent getComponent();
+    JPanel getContent();
+    boolean equals(View view);
 }

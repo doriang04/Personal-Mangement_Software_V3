@@ -19,6 +19,11 @@ public class EmployeeSearchView extends JPanel implements View {
         return "Mitarbeiter suchen";
     }
 
-    @Override public JComponent getComponent() { return this; }
+    @Override public JPanel getContent() { return this; }
+
+    @Override
+    public boolean equals(View view) {
+        return view.getViewId().equals(this.getViewId());
+    }
 
 }

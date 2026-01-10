@@ -19,6 +19,11 @@ public class AdminControlPanelView extends JPanel implements View {
         return "Schulungsverwaltung";
     }
 
-    @Override public JComponent getComponent() { return this; }
+    @Override public JPanel getContent() { return this; }
+
+    @Override
+    public boolean equals(View view) {
+        return view.getViewId().equals(this.getViewId());
+    }
 
 }

@@ -18,18 +18,23 @@ import org.h2.tools.RunScript;
 
 // TODO check this class if it works as intended (gpt code cannot be trusted by itself lol
 
-/**
- * DatabaseManager: initialisiert DB-Schema, schreibt Daten aus ServiceLocator in die DB
- * und bietet (Skelett-)Methoden zum Einlesen kompletter Daten aus JSON-Dateien.
- */
 public class DatabaseManager {
+
+    private static DatabaseManager instance;
+
     private static final String DB_URL = "jdbc:h2:~/h2_db_files/personalmanagement;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE";
     private static final String USER = "sa";
     private static final String PASSWORD = "";
+
     private Connection connection;
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    public DatabaseManager() {
+    public static synchronized DatabaseManager getInstance() {
+        if (instance == null) instance = new DatabaseManager();
+        return instance;
+    }
+
+    private DatabaseManager() {
         try {
             connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             initDatabase();

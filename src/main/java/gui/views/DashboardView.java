@@ -21,7 +21,12 @@ public class DashboardView extends JPanel implements View {
     }
 
     @Override
-    public JComponent getComponent() {
+    public JPanel getContent() {
         return this;
+    }
+
+    @Override
+    public boolean equals(View view) {
+        return view.getViewId().equals(this.getViewId());
     }
 }
