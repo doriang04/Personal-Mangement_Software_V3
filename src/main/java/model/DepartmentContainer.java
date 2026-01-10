@@ -25,4 +25,11 @@ public class DepartmentContainer {
     public ArrayList<Department> getDepartments() {
         return departments;
     }
+
+    public Department getDepartmentById(int id) {
+        for (Department d : departments) {
+            if (d.getId() == id) return d;
+        }
+        return null;
+    }
 }

@@ -56,7 +56,6 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("\n🛑 Programm wird beendet...");
             dbManager.saveAllData();
-            dbManager.close();
             System.out.println("👋 Bye Bye!");
         }));
 

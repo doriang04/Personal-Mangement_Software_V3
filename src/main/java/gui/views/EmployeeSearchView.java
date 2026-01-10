@@ -1,6 +1,5 @@
 package gui.views;
 
-import core.SessionManager;
 import gui.UIController;
 import model.*;
 
@@ -13,18 +12,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeeSearchView extends JPanel implements View {
 
-    // UI Komponenten
     private JTextField txtSearchEmployee;
     private JComboBox<DepartmentItem> comboFilterDepartment;
     private JButton btnSearch;
     private JTable employeeResultTable;
     private DefaultTableModel tableModel;
 
-    // Daten & State
-    private final boolean isPrivileged; // True für HR oder Teamleiter
+    private final boolean isPrivileged;
 
     public EmployeeSearchView() {
         setLayout(new BorderLayout());
@@ -143,9 +141,9 @@ public class EmployeeSearchView extends JPanel implements View {
             boolean deptMatch = true;
             String deptName = "Keine Abteilung";
 
-            Team team = getTeamById(emp.getTeamId());
+            Team team = ServiceLocator.getTeamContainer().getTeamById(emp.getTeamId());
             if (team != null) {
-                Department dept = getDepartmentById(team.getDepartmentId());
+                Department dept = ServiceLocator.getDepartmentContainer().getDepartmentById(team.getDepartmentId());
                 if (dept != null) {
                     deptName = dept.getName();
                     if (filterDeptId != null && dept.getId() != filterDeptId) deptMatch = false;
@@ -192,22 +190,6 @@ public class EmployeeSearchView extends JPanel implements View {
         UIController.getInstance().openEmployeeDetailTab(empId);
     }
 
-    // Helper
-    private Team getTeamById(int id) {
-        for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
-            if (t.getId() == id) return t;
-        }
-        return null;
-    }
-
-    private Department getDepartmentById(int id) {
-        for (Department d : ServiceLocator.getDepartmentContainer().getDepartments()) {
-            if (d.getId() == id) return d;
-        }
-        return null;
-    }
-
-    // Helper Klasse für ComboBox
     private static class DepartmentItem {
         Department dept;
         public DepartmentItem(Department d) { this.dept = d; }
@@ -217,5 +199,10 @@ public class EmployeeSearchView extends JPanel implements View {
     @Override public String getViewId() { return "employee-search-view"; }
     @Override public String getViewTabTitle() { return "Mitarbeitersuche"; }
     @Override public JPanel getContent() { return this; }
-    @Override public boolean equals(View view) { return view != null && view.getViewId().equals(getViewId()); }
+    @Override public boolean equals(View view) {
+        if (view == null) return false;
+        if (!view.getViewId().equals(getViewId())) return false;
+        if (!((EmployeeSearchView) view).txtSearchEmployee.getText().equals(this.txtSearchEmployee.getText())) return false;
+        return Objects.equals(Objects.requireNonNull(((EmployeeSearchView) view).comboFilterDepartment.getSelectedItem()).toString(), Objects.requireNonNull(this.comboFilterDepartment.getSelectedItem()).toString());
+    }
 }
