@@ -48,20 +48,32 @@ public class SessionManager {
 
     public void login(String username, String password) throws AuthenticationException {
         AuthenticationException error_to_throw = new AuthenticationException("Username or Password do not match. Please provide correct credentials.");
+
         System.out.println("\n--- login attempt ---");
+
         for (Employee employee: ServiceLocator.getEmployeeContainer().getEmployees()) {
-            System.out.println("empl expects: (" + employee.getUsername() + ", " + employee.getPassword() + ")");
-            System.out.println("attempt with: (" + username + ", " + password);
+            // Debugging Output
+            // System.out.println("checking: " + employee.getUsername());
+
             if (employee.getUsername().equals(username)) {
                 if (employee.getPassword().equals(password)) {
+                    // 1. User setzen
                     loggedInUser = employee;
-                    break;
+                    System.out.println("✅ Login success for: " + username);
+
+                    // 2. WICHTIG: Methode hier verlassen!
+                    // Nicht 'break', sonst läuft er unten in den Fehler rein.
+                    return;
                 }
+
+                // Passwort falsch -> Exception werfen
                 System.out.println(" -> password incorrect");
                 throw error_to_throw;
             }
         }
-        System.out.println(" -> user not found");
+
+        // Wenn der Loop durchläuft ohne return, wurde der Username nicht gefunden
+        System.out.println(" -> user not found in database");
         throw error_to_throw;
     }
 
