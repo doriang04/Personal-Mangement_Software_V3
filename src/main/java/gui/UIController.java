@@ -50,6 +50,8 @@ public class UIController {
                 () -> openTabOrFocus(new EmployeeSearchView(), true));
         mainWindow.addNavigationEntry("Mein Profil",
                 () -> openTabOrFocus(new EmployeeDetailView("Eigenes Profil"), true));
+        mainWindow.addNavigationEntry("Meine Schulungen",
+                () -> openTabOrFocus(new MyTrainingsView(), true));
 
         mainWindow.addSpacerToNav();
 
@@ -70,6 +72,11 @@ public class UIController {
         if ("ADMIN".equals(role)) {
             mainWindow.addNavigationSection("Administration");
             // mainWindow.addNavigationEntry("Einstellungen", ...);
+        }
+
+        if ("HR".equals(role) || "TEAM_LEAD".equals(role)) {
+            mainWindow.addNavigationEntry("Schulungsverwaltung",
+                    () -> openTabOrFocus(new TrainingManagementView(), true));
         }
 
         mainWindow.addGlueToNav();

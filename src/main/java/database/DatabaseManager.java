@@ -689,6 +689,21 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Speichert eine neu zugewiesene Schulung direkt in die Datenbank.
+     */
+    public void assignTrainingToEmployee(int employeeId, int trainingId, java.time.LocalDate assignedAt) throws SQLException {
+        // ACHTUNG: Stelle sicher, dass "training_history" in deiner schema.sql genau so heißt!
+        String sql = "INSERT INTO training_history (employee_id, training_id, status, assigned_at) VALUES (?, ?, 'OPEN', ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, employeeId);
+            stmt.setInt(2, trainingId);
+            stmt.setDate(3, Date.valueOf(assignedAt));
+            stmt.executeUpdate();
+        }
+    }
+
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {
