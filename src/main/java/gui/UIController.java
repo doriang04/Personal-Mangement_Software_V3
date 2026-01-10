@@ -4,6 +4,11 @@ import model.ServiceLocator;
 import core.SessionManager;
 import gui.views.*;
 
+// NEUE IMPORTS
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+
 public class UIController {
 
     private static UIController instance;
@@ -18,6 +23,33 @@ public class UIController {
     private UIController() {
         this.mainWindow = MainWindow.getInstance();
         this.sessionManager = ServiceLocator.getSessionManager();
+
+        // NEU: Window-Listener registrieren, um das Schließen abzufangen
+        initShutdownListener();
+    }
+
+    // NEU: Diese Methode kümmert sich um das sichere Beenden
+    private void initShutdownListener() {
+        // Sicherstellen, dass das Fenster nicht einfach zugeht (Redundant falls schon in MainWindow gesetzt, aber sicher ist sicher)
+        this.mainWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        this.mainWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                shutdownApplication();
+            }
+        });
+    }
+
+    // NEU: Zentrale Methode zum Beenden
+    public void shutdownApplication() {
+        System.out.println("🛑 Programm wird beendet... Speichere Daten.");
+
+        // 1. Daten speichern
+        database.DatabaseManager.getInstance().saveAllData();
+
+        // 2. JVM beenden
+        System.exit(0);
     }
 
     public void startApplication() {
@@ -39,6 +71,8 @@ public class UIController {
     }
 
     public void logout() {
+        // Du kannst hier auch direkt saveAllData aufrufen oder dich auf den Shutdown verlassen,
+        // aber explizit ist besser:
         database.DatabaseManager.getInstance().saveAllData();
         sessionManager.logout();
         showLoginScreen();
