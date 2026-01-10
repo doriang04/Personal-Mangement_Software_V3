@@ -38,6 +38,6 @@ public class TrainingSkillManagerContainer {
                 return manager;
             }
         }
-        return null; // Nichts gefunden
+        return null;
     }
 }
