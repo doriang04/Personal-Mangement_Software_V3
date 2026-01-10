@@ -25,4 +25,17 @@ public class RoleManagerContainer {
     public ArrayList<RoleManager> getRoleManagers() {
         return roleManagers;
     }
+
+    public void setRoleManagers(ArrayList<RoleManager> roleManagers) {
+        this.roleManagers = roleManagers;
+    }
+    public RoleManager getRoleManagerById(int roleManagerId) {
+        for (RoleManager rm: roleManagers) {
+            if (rm.getId() == roleManagerId) {
+                return rm;
+            }
+        }
+        return null;
+    }
+
 }

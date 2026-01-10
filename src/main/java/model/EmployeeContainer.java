@@ -27,4 +27,14 @@ public class EmployeeContainer {
     public ArrayList<Employee> getEmployees() {
         return new ArrayList<>(employees);
     }
+
+
+    public Employee getEmployeeById(int EmployeeId) {
+        for (Employee employee : employees) {
+            if (employee.getId() == EmployeeId) {
+                return employee;
+            }
+        }
+        return null;
+    }
 }

@@ -8,6 +8,8 @@ import java.util.List;
 
 public class TrainingSkillManager {
 
+
+
     public static class TrainingSkillEntry {
         private int trainingId;
         private int skillId;
@@ -40,6 +42,7 @@ public class TrainingSkillManager {
     public TrainingSkillManager() {
 
     }
+
 
     public int getTrainingId() {
         return trainingId;

@@ -9,6 +9,10 @@ public class TrainingManager {
     private int employeeId; // was final
     private final ArrayList<TrainingHistoryEntry> trainingHistory = new ArrayList<>();
 
+    public int getId() {
+        return employeeId;
+    }
+
     public enum Status {
         OPEN,
         DONE

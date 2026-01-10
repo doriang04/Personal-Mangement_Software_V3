@@ -21,4 +21,13 @@ public class TeamContainer {
     public ArrayList<Team> getTeams() {
         return teams;
     }
+
+    public Team getTeamById(int Teamid) {
+        for (Team Team: teams) {
+            if (Team.getId() == Teamid) {
+                return Team;
+            }
+        }
+        return null;
+    }
 }

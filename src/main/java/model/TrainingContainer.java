@@ -26,4 +26,13 @@ public class TrainingContainer {
         return trainings;
     }
 
+    public Training getTrainingById(int Trainingid) {
+        for (Training Training: trainings) {
+            if (Training.getId() == Trainingid) {
+                return Training;
+            }
+        }
+        return null;
+    }
+
 }

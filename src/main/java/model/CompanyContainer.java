@@ -23,4 +23,11 @@ public class CompanyContainer {
     public ArrayList<Company> getCompanies() {
         return companies;
     }
+
+    public Company getCompanyById(int CompanyId) {
+        for (Company Company: companies) {
+            if (Company.getId() == CompanyId) return Company;
+        }
+        return null;
+    }
 }

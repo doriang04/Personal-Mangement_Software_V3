@@ -9,6 +9,10 @@ public class RoleManager {
     private int employeeId; // corresponds to role_history.employee_id / employees.id  // war mal final
     private final List<RoleHistoryEntry> roleHistory = new ArrayList<>();
 
+    public  int getId() {
+        return employeeId;
+    }
+
     /**
      * Represents one entry from role_history table.
      * historyId is nullable (0 if unknown / not persisted yet).

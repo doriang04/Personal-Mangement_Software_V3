@@ -17,4 +17,13 @@ public class TrainingManagerContainer {
     public void addTrainingManager(TrainingManager tm) { trainingManagers.add(tm); }
     public void removeTrainingManager(TrainingManager tm) { trainingManagers.remove(tm); }
     public ArrayList<TrainingManager> getTrainingManagers() { return new ArrayList<>(trainingManagers); }
+
+    public TrainingManager getTrainingManagerById(int TrainingManagerid) {
+        for (TrainingManager TrainingManager: trainingManagers) {
+            if (TrainingManager.getId() == TrainingManagerid) {
+                return TrainingManager;
+            }
+        }
+        return null;
+    }
 }

@@ -91,16 +91,17 @@ public class UIController {
         if (!mainWindow.selectTabIfExists(view)) mainWindow.openTab(view, closable);
     }
 
+
     /**
      * Öffnet das Profil eines Mitarbeiters in einem neuen Tab.
      * Wird von EmployeeSearchView per Doppelklick aufgerufen.
      */
     public void openEmployeeDetailTab(int employeeId) {
-        // Wir brauchen das Employee Objekt hier nicht mehr suchen,
-        // da die View jetzt schlau genug ist, nur mit der ID zu arbeiten.
-
-        // Einfach ID an die View übergeben:
+        // 1. View erstellen (ID übergeben)
         gui.views.EmployeeDetailView view = new gui.views.EmployeeDetailView(employeeId);
+
+        // 2. WICHTIG: Tab im Hauptfenster öffnen! (DIESE ZEILE FEHLTE)
+        mainWindow.openTab(view, true);
     }
 
     // Falls du komplexere Anforderungen hast (wie im originalen requestTabCreation): TODO is this needed?

@@ -23,5 +23,14 @@ public class SkillContainer {
     public ArrayList<Skill> getSkills() {
         return skills;
     }
+
+    public Skill getSkillById(int Skillid) {
+        for (Skill skill: skills) {
+            if (skill.getId() == Skillid) {
+                return skill;
+            }
+        }
+        return null;
+    }
     
 }

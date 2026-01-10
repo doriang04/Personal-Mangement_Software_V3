@@ -22,6 +22,16 @@ public class SkillManagerContainer {
     public ArrayList<SkillManager> getSkillManagers() {
         return skillManagers;
     }
+
+    public SkillManager getSkillManagerById(int SkillManagerid) {
+        for (SkillManager SkillManager: skillManagers) {
+            if (SkillManager.getId() == SkillManagerid) {
+                return SkillManager;
+            }
+        }
+        return null;
+    }
+
 }
 
 

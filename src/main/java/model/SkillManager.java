@@ -15,6 +15,10 @@ public class SkillManager {
     private int employeeId; // was final
     private final ArrayList<SkillHistoryEntry> skillHistory = new ArrayList<>();
 
+    public int getId() {
+        return employeeId;
+    }
+
     /**
      * Represents one row in skill_history.
      */
