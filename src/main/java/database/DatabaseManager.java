@@ -12,11 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.h2.tools.RunScript;
-
-// TODO check this class if it works as intended (gpt code cannot be trusted by itself lol
 
 public class DatabaseManager {
 
@@ -52,71 +49,56 @@ public class DatabaseManager {
         }
     }
 
-    /**
-     * Lädt das Schema aus der externen .sql Datei
-     */
     private void initDatabase() {
         try {
             InputStream is = getClass().getClassLoader().getResourceAsStream("db/schema.sql");
             if (is == null) {
                 throw new RuntimeException("Schema file not found: db/schema.sql");
             }
-            // H2 RunScript führt das gesamte SQL File aus
             RunScript.execute(connection, new InputStreamReader(is));
             System.out.println("✅ Database schema initialized from schema.sql");
         } catch (Exception e) {
             System.err.println("❌ Schema init failed: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
-    /**
-     * Hauptmethode, um alle Daten aus dem ServiceLocator in die DB zu schreiben.
-     * Die Operation läuft innerhalb einer DB-Transaktion; bei Fehlern wird zurückgerollt.
-     */
-    public void syncWithServiceLocator() {
-        System.out.println("🔄 Syncing ServiceLocator data to database...");
-        boolean previousAutoCommit = true;
+    public void importFromJson(Path dir) throws IOException, SQLException {
+        if (dir == null || !Files.isDirectory(dir)) {
+            throw new IllegalArgumentException("dir must be an existing directory");
+        }
+
+        connection.setAutoCommit(false);
         try {
-            previousAutoCommit = connection.getAutoCommit();
-            connection.setAutoCommit(false); // Start transaction
+            saveCompanies(loadFromJson(dir.resolve("companies.json"), Company.class));
+            saveDepartments(loadFromJson(dir.resolve("departments.json"), Department.class));
+            saveTeams(loadFromJson(dir.resolve("teams.json"), Team.class));
+            saveRoles(loadFromJson(dir.resolve("roles.json"), Role.class));
+            saveSkills(loadFromJson(dir.resolve("skills.json"), Skill.class));
+            saveTrainings(loadFromJson(dir.resolve("trainings.json"), Training.class));
 
-            // Reihenfolge wichtig wg. FK-Constraints
-            saveCompanies(ServiceLocator.getCompanyContainer().getCompanies());
-            saveDepartments(ServiceLocator.getDepartmentContainer().getDepartments());
-            saveTeams(ServiceLocator.getTeamContainer().getTeams());
-            saveRoles(ServiceLocator.getRoleContainer().getRoles());
-            saveSkills(ServiceLocator.getSkillContainer().getSkills());
-            // Mitarbeiter hängen oft an Teams, daher erst nach Teams speichern
-            saveEmployees(ServiceLocator.getEmployeeContainer().getEmployees());
-            saveTrainings(ServiceLocator.getTrainingContainer().getTrainings());
+            ArrayList<Employee> employees =
+                    loadFromJson(dir.resolve("employees.json"), Employee.class);
 
-            // Hinweis / TODO:
-            // Falls euer Modell History- oder Join-Entitäten enthält (role_history, skill_history,
-            // training_history, training_skills), dann hier die entsprechenden saveX(...) Methoden
-            // aufrufen. Beispiel (falls vorhanden):
-            // saveRoleHistory(ServiceLocator.getRoleHistoryContainer().getRoleHistories());
-            // saveSkillHistory(ServiceLocator.getSkillHistoryContainer().getSkillHistories());
-            // saveTrainingHistory(ServiceLocator.getTrainingHistoryContainer().getTrainingHistories());
-            // saveTrainingSkills(ServiceLocator.getTrainingContainer().getTrainingSkills());
+            saveEmployees(employees);
+
+            saveTrainingSkillsFromJson(dir.resolve("trainings.json"));
+            saveEmployeeHistoriesFromJson(employees);
 
             connection.commit();
-            System.out.println("✅ Sync complete!");
-        } catch (SQLException e) {
-            System.err.println("❌ Sync failed: " + e.getMessage());
-            try {
-                connection.rollback();
-                System.err.println("↩️ Rolled back transaction.");
-            } catch (SQLException ex) {
-                System.err.println("❌ Rollback failed: " + ex.getMessage());
-            }
+            System.out.println("✅ JSON → DB import complete");
+        } catch (Exception e) {
+            connection.rollback();
+            throw e;
         } finally {
-            try {
-                connection.setAutoCommit(previousAutoCommit);
-            } catch (SQLException e) {
-                System.err.println("❌ Could not restore auto-commit: " + e.getMessage());
-            }
+            connection.setAutoCommit(true);
         }
+    }
+
+    private <T> ArrayList<T> loadFromJson(Path file, Class<T> clazz) throws IOException {
+        return mapper.readValue(
+                file.toFile(),
+                mapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz)
+        );
     }
 
     private void saveCompanies(ArrayList<Company> companies) throws SQLException {
@@ -253,83 +235,6 @@ public class DatabaseManager {
         }
     }
 
-    public void importFromJson(Path dir) throws IOException, SQLException {
-        if (dir == null || !Files.isDirectory(dir)) {
-            throw new IllegalArgumentException("dir must be an existing directory");
-        }
-
-        connection.setAutoCommit(false);
-        try {
-            saveCompanies(loadCompaniesFromJson(dir.resolve("companies.json")));
-            saveDepartments(loadDepartmentsFromJson(dir.resolve("departments.json")));
-            saveTeams(loadTeamsFromJson(dir.resolve("teams.json")));
-            saveRoles(loadRolesFromJson(dir.resolve("roles.json")));
-            saveSkills(loadSkillsFromJson(dir.resolve("skills.json")));
-            saveTrainings(loadTrainingsFromJson(dir.resolve("trainings.json")));
-
-            // Employees + Histories
-            ArrayList<Employee> employees = loadEmployeesFromJson(dir.resolve("employees.json"));
-            saveEmployees(employees);
-
-            // Trainings → Skills (N:M)
-            saveTrainingSkillsFromJson(dir.resolve("trainings.json"));
-
-            // This last to avoid Foreign Key Issues
-            saveEmployeeHistoriesFromJson(employees);
-
-            connection.commit();
-            System.out.println("✅ JSON → DB import complete");
-        } catch (Exception e) {
-            connection.rollback();
-            throw e;
-        } finally {
-            connection.setAutoCommit(true);
-        }
-    }
-
-    // TODO find a way to do this in a pretty way
-    private ArrayList<Company> loadCompaniesFromJson(Path file) throws IOException {
-        return mapper.readValue(file.toFile(),
-                new TypeReference<>() {
-                });
-    }
-
-    private ArrayList<Department> loadDepartmentsFromJson(Path file) throws IOException {
-        return mapper.readValue(file.toFile(),
-                new TypeReference<>() {
-                });
-    }
-
-    private ArrayList<Team> loadTeamsFromJson(Path file) throws IOException {
-        return mapper.readValue(file.toFile(),
-                new TypeReference<>() {
-                });
-    }
-
-    private ArrayList<Role> loadRolesFromJson(Path file) throws IOException {
-        return mapper.readValue(file.toFile(),
-                new TypeReference<>() {
-                });
-    }
-
-    private ArrayList<Skill> loadSkillsFromJson(Path file) throws IOException {
-        return mapper.readValue(file.toFile(),
-                new TypeReference<>() {
-                });
-    }
-
-    private ArrayList<Employee> loadEmployeesFromJson(Path file) throws IOException {
-        return mapper.readValue(file.toFile(),
-                new TypeReference<>() {
-                });
-    }
-
-    private ArrayList<Training> loadTrainingsFromJson(Path file) throws IOException {
-        return mapper.readValue(file.toFile(),
-                new TypeReference<>() {
-                });
-    }
-
     private void saveEmployeeHistoriesFromJson(ArrayList<Employee> employees) throws SQLException {
         String roleSql = """
         INSERT INTO role_history (employee_id, role_id, assigned_at, ended_at)
@@ -354,7 +259,7 @@ public class DatabaseManager {
         ) {
             for (Employee e : employees) {
 
-                // -------- ROLE HISTORY --------
+                // Role History
                 var rm = e.getRoleManager();
 
                 for (var entry : rm.getRoleHistory()) {
@@ -369,7 +274,7 @@ public class DatabaseManager {
                     roleStmt.addBatch();
                 }
 
-                // -------- SKILL HISTORY --------
+                // Skill History
                 for (var sh : e.getSkillManager().getSkillHistory()) {
                     skillStmt.setInt(1, e.getId());
                     skillStmt.setInt(2, sh.getSkillId());
@@ -377,17 +282,24 @@ public class DatabaseManager {
                     skillStmt.addBatch();
                 }
 
-                // -------- TRAINING HISTORY --------
-                for (var th : e.getOpenTrainingManager().getTrainingHistory()) {
+                // Training History
+                for (var th : e.getTrainingManager().getTrainingHistory()) {
                     trainingStmt.setInt(1, e.getId());
                     trainingStmt.setInt(2, th.getTrainingId());
                     trainingStmt.setString(3, th.isDone() ? "DONE" : "OPEN");
-                    trainingStmt.setDate(4, Date.valueOf(th.getAssignedAt()));
+
+                    if (th.getAssignedAt() != null) {
+                        trainingStmt.setDate(4, Date.valueOf(th.getAssignedAt()));
+                    } else {
+                        trainingStmt.setNull(4, Types.DATE);
+                    }
+
                     if (th.getCompletedAt() != null) {
                         trainingStmt.setDate(5, Date.valueOf(th.getCompletedAt()));
                     } else {
                         trainingStmt.setNull(5, Types.DATE);
                     }
+
                     trainingStmt.addBatch();
                 }
             }
@@ -420,18 +332,15 @@ public class DatabaseManager {
     public void loadDataFromDb() throws SQLException {
         System.out.println("📥 Lade Daten aus der Datenbank in den Speicher...");
 
-        // 1. Basis-Entitäten laden (Reihenfolge ist wichtig wegen Abhängigkeiten)
         loadCompanies();
         loadDepartments();
         loadTeams();
         loadRoles();
         loadSkills();
-        loadTrainings(); // Lädt auch TrainingSkills
+        loadTrainings();
 
-        // 2. Mitarbeiter laden (Basisdaten)
         loadEmployees();
 
-        // 3. Historien und Verknüpfungen laden
         loadRoleHistories();
         loadSkillHistories();
         loadTrainingHistories();
@@ -513,7 +422,6 @@ public class DatabaseManager {
     }
 
     private void loadTrainings() throws SQLException {
-        // Zuerst Training-Objekte erstellen
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT * FROM trainings")) {
             var container = ServiceLocator.getTrainingContainer();
@@ -524,35 +432,25 @@ public class DatabaseManager {
                 t.setDescription(rs.getString("description"));
                 t.setLength(rs.getInt("duration_hours"));
 
-                // SkillManager für das Training initialisieren
                 t.setSkills(new TrainingSkillManager(t));
 
                 container.addTraining(t);
             }
         }
 
-        // Jetzt die Training-Skills (N:M) verknüpfen
         String sql = "SELECT * FROM training_skills";
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            var container = ServiceLocator.getTrainingContainer();
+
             while (rs.next()) {
                 int tId = rs.getInt("training_id");
                 int sId = rs.getInt("skill_id");
 
-                // Wir suchen das Training im Container (etwas ineffizient O(n), aber ok für kleine Mengen)
-                for (Training t : container.getTrainings()) {
-                    if (t.getId() == tId) {
-                        // Da wir keinen vollen Skill haben, laden wir ihn aus dem SkillContainer
-                        // Oder wir fügen nur die ID hinzu, wenn TrainingSkillManager das unterstützt.
-                        // Deine TrainingSkillManager.addSkill Methode erwartet ein Skill Objekt.
-                        for(Skill s : ServiceLocator.getSkillContainer().getSkills()) {
-                            if(s.getId() == sId) {
-                                t.getSkills().addSkill(s);
-                                break;
-                            }
-                        }
-                    }
+                Training training = ServiceLocator.getTrainingContainer().getTrainingById(tId);
+                Skill skill = ServiceLocator.getSkillContainer().getSkillById(sId);
+
+                if (training != null && skill != null) {
+                    training.getSkills().addSkill(skill);
                 }
             }
         }
@@ -582,30 +480,25 @@ public class DatabaseManager {
 
                 e.setEmploymentStatus(rs.getBoolean("employment_active"));
 
-                // Date handling (SQL Date -> Java Util Date)
                 if (rs.getDate("date_of_birth") != null)
                     e.setDateOfBirth(new java.util.Date(rs.getDate("date_of_birth").getTime()));
 
                 if (rs.getDate("hire_date") != null)
                     e.setHireDate(new java.util.Date(rs.getDate("hire_date").getTime()));
 
-                // FKs (können null sein, was rs.getInt als 0 zurückgibt, wenn NULL)
                 int teamId = rs.getInt("team_id");
                 if (!rs.wasNull()) e.setTeamId(teamId);
 
                 int managerId = rs.getInt("manager_id");
                 if (!rs.wasNull()) e.setManagerId(managerId);
 
-                // WICHTIG: Manager initialisieren, damit wir sie gleich befüllen können
                 e.setRoleManager(new RoleManager(e));
                 e.setSkillManager(new SkillManager(e));
-                e.setOpenTrainingManager(new TrainingManager(e));
-                // e.setDoneTrainingManager(new TrainingManager(e)); // Optional, falls getrennt gewünscht
+                e.setTrainingManager(new TrainingManager(e));
 
-                // Auch in die globalen Manager-Container packen (falls nötig)
                 ServiceLocator.getRoleManagerContainer().addRoleManager(e.getRoleManager());
                 ServiceLocator.getSkillManagerContainer().addSkillManager(e.getSkillManager());
-                ServiceLocator.getTrainingManagerContainer().addTrainingManager(e.getOpenTrainingManager());
+                ServiceLocator.getTrainingManagerContainer().addTrainingManager(e.getTrainingManager());
 
                 container.addEmployee(e);
             }
@@ -617,12 +510,9 @@ public class DatabaseManager {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            var employees = ServiceLocator.getEmployeeContainer().getEmployees();
-
             while (rs.next()) {
                 int empId = rs.getInt("employee_id");
-                // Finde Mitarbeiter
-                Employee emp = employees.stream().filter(e -> e.getId() == empId).findFirst().orElse(null);
+                Employee emp = ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
 
                 if (emp != null) {
                     var entry = new RoleManager.RoleHistoryEntry();
@@ -634,13 +524,7 @@ public class DatabaseManager {
                         entry.setEndDate(rs.getDate("ended_at").toLocalDate());
                     }
 
-                    // Trick: Wir nutzen die interne Liste nicht direkt, sondern bauen eine auf
-                    // oder nutzen Reflection. Aber RoleManager hat keine addHistoryEntry Methode,
-                    // nur setRoleHistory(List).
-                    // Wir holen die aktuelle Liste, fügen hinzu, und setzen neu.
-                    List<RoleManager.RoleHistoryEntry> currentList = emp.getRoleManager().getRoleHistory();
-                    currentList.add(entry);
-                    emp.getRoleManager().setRoleHistory(currentList);
+                    emp.getRoleManager().addRoleHistoryEntry(entry);
                 }
             }
         }
@@ -651,11 +535,9 @@ public class DatabaseManager {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            var employees = ServiceLocator.getEmployeeContainer().getEmployees();
-
             while (rs.next()) {
                 int empId = rs.getInt("employee_id");
-                Employee emp = employees.stream().filter(e -> e.getId() == empId).findFirst().orElse(null);
+                Employee emp = ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
 
                 if (emp != null) {
                     var entry = new SkillManager.SkillHistoryEntry();
@@ -674,11 +556,9 @@ public class DatabaseManager {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
-            var employees = ServiceLocator.getEmployeeContainer().getEmployees();
-
             while (rs.next()) {
                 int empId = rs.getInt("employee_id");
-                Employee emp = employees.stream().filter(e -> e.getId() == empId).findFirst().orElse(null);
+                Employee emp = ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
 
                 if (emp != null) {
                     TrainingManager.Status status = TrainingManager.Status.valueOf(rs.getString("status"));
@@ -691,30 +571,12 @@ public class DatabaseManager {
                             rs.getDate("completed_at") != null ? rs.getDate("completed_at").toLocalDate() : null
                     );
 
-                    // Wir nutzen hier einfach den "openTrainingManager" als Hauptspeicher für alles
-                    emp.getOpenTrainingManager().getTrainingHistory().add(entry);
+                    emp.getTrainingManager().getTrainingHistory().add(entry);
                 }
             }
         }
     }
 
-    /**
-     * Speichert eine neu zugewiesene Schulung direkt in die Datenbank.
-     */
-    public void assignTrainingToEmployee(int employeeId, int trainingId, java.time.LocalDate assignedAt) throws SQLException {
-        // ACHTUNG: Stelle sicher, dass "training_history" in deiner schema.sql genau so heißt!
-        String sql = "INSERT INTO training_history (employee_id, training_id, status, assigned_at) VALUES (?, ?, 'OPEN', ?)";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, employeeId);
-            stmt.setInt(2, trainingId);
-            stmt.setDate(3, Date.valueOf(assignedAt));
-            stmt.executeUpdate();
-        }
-    }
-    /**
-     * Speichert alle relevanten Änderungen aus dem RAM zurück in die Datenbank.
-     */
     public void saveAllData() {
         System.out.println("💾 Speichere Daten in die Datenbank...");
         try {
@@ -727,7 +589,6 @@ public class DatabaseManager {
             System.out.println("✅ Speichern erfolgreich!");
         } catch (SQLException e) {
             System.err.println("❌ Fehler beim Speichern: " + e.getMessage());
-            e.printStackTrace();
         }
         closeConnection();
     }
@@ -750,17 +611,13 @@ public class DatabaseManager {
         }
     }
 
-    // 2. Rollenhistorie synchronisieren
-    // Strategie: Alte Einträge für diesen User löschen, aktuelle Liste aus RAM neu schreiben.
-    private void updateRoleHistory(Employee e) throws SQLException {
-        // A) Löschen
+    private void updateRoleHistory(Employee e) throws SQLException { // TODO fix this method
         String deleteSql = "DELETE FROM role_history WHERE employee_id=?";
         try (PreparedStatement delStmt = connection.prepareStatement(deleteSql)) {
             delStmt.setInt(1, e.getId());
             delStmt.executeUpdate();
         }
 
-        // B) Neu Einfügen
         String insertSql = "INSERT INTO role_history (employee_id, role_id, assigned_at, ended_at) VALUES (?, ?, ?, ?)";
         try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
             if (e.getRoleManager() != null) {
@@ -781,20 +638,17 @@ public class DatabaseManager {
         }
     }
 
-    // 3. Schulungshistorie synchronisieren
-    private void updateTrainingHistory(Employee e) throws SQLException {
-        // A) Löschen
+    private void updateTrainingHistory(Employee e) throws SQLException { // TODO fix this method
         String deleteSql = "DELETE FROM training_history WHERE employee_id=?";
         try (PreparedStatement delStmt = connection.prepareStatement(deleteSql)) {
             delStmt.setInt(1, e.getId());
             delStmt.executeUpdate();
         }
 
-        // B) Neu Einfügen
         String insertSql = "INSERT INTO training_history (employee_id, training_id, status, assigned_at, completed_at) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
-            if (e.getOpenTrainingManager() != null) {
-                for (TrainingManager.TrainingHistoryEntry entry : e.getOpenTrainingManager().getTrainingHistory()) {
+            if (e.getTrainingManager() != null) {
+                for (TrainingManager.TrainingHistoryEntry entry : e.getTrainingManager().getTrainingHistory()) {
                     insertStmt.setInt(1, e.getId());
                     insertStmt.setInt(2, entry.getTrainingId());
 

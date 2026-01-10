@@ -191,11 +191,4 @@ public class MainWindow extends JFrame {
         System.out.println("selectTabIfExists false");
         return false;
     }
-
-    public boolean isTabOpen(View view) {
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            if (view.equals(tabbedPane.getComponentAt(i))) return true;
-        }
-        return false;
-    }
 }

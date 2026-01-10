@@ -53,17 +53,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 1,
+          "assignedAt": "2023-12-01",
           "completedAt": "2023-12-01"
         },
         {
           "trainingId": 5,
+          "assignedAt": "2024-03-15",
           "completedAt": "2024-03-15"
         }
       ]
@@ -113,18 +112,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 3,
-          "assignedAt": "2025-02-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-02-01",
+          "completedAt": null
+        },
         {
           "trainingId": 1,
+          "assignedAt": "2024-01-15",
           "completedAt": "2024-01-15"
         }
       ]
@@ -175,18 +172,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 2,
-          "assignedAt": "2025-01-20"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-01-20",
+          "completedAt": null
+        },
         {
           "trainingId": 4,
+          "assignedAt": "2023-11-01",
           "completedAt": "2023-11-01"
         }
       ]
@@ -232,13 +227,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 16,
+          "assignedAt": "2024-06-01",
           "completedAt": "2024-06-01"
         }
       ]
@@ -284,18 +277,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 16,
-          "assignedAt": "2025-03-15"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-03-15",
+          "completedAt": null
+        },
         {
           "trainingId": 4,
+          "assignedAt": "2022-09-01",
           "completedAt": "2022-09-01"
         }
       ]
@@ -350,22 +341,21 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 17,
-          "assignedAt": "2025-04-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-04-01",
+          "completedAt": null
+        },
         {
           "trainingId": 3,
+          "assignedAt": "2022-09-15",
           "completedAt": "2022-09-15"
         },
         {
           "trainingId": 12,
+          "assignedAt": "2024-01-20",
           "completedAt": "2024-01-20"
         }
       ]
@@ -415,17 +405,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 17,
+          "assignedAt": "2024-05-10",
           "completedAt": "2024-05-10"
         },
         {
           "trainingId": 4,
+          "assignedAt": "2023-10-01",
           "completedAt": "2023-10-01"
         }
       ]
@@ -475,18 +464,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 10,
-          "assignedAt": "2025-05-15"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-05-15",
+          "completedAt": null
+        },
         {
           "trainingId": 16,
+          "assignedAt": "2024-03-20",
           "completedAt": "2024-03-20"
         }
       ]
@@ -532,18 +519,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 17,
-          "assignedAt": "2025-06-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-06-01",
+          "completedAt": null
+        },
         {
           "trainingId": 4,
+          "assignedAt": "2023-12-15",
           "completedAt": "2023-12-15"
         }
       ]
@@ -593,17 +578,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 12,
+          "assignedAt": "2023-11-10",
           "completedAt": "2023-11-10"
         },
         {
           "trainingId": 3,
+          "assignedAt": "2022-06-01",
           "completedAt": "2022-06-01"
         }
       ]
@@ -662,22 +646,21 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 18,
-          "assignedAt": "2025-04-20"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-04-20",
+          "completedAt": null
+        },
         {
           "trainingId": 30,
+          "assignedAt": "2024-02-15",
           "completedAt": "2024-02-15"
         },
         {
           "trainingId": 11,
+          "assignedAt": "2023-10-01",
           "completedAt": "2023-10-01"
         }
       ]
@@ -727,17 +710,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 18,
+          "assignedAt": "2024-08-10",
           "completedAt": "2024-08-10"
         },
         {
           "trainingId": 4,
+          "assignedAt": "2023-03-15",
           "completedAt": "2023-03-15"
         }
       ]
@@ -787,18 +769,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 10,
-          "assignedAt": "2025-05-15"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-05-15",
+          "completedAt": null
+        },
         {
           "trainingId": 18,
+          "assignedAt": "2024-01-20",
           "completedAt": "2024-01-20"
         }
       ]
@@ -848,13 +828,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 18,
+          "assignedAt": "2024-06-05",
           "completedAt": "2024-06-05"
         }
       ]
@@ -909,22 +887,21 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 32,
-          "assignedAt": "2025-07-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-07-01",
+          "completedAt": null
+        },
         {
           "trainingId": 11,
+          "assignedAt": "2023-05-15",
           "completedAt": "2023-05-15"
         },
         {
           "trainingId": 30,
+          "assignedAt": "2024-03-10",
           "completedAt": "2024-03-10"
         }
       ]
@@ -983,22 +960,21 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 24,
-          "assignedAt": "2025-08-10"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-08-10",
+          "completedAt": null
+        },
         {
           "trainingId": 9,
+          "assignedAt": "2022-11-15",
           "completedAt": "2022-11-15"
         },
         {
           "trainingId": 28,
+          "assignedAt": "2024-04-01",
           "completedAt": "2024-04-01"
         }
       ]
@@ -1048,18 +1024,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 24,
-          "assignedAt": "2025-09-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-09-01",
+          "completedAt": null
+        },
         {
           "trainingId": 24,
+          "assignedAt": "2024-02-20",
           "completedAt": "2024-02-20"
         }
       ]
@@ -1109,18 +1083,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 25,
-          "assignedAt": "2025-10-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-10-01",
+          "completedAt": null
+        },
         {
           "trainingId": 25,
+          "assignedAt": "2024-07-15",
           "completedAt": "2024-07-15"
         }
       ]
@@ -1170,17 +1142,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 9,
+          "assignedAt": "2023-12-10",
           "completedAt": "2023-12-10"
         },
         {
           "trainingId": 4,
+          "assignedAt": "2023-06-01",
           "completedAt": "2023-06-01"
         }
       ]
@@ -1234,18 +1205,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 15,
-          "assignedAt": "2025-11-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-11-01",
+          "completedAt": null
+        },
         {
           "trainingId": 15,
+          "assignedAt": "2024-09-20",
           "completedAt": "2024-09-20"
         }
       ]
@@ -1304,22 +1273,21 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 20,
-          "assignedAt": "2025-05-25"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-05-25",
+          "completedAt": null
+        },
         {
           "trainingId": 13,
+          "assignedAt": "2023-10-15",
           "completedAt": "2023-10-15"
         },
         {
           "trainingId": 21,
+          "assignedAt": "2024-03-01",
           "completedAt": "2024-03-01"
         }
       ]
@@ -1373,17 +1341,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 20,
+          "assignedAt": "2024-09-10",
           "completedAt": "2024-09-10"
         },
         {
           "trainingId": 13,
+          "assignedAt": "2023-12-05",
           "completedAt": "2023-12-05"
         }
       ]
@@ -1437,18 +1404,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 21,
-          "assignedAt": "2025-06-15"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-06-15",
+          "completedAt": null
+        },
         {
           "trainingId": 21,
+          "assignedAt": "2024-01-20",
           "completedAt": "2024-01-20"
         }
       ]
@@ -1498,17 +1463,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 13,
+          "assignedAt": "2023-08-15",
           "completedAt": "2023-08-15"
         },
         {
           "trainingId": 4,
+          "assignedAt": "2022-11-01",
           "completedAt": "2022-11-01"
         }
       ]
@@ -1558,18 +1522,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 20,
-          "assignedAt": "2025-08-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-08-01",
+          "completedAt": null
+        },
         {
           "trainingId": 20,
+          "assignedAt": "2024-11-15",
           "completedAt": "2024-11-15"
         }
       ]
@@ -1628,22 +1590,21 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 22,
-          "assignedAt": "2025-07-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-07-01",
+          "completedAt": null
+        },
         {
           "trainingId": 14,
+          "assignedAt": "2023-11-20",
           "completedAt": "2023-11-20"
         },
         {
           "trainingId": 23,
+          "assignedAt": "2024-05-15",
           "completedAt": "2024-05-15"
         }
       ]
@@ -1697,18 +1658,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 23,
-          "assignedAt": "2025-08-20"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-08-20",
+          "completedAt": null
+        },
         {
           "trainingId": 23,
+          "assignedAt": "2024-03-10",
           "completedAt": "2024-03-10"
         }
       ]
@@ -1758,17 +1717,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 22,
+          "assignedAt": "2024-01-25",
           "completedAt": "2024-01-25"
         },
         {
           "trainingId": 14,
+          "assignedAt": "2023-09-15",
           "completedAt": "2023-09-15"
         }
       ]
@@ -1818,18 +1776,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 33,
-          "assignedAt": "2025-09-15"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-09-15",
+          "completedAt": null
+        },
         {
           "trainingId": 14,
+          "assignedAt": "2024-06-20",
           "completedAt": "2024-06-20"
         }
       ]
@@ -1879,17 +1835,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 22,
+          "assignedAt": "2024-04-10",
           "completedAt": "2024-04-10"
         },
         {
           "trainingId": 4,
+          "assignedAt": "2023-02-15",
           "completedAt": "2023-02-15"
         }
       ]
@@ -1948,22 +1903,21 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 34,
-          "assignedAt": "2025-02-20"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-02-20",
+          "completedAt": null
+        },
         {
           "trainingId": 5,
+          "assignedAt": "2023-08-15",
           "completedAt": "2023-08-15"
         },
         {
           "trainingId": 34,
+          "assignedAt": "2024-06-10",
           "completedAt": "2024-06-10"
         }
       ]
@@ -2017,17 +1971,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 34,
+          "assignedAt": "2024-11-05",
           "completedAt": "2024-11-05"
         },
         {
           "trainingId": 13,
+          "assignedAt": "2023-10-20",
           "completedAt": "2023-10-20"
         }
       ]
@@ -2081,18 +2034,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 28,
-          "assignedAt": "2025-10-25"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-10-25",
+          "completedAt": null
+        },
         {
           "trainingId": 34,
+          "assignedAt": "2024-03-15",
           "completedAt": "2024-03-15"
         }
       ]
@@ -2142,17 +2093,16 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 34,
+          "assignedAt": "2024-09-01",
           "completedAt": "2024-09-01"
         },
         {
           "trainingId": 9,
+          "assignedAt": "2023-07-20",
           "completedAt": "2023-07-20"
         }
       ]
@@ -2202,18 +2152,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 9,
-          "assignedAt": "2025-12-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-12-01",
+          "completedAt": null
+        },
         {
           "trainingId": 34,
+          "assignedAt": "2024-05-10",
           "completedAt": "2024-05-10"
         }
       ]
@@ -2268,13 +2216,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 4,
+          "assignedAt": "2023-06-20",
           "completedAt": "2023-06-20"
         }
       ]
@@ -2324,18 +2270,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 1,
-          "assignedAt": "2025-03-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-03-01",
+          "completedAt": null
+        },
         {
           "trainingId": 5,
+          "assignedAt": "2024-01-15",
           "completedAt": "2024-01-15"
         }
       ]
@@ -2385,13 +2329,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 10,
+          "assignedAt": "2024-02-10",
           "completedAt": "2024-02-10"
         }
       ]
@@ -2441,18 +2383,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 6,
-          "assignedAt": "2025-04-15"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-04-15",
+          "completedAt": null
+        },
         {
           "trainingId": 6,
+          "assignedAt": "2023-12-05",
           "completedAt": "2023-12-05"
         }
       ]
@@ -2502,13 +2442,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 30,
+          "assignedAt": "2024-07-20",
           "completedAt": "2024-07-20"
         }
       ]
@@ -2558,13 +2496,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 11,
+          "assignedAt": "2024-03-15",
           "completedAt": "2024-03-15"
         }
       ]
@@ -2614,13 +2550,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 9,
+          "assignedAt": "2024-01-10",
           "completedAt": "2024-01-10"
         }
       ]
@@ -2670,18 +2604,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 32,
-          "assignedAt": "2025-07-10"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-07-10",
+          "completedAt": null
+        },
         {
           "trainingId": 15,
+          "assignedAt": "2024-05-25",
           "completedAt": "2024-05-25"
         }
       ]
@@ -2731,13 +2663,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 31,
+          "assignedAt": "2024-02-15",
           "completedAt": "2024-02-15"
         }
       ]
@@ -2787,13 +2717,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 10,
+          "assignedAt": "2023-11-20",
           "completedAt": "2023-11-20"
         }
       ]
@@ -2843,13 +2771,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 12,
+          "assignedAt": "2024-04-05",
           "completedAt": "2024-04-05"
         }
       ]
@@ -2904,18 +2830,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 6,
-          "assignedAt": "2025-05-20"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-05-20",
+          "completedAt": null
+        },
         {
           "trainingId": 6,
+          "assignedAt": "2023-09-10",
           "completedAt": "2023-09-10"
         }
       ]
@@ -2965,13 +2889,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 11,
+          "assignedAt": "2024-01-25",
           "completedAt": "2024-01-25"
         }
       ]
@@ -3021,13 +2943,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 18,
+          "assignedAt": "2024-06-15",
           "completedAt": "2024-06-15"
         }
       ]
@@ -3077,18 +2997,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 7,
-          "assignedAt": "2025-06-20"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-06-20",
+          "completedAt": null
+        },
         {
           "trainingId": 1,
+          "assignedAt": "2023-12-10",
           "completedAt": "2023-12-10"
         }
       ]
@@ -3134,13 +3052,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 16,
+          "assignedAt": "2024-02-20",
           "completedAt": "2024-02-20"
         }
       ]
@@ -3186,16 +3102,14 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 17,
-          "assignedAt": "2025-08-01"
+          "assignedAt": "2025-08-01",
+          "completedAt": null
         }
       ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": []
     }
   },
   {
@@ -3238,13 +3152,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 18,
+          "assignedAt": "2024-05-10",
           "completedAt": "2024-05-10"
         }
       ]
@@ -3290,13 +3202,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 4,
+          "assignedAt": "2023-11-15",
           "completedAt": "2023-11-15"
         }
       ]
@@ -3342,13 +3252,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 10,
+          "assignedAt": "2024-03-05",
           "completedAt": "2024-03-05"
         }
       ]
@@ -3394,16 +3302,14 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 6,
-          "assignedAt": "2025-06-01"
+          "assignedAt": "2025-06-01",
+          "completedAt": null
         }
       ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": []
     }
   },
   {
@@ -3446,13 +3352,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 6,
+          "assignedAt": "2024-01-20",
           "completedAt": "2024-01-20"
         }
       ]
@@ -3498,16 +3402,14 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 6,
-          "assignedAt": "2025-07-15"
+          "assignedAt": "2025-07-15",
+          "completedAt": null
         }
       ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": []
     }
   },
   {
@@ -3550,13 +3452,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 11,
+          "assignedAt": "2024-02-10",
           "completedAt": "2024-02-10"
         }
       ]
@@ -3602,18 +3502,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 27,
-          "assignedAt": "2025-10-05"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-10-05",
+          "completedAt": null
+        },
         {
           "trainingId": 15,
+          "assignedAt": "2024-07-20",
           "completedAt": "2024-07-20"
         }
       ]
@@ -3659,13 +3557,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 20,
+          "assignedAt": "2024-09-15",
           "completedAt": "2024-09-15"
         }
       ]
@@ -3711,18 +3607,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 23,
-          "assignedAt": "2025-08-20"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-08-20",
+          "completedAt": null
+        },
         {
           "trainingId": 14,
+          "assignedAt": "2024-05-25",
           "completedAt": "2024-05-25"
         }
       ]
@@ -3768,13 +3662,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 11,
+          "assignedAt": "2024-06-10",
           "completedAt": "2024-06-10"
         }
       ]
@@ -3825,18 +3717,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 35,
-          "assignedAt": "2025-03-10"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-03-10",
+          "completedAt": null
+        },
         {
           "trainingId": 8,
+          "assignedAt": "2023-12-01",
           "completedAt": "2023-12-01"
         }
       ]
@@ -3882,13 +3772,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 8,
+          "assignedAt": "2024-02-15",
           "completedAt": "2024-02-15"
         }
       ]
@@ -3938,18 +3826,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 19,
-          "assignedAt": "2025-05-05"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-05-05",
+          "completedAt": null
+        },
         {
           "trainingId": 8,
+          "assignedAt": "2023-11-10",
           "completedAt": "2023-11-10"
         }
       ]
@@ -3999,13 +3885,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 24,
+          "assignedAt": "2024-04-20",
           "completedAt": "2024-04-20"
         }
       ]
@@ -4051,18 +3935,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 34,
-          "assignedAt": "2025-11-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-11-01",
+          "completedAt": null
+        },
         {
           "trainingId": 34,
+          "assignedAt": "2024-07-15",
           "completedAt": "2024-07-15"
         }
       ]
@@ -4108,16 +3990,14 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 4,
-          "assignedAt": "2025-09-01"
+          "assignedAt": "2025-09-01",
+          "completedAt": null
         }
       ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": []
     }
   },
   {
@@ -4160,16 +4040,14 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 4,
-          "assignedAt": "2025-10-01"
+          "assignedAt": "2025-10-01",
+          "completedAt": null
         }
       ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": []
     }
   },
   {
@@ -4212,13 +4090,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 1,
+          "assignedAt": "2024-01-25",
           "completedAt": "2024-01-25"
         }
       ]
@@ -4269,18 +4145,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 10,
-          "assignedAt": "2025-07-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-07-01",
+          "completedAt": null
+        },
         {
           "trainingId": 18,
+          "assignedAt": "2023-12-15",
           "completedAt": "2023-12-15"
         }
       ]
@@ -4326,13 +4200,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 10,
+          "assignedAt": "2024-05-20",
           "completedAt": "2024-05-20"
         }
       ]
@@ -4378,13 +4250,11 @@
         }
       ]
     },
-    "openTrainingManager": {
-      "trainingHistory": []
-    },
-    "doneTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 30,
+          "assignedAt": "2024-03-10",
           "completedAt": "2024-03-10"
         }
       ]
@@ -4439,18 +4309,16 @@
         }
       ]
     },
-    "openTrainingManager": {
+    "trainingManager": {
       "trainingHistory": [
         {
           "trainingId": 11,
-          "assignedAt": "2025-04-01"
-        }
-      ]
-    },
-    "doneTrainingManager": {
-      "trainingHistory": [
+          "assignedAt": "2025-04-01",
+          "completedAt": null
+        },
         {
           "trainingId": 11,
+          "assignedAt": "2023-10-20",
           "completedAt": "2023-10-20"
         }
       ]

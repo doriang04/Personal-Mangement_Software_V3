@@ -22,13 +22,12 @@ public class Employee {
     private int managerId;
 
     private SkillManager skillManager;
-    private TrainingManager openTrainingManager;
-    private TrainingManager doneTrainingManager;
+    private TrainingManager trainingManager;
     private RoleManager roleManager;
     
     public Employee(int id, int teamId, String username, String password,
                     String firstName, String lastName, String email, Date dateOfBirth, String adress, char gender, Date hireDate,
-                    int managerId, boolean employmentStatus, String phoneNumber, SkillManager skillManager, TrainingManager openTrainingManager, TrainingManager doneTrainingManager) {
+                    int managerId, boolean employmentStatus, String phoneNumber, SkillManager skillManager, TrainingManager trainingManager) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -44,8 +43,7 @@ public class Employee {
         this.employmentStatus = employmentStatus;
         this.phoneNumber = phoneNumber;
         this.skillManager = skillManager;
-        this.openTrainingManager = openTrainingManager;
-        this.doneTrainingManager = doneTrainingManager;
+        this.trainingManager = trainingManager;
         this.roleManager = new RoleManager(this);
     }
     public Employee() {
@@ -172,20 +170,12 @@ public class Employee {
         this.skillManager = skillManager;
     }
 
-    public TrainingManager getOpenTrainingManager() {
-        return openTrainingManager;
+    public TrainingManager getTrainingManager() {
+        return trainingManager;
     }
 
-    public void setOpenTrainingManager(TrainingManager openTrainingManager) {
-        this.openTrainingManager = openTrainingManager;
-    }
-
-    public TrainingManager getDoneTrainingManager() {
-        return doneTrainingManager;
-    }
-
-    public void setDoneTrainingManager(TrainingManager doneTrainingManager) {
-        this.doneTrainingManager = doneTrainingManager;
+    public void setTrainingManager(TrainingManager trainingManager) {
+        this.trainingManager = trainingManager;
     }
 
     public RoleManager getRoleManager() {

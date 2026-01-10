@@ -146,7 +146,7 @@ public class TrainingManagementView extends JPanel implements View {
 
             if (show) {
                 // Wir holen die Historie
-                TrainingManager tm = emp.getOpenTrainingManager();
+                TrainingManager tm = emp.getTrainingManager();
                 List<TrainingHistoryEntry> history = (tm != null) ? tm.getTrainingHistory() : null;
 
                 // FALL 1: Mitarbeiter hat KEINE Schulungen

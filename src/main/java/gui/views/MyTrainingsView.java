@@ -1,6 +1,5 @@
 package gui.views;
 
-import core.SessionManager;
 import model.*;
 import model.TrainingManager.TrainingHistoryEntry;
 import model.TrainingManager.Status;
@@ -10,13 +9,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.ArrayList;
 
 public class MyTrainingsView extends JPanel implements View {
 
     private Employee currentUser;
 
-    // UI Komponenten
     private JTabbedPane tabbedPane;
     private JTable openTable;
     private DefaultTableModel openModel;
@@ -25,29 +23,9 @@ public class MyTrainingsView extends JPanel implements View {
 
     public MyTrainingsView() {
         setLayout(new BorderLayout());
-
-        // 1. Eingeloggten User finden
-        this.currentUser = findCurrentUser();
-
-        // 2. UI aufbauen
+        this.currentUser = ServiceLocator.getSessionManager().getCurrentUser();
         initUI();
-
-        // 3. Daten laden
         loadData();
-    }
-
-    private Employee findCurrentUser() {
-        SessionManager session = ServiceLocator.getSessionManager();
-        String fullName = session.getUserFirstNameAndLastName();
-
-        if (fullName == null) return null;
-
-        for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
-            if ((e.getFirstName() + e.getLastName()).equalsIgnoreCase(fullName.replace(" ", ""))) {
-                return e;
-            }
-        }
-        return null;
     }
 
     private void initUI() {
@@ -58,7 +36,6 @@ public class MyTrainingsView extends JPanel implements View {
         header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(header, BorderLayout.NORTH);
 
-        // Tabs
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Offene Schulungen", createOpenTrainingsPanel());
         tabbedPane.addTab("Historie (Erledigt)", createHistoryPanel());
@@ -66,12 +43,10 @@ public class MyTrainingsView extends JPanel implements View {
         add(tabbedPane, BorderLayout.CENTER);
     }
 
-    // --- TAB 1: OFFENE SCHULUNGEN ---
     private JPanel createOpenTrainingsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        // Spalten: ID, Titel, Beschreibung, Zuweisungsdatum
-        String[] columns = {"ID", "Schulung", "Beschreibung", "Zugewiesen am"};
+        String[] columns = {"Schulung", "Beschreibung", "Zugewiesen am"};
         openModel = new DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int row, int col) { return false; }
         };
@@ -82,10 +57,9 @@ public class MyTrainingsView extends JPanel implements View {
 
         panel.add(new JScrollPane(openTable), BorderLayout.CENTER);
 
-        // Button unten
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnComplete = new JButton("Als erledigt markieren");
-        btnComplete.addActionListener(e -> completeSelectedTraining());
+        btnComplete.addActionListener(_ -> completeSelectedTraining());
 
         footer.add(btnComplete);
         panel.add(footer, BorderLayout.SOUTH);
@@ -93,11 +67,9 @@ public class MyTrainingsView extends JPanel implements View {
         return panel;
     }
 
-    // --- TAB 2: HISTORIE (Ohne Ablaufdatum) ---
     private JPanel createHistoryPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        // Spalten: Titel, Abschlussdatum, Zertifikat
         String[] columns = {"Schulung", "Abschlussdatum", "Zertifikat"};
         historyModel = new DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int row, int col) { return false; }
@@ -118,27 +90,20 @@ public class MyTrainingsView extends JPanel implements View {
 
         if (currentUser == null) return;
 
-        TrainingManager tm = currentUser.getOpenTrainingManager();
+        TrainingManager tm = currentUser.getTrainingManager();
         if (tm == null) return;
 
-        List<TrainingHistoryEntry> history = tm.getTrainingHistory();
+        ArrayList<TrainingHistoryEntry> history = tm.getTrainingHistory();
 
         for (TrainingHistoryEntry entry : history) {
-            // Namen auflösen
             String title = "Unbekannt";
             String description = "-";
 
-            for(Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
-                if (t.getId() == entry.getTrainingId()) {
-                    title = t.getTitle();
-                    description = t.getDescription();
-                    break;
-                }
-            }
+            Training t = ServiceLocator.getTrainingContainer().getTrainingById(entry.getTrainingId());
+            if (t != null) title = t.getTitle();
+            if (t != null) description = t.getDescription();
 
-            // --- Status prüfen ---
             if (entry.getStatus() == null || entry.getStatus() == Status.OPEN) {
-                // OFFEN
                 openModel.addRow(new Object[]{
                         entry.getTrainingId(),
                         title,
@@ -146,7 +111,6 @@ public class MyTrainingsView extends JPanel implements View {
                         entry.getAssignedAt()
                 });
             } else if (entry.getStatus() == Status.DONE) {
-                // ERLEDIGT
                 String completedStr = (entry.getCompletedAt() != null)
                         ? entry.getCompletedAt().format(DateTimeFormatter.ISO_DATE)
                         : "-";
@@ -154,7 +118,7 @@ public class MyTrainingsView extends JPanel implements View {
                 historyModel.addRow(new Object[]{
                         title,
                         completedStr,
-                        "Anzeigen" // Platzhalter Button
+                        "Anzeigen" // Platzhalter Button TODO später noch austauschen gegen was wirklich gebrauchtes (maybe)
                 });
             }
         }
@@ -176,12 +140,11 @@ public class MyTrainingsView extends JPanel implements View {
 
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                TrainingManager tm = currentUser.getOpenTrainingManager();
-                // Nur im RAM speichern (wie gewünscht)
+                TrainingManager tm = currentUser.getTrainingManager();
                 tm.completeTraining(trainingId, LocalDate.now());
 
                 JOptionPane.showMessageDialog(this, "Erledigt! In Historie verschoben.");
-                loadData(); // Ansicht aktualisieren
+                loadData();
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());

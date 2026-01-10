@@ -2,13 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
-// TODO: and again, test gpt code (or adjust, not like i care lol)
 
 public class TrainingSkillManager {
-
-
 
     public static class TrainingSkillEntry {
         private int trainingId;
@@ -33,7 +28,7 @@ public class TrainingSkillManager {
     }
 
     private int trainingId; // war mal final
-    private final List<TrainingSkillEntry> skills = new ArrayList<>();
+    private final ArrayList<TrainingSkillEntry> skills = new ArrayList<>();
 
     public TrainingSkillManager(Training training) {
         this.trainingId = training.getId();
@@ -43,12 +38,11 @@ public class TrainingSkillManager {
 
     }
 
-
     public int getTrainingId() {
         return trainingId;
     }
 
-    public List<TrainingSkillEntry> getSkills() {
+    public ArrayList<TrainingSkillEntry> getSkills() {
         return new ArrayList<>(skills);
     }
 
@@ -69,10 +63,7 @@ public class TrainingSkillManager {
         }
     }
 
-    /**
-     * Used when loading from DB.
-     */
-    public void setSkills(List<TrainingSkillEntry> entries) {
+    public void setSkills(ArrayList<TrainingSkillEntry> entries) {
         skills.clear();
         if (entries != null) {
             skills.addAll(entries);

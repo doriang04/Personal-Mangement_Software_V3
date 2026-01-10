@@ -5,7 +5,6 @@ import model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class AssignTrainingDialog extends JDialog {
 
@@ -14,6 +13,18 @@ public class AssignTrainingDialog extends JDialog {
     private JTextField txtDate;
     private JButton btnSave, btnCancel;
     private final Runnable onSuccessCallback;
+
+    class EmployeeItem {
+        Employee e;
+        EmployeeItem(Employee e) { this.e = e; }
+        public String toString() { return e.getFirstName() + " " + e.getLastName(); }
+    }
+
+    class TrainingItem {
+        Training t;
+        TrainingItem(Training t) { this.t = t; }
+        public String toString() { return t.getTitle(); }
+    }
 
     public AssignTrainingDialog(Window owner, Runnable onSuccessCallback) {
         super(owner, "Schulung zuweisen", ModalityType.APPLICATION_MODAL);
@@ -33,7 +44,6 @@ public class AssignTrainingDialog extends JDialog {
         cbEmployees = new JComboBox<>();
         cbTrainings = new JComboBox<>();
 
-        // Datum vorbelegen (Heute)
         txtDate = new JTextField(LocalDate.now().toString());
 
         form.add(new JLabel("Mitarbeiter:"));
@@ -58,14 +68,8 @@ public class AssignTrainingDialog extends JDialog {
     }
 
     private void loadData() {
-        // Mitarbeiter laden
-        for(Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
-            cbEmployees.addItem(new EmployeeItem(e));
-        }
-        // Schulungen laden
-        for(Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
-            cbTrainings.addItem(new TrainingItem(t));
-        }
+        for(Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) cbEmployees.addItem(new EmployeeItem(e));
+        for(Training t : ServiceLocator.getTrainingContainer().getTrainings()) cbTrainings.addItem(new TrainingItem(t));
     }
 
     private void onSave() {
@@ -79,51 +83,27 @@ public class AssignTrainingDialog extends JDialog {
                 return;
             }
 
-            // Datum parsen
             LocalDate date = LocalDate.parse(dateStr);
 
-            // ---------------------------------------------------------
-            // ÄNDERUNG: KEIN Datenbank-Aufruf mehr!
-            // Wir arbeiten nur mit den Objekten im Speicher.
-            // ---------------------------------------------------------
-
-            TrainingManager tm = empItem.e.getOpenTrainingManager();
+            TrainingManager tm = empItem.e.getTrainingManager();
             if (tm != null) {
-                // Hier wird das Training dem Objekt hinzugefügt
                 tm.assignTraining(trainItem.t.getId(), date);
 
                 System.out.println("DEBUG: Schulung '" + trainItem.t.getTitle() +
-                        "' an " + empItem.e.getUsername() + " zugewiesen (Nur RAM).");
+                        "' an " + empItem.e.getUsername() + " zugewiesen.");
             } else {
                 JOptionPane.showMessageDialog(this, "Fehler: Mitarbeiter hat keinen TrainingManager!");
                 return;
             }
 
-            // Erfolg
-            JOptionPane.showMessageDialog(this, "Zugewiesen (Nur temporär im Speicher)!");
-
-            // Tabelle aktualisieren
+            JOptionPane.showMessageDialog(this, "Zugewiesen!");
             if (onSuccessCallback != null) onSuccessCallback.run();
-
             dispose();
 
         } catch (java.time.format.DateTimeParseException dtpe) {
             JOptionPane.showMessageDialog(this, "Falsches Datumsformat! Bitte YYYY-MM-DD nutzen.");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
         }
-    }
-
-    // Hilfsklassen für ComboBox Anzeige
-    class EmployeeItem {
-        Employee e;
-        EmployeeItem(Employee e) { this.e = e; }
-        public String toString() { return e.getFirstName() + " " + e.getLastName(); }
-    }
-    class TrainingItem {
-        Training t;
-        TrainingItem(Training t) { this.t = t; }
-        public String toString() { return t.getTitle(); }
     }
 }

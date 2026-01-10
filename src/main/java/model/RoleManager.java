@@ -2,21 +2,20 @@ package model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RoleManager {
 
     private int employeeId; // corresponds to role_history.employee_id / employees.id  // war mal final
-    private final List<RoleHistoryEntry> roleHistory = new ArrayList<>();
+    private final ArrayList<RoleHistoryEntry> roleHistory = new ArrayList<>();
 
     public  int getId() {
         return employeeId;
     }
 
-    /**
-     * Represents one entry from role_history table.
-     * historyId is nullable (0 if unknown / not persisted yet).
-     */
+    public void addRoleHistoryEntry(RoleHistoryEntry entry) {
+        roleHistory.add(entry);
+    }
+
     public static class RoleHistoryEntry {
         private int historyId;
         private int roleId;
@@ -92,18 +91,14 @@ public class RoleManager {
     public RoleManager() {
     }
 
-    /**
-     * Loads persisted role history.
-     * Expected order: assignedAt ASC (oldest -> newest)
-     */
-    public void setRoleHistory(List<RoleHistoryEntry> entries) {
+    public void setRoleHistory(ArrayList<RoleHistoryEntry> entries) {
         roleHistory.clear();
         if (entries != null) {
             roleHistory.addAll(entries);
         }
     }
 
-    public List<RoleHistoryEntry> getRoleHistory() {
+    public ArrayList<RoleHistoryEntry> getRoleHistory() {
         return new ArrayList<>(roleHistory);
     }
 
@@ -111,14 +106,6 @@ public class RoleManager {
         return employeeId;
     }
 
-    /**
-     * Dynamically resolves the currently active Role.
-     *
-     * Logic:
-     * - Find the newest RoleHistoryEntry where endedAt == null
-     * - Ask ServiceLocator.RoleContainer for the Role by roleId
-     * - If no such history entry exists -> Optional.empty()
-     */
     public Role getActiveRole() {
         RoleHistoryEntry activeEntry = null;
 
@@ -140,10 +127,6 @@ public class RoleManager {
                 .getRoleById(activeEntry.getRoleId());
     }
 
-    /**
-     * Assigns a new role starting at assignedAt.
-     * Automatically closes the previous active role.
-     */
     public RoleHistoryEntry assignRole(int roleId, LocalDate assignedAt) {
         if (assignedAt == null) {
             throw new IllegalArgumentException("assignedAt must not be null");
@@ -163,9 +146,6 @@ public class RoleManager {
         return newEntry;
     }
 
-    /**
-     * Ends the currently active role.
-     */
     public void endActiveRole(LocalDate endedAt) {
         if (endedAt == null) {
             throw new IllegalArgumentException("endedAt must not be null");
