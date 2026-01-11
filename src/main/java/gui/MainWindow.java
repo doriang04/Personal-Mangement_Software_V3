@@ -27,7 +27,8 @@ public class MainWindow extends JFrame {
 
     private MainWindow() {
         setTitle("Personalmanagement Software");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setSize(450, 550);
         setLocationRelativeTo(null);
 

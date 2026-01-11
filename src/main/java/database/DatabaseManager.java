@@ -670,6 +670,53 @@ public class DatabaseManager {
         }
     }
 
+    public void deleteEmployee(int id) {
+        String sql = "DELETE FROM employees WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            System.out.println("✅ Mitarbeiter " + id + " aus DB gelöscht.");
+        } catch (SQLException e) {
+            System.err.println("❌ Fehler beim Löschen: " + e.getMessage());
+        }
+    }
+
+    public void addEmployee(Employee e) {
+        // Falls du andere Spaltennamen in der H2-DB hast, hier anpassen!
+        String sql = "INSERT INTO employees (id, username, password, first_name, last_name, email, phone_number, " +
+                "date_of_birth, address, gender, hire_date, employment_active, team_id, manager_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, e.getId());
+            stmt.setString(2, e.getUsername());
+            stmt.setString(3, e.getPassword());
+            stmt.setString(4, e.getFirstName());
+            stmt.setString(5, e.getLastName());
+            stmt.setString(6, e.getEMail());
+            stmt.setString(7, e.getPhoneNumber());
+            // Datum konvertieren (java.util.Date -> java.sql.Date)
+            stmt.setDate(8, new java.sql.Date(e.getDateOfBirth().getTime()));
+            stmt.setString(9, e.getAddress());
+            stmt.setString(10, String.valueOf(e.getGender()));
+            stmt.setDate(11, new java.sql.Date(e.getHireDate().getTime()));
+            stmt.setBoolean(12, e.isEmploymentStatus());
+
+            // Bei 0 setzen wir NULL, falls kein Team/Manager existiert (optional)
+            if (e.getTeamId() == 0) stmt.setNull(13, Types.INTEGER);
+            else stmt.setInt(13, e.getTeamId());
+
+            if (e.getManagerId() == 0) stmt.setNull(14, Types.INTEGER);
+            else stmt.setInt(14, e.getManagerId());
+
+            stmt.executeUpdate();
+            System.out.println("✅ Mitarbeiter " + e.getId() + " in DB gespeichert.");
+        } catch (SQLException ex) {
+            System.err.println("❌ Fehler beim Speichern: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
     public void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
