@@ -1,456 +1,666 @@
 [
   {
-    "id": 1,
+    "id": 0,
     "title": "Bauleiter Fortbildung",
     "description": "Umfassende Schulung für Bauleiter: Projektsteuerung, Teamführung, Arbeitssicherheit, Bauvertragsrecht und MS Project",
     "length": 40,
     "skillList": {
       "skills": [
-        {"skillId": 2},
-        {"skillId": 11},
-        {"skillId": 10},
-        {"skillId": 4},
-        {"skillId": 22}
+        {
+          "skillId": 1
+        },
+        {
+          "skillId": 10
+        },
+        {
+          "skillId": 9
+        },
+        {
+          "skillId": 3
+        },
+        {
+          "skillId": 21
+        }
       ]
     }
   },
   {
-    "id": 2,
+    "id": 1,
     "title": "Maurer Meisterkurs",
     "description": "Vorbereitung auf Maurermeisterprüfung: Fachwissen, Personalführung, Kostenrechnung und Qualitätsmanagement",
     "length": 80,
     "skillList": {
       "skills": [
-        {"skillId": 51},
-        {"skillId": 49},
-        {"skillId": 43}
+        {
+          "skillId": 50
+        },
+        {
+          "skillId": 48
+        },
+        {
+          "skillId": 42
+        }
       ]
     }
   },
   {
-    "id": 3,
+    "id": 2,
     "title": "BIM Grundlagen",
     "description": "Einstieg in Building Information Modeling mit Revit: 3D-Modellierung, Kollisionsprüfung, Mengeabnahme",
     "length": 24,
     "skillList": {
       "skills": [
-        {"skillId": 3},
-        {"skillId": 99},
-        {"skillId": 98}
+        {
+          "skillId": 2
+        },
+        {
+          "skillId": 98
+        },
+        {
+          "skillId": 97
+        }
       ]
     }
   },
   {
-    "id": 4,
+    "id": 3,
     "title": "Arbeitssicherheit SiGeKo",
     "description": "Sicherheitskoordinator Ausbildung: Gefahrenanalyse, SiGe-Plan, Arbeitsschutzgesetz, Brandschutz",
     "length": 16,
     "skillList": {
       "skills": [
-        {"skillId": 20},
-        {"skillId": 93},
-        {"skillId": 94}
+        {
+          "skillId": 19
+        },
+        {
+          "skillId": 92
+        },
+        {
+          "skillId": 93
+        }
       ]
     }
   },
   {
-    "id": 5,
+    "id": 4,
     "title": "Projektmanagement PMP",
     "description": "Project Management Professional Zertifizierung: PMBOK, Risikomanagement, Stakeholder-Management",
     "length": 60,
     "skillList": {
       "skills": [
-        {"skillId": 67},
-        {"skillId": 15},
-        {"skillId": 17}
+        {
+          "skillId": 66
+        },
+        {
+          "skillId": 14
+        },
+        {
+          "skillId": 16
+        }
       ]
     }
   },
   {
-    "id": 6,
+    "id": 5,
     "title": "MS Project Power User",
     "description": "Fortgeschrittene MS Project Nutzung: Gantt-Diagramme, Ressourcenmanagement, Baseline-Vergleich",
     "length": 12,
     "skillList": {
       "skills": [
-        {"skillId": 22},
-        {"skillId": 31}
+        {
+          "skillId": 21
+        },
+        {
+          "skillId": 30
+        }
       ]
     }
   },
   {
-    "id": 7,
+    "id": 6,
     "title": "Lean Construction",
     "description": "Lean-Methoden im Bauwesen: Last Planner, Wertstromanalyse, Verschwendungsreduktion",
     "length": 20,
     "skillList": {
       "skills": [
-        {"skillId": 12},
-        {"skillId": 66},
-        {"skillId": 89}
+        {
+          "skillId": 11
+        },
+        {
+          "skillId": 65
+        },
+        {
+          "skillId": 88
+        }
       ]
     }
   },
   {
-    "id": 8,
+    "id": 7,
     "title": "DSGVO für Bauprojekte",
     "description": "Datenschutz im Bauwesen: DSGVO-Compliance, Baustellen-Dokumentation, Mitarbeiterdaten",
     "length": 8,
     "skillList": {
       "skills": [
-        {"skillId": 30},
-        {"skillId": 92}
+        {
+          "skillId": 29
+        },
+        {
+          "skillId": 91
+        }
       ]
     }
   },
   {
-    "id": 9,
+    "id": 8,
     "title": "IT-Support Spezialist",
     "description": "ITIL-zertifizierte Helpdesk Schulung: Ticket-Systeme, Netzwerk-Grundlagen, Windows/Linux",
     "length": 32,
     "skillList": {
       "skills": [
-        {"skillId": 62},
-        {"skillId": 69},
-        {"skillId": 26}
+        {
+          "skillId": 61
+        },
+        {
+          "skillId": 68
+        },
+        {
+          "skillId": 25
+        }
       ]
     }
   },
   {
-    "id": 10,
+    "id": 9,
     "title": "Fuhrparkmanagement",
     "description": "Baumaschinenführerscheine, Wartungsplanung, Sicherheitschecks, Hydraulik-Grundlagen",
     "length": 24,
     "skillList": {
       "skills": [
-        {"skillId": 38},
-        {"skillId": 55},
-        {"skillId": 56}
+        {
+          "skillId": 37
+        },
+        {
+          "skillId": 54
+        },
+        {
+          "skillId": 55
+        }
       ]
     }
   },
   {
-    "id": 11,
+    "id": 10,
     "title": "Einkäufer Zertifikat",
     "description": "Strategischer Einkauf: Lieferantenmanagement, Verhandlungen, AVA-Verfahren, ERP-Systeme",
     "length": 28,
     "skillList": {
       "skills": [
-        {"skillId": 58},
-        {"skillId": 61},
-        {"skillId": 25}
+        {
+          "skillId": 57
+        },
+        {
+          "skillId": 60
+        },
+        {
+          "skillId": 24
+        }
       ]
     }
   },
   {
-    "id": 12,
+    "id": 11,
     "title": "CAD AutoCAD Revit",
     "description": "2D/3D-Konstruktion: AutoCAD Grundlagen, Revit BIM, Zeichnungsmanagement",
     "length": 36,
     "skillList": {
       "skills": [
-        {"skillId": 5},
-        {"skillId": 99}
+        {
+          "skillId": 4
+        },
+        {
+          "skillId": 98
+        }
       ]
     }
   },
   {
-    "id": 13,
+    "id": 12,
     "title": "HR Management",
     "description": "Personalmanagement: Recruiting, Arbeitsrecht, Mitarbeiterführung, DATEV Lohnabrechnung",
     "length": 40,
     "skillList": {
       "skills": [
-        {"skillId": 42},
-        {"skillId": 44},
-        {"skillId": 24}
+        {
+          "skillId": 41
+        },
+        {
+          "skillId": 43
+        },
+        {
+          "skillId": 23
+        }
       ]
     }
   },
   {
-    "id": 14,
+    "id": 13,
     "title": "Controlling Grundlagen",
     "description": "Kostenrechnung, Budgetierung, Kennzahlen, Excel Power BI für Controller",
     "length": 24,
     "skillList": {
       "skills": [
-        {"skillId": 43},
-        {"skillId": 82},
-        {"skillId": 23}
+        {
+          "skillId": 42
+        },
+        {
+          "skillId": 81
+        },
+        {
+          "skillId": 22
+        }
       ]
     }
   },
   {
-    "id": 15,
+    "id": 14,
     "title": "Java Spring Boot Developer",
     "description": "Backend-Entwicklung: Java 17+, Spring Boot, REST APIs, PostgreSQL, Git CI/CD",
     "length": 48,
     "skillList": {
       "skills": [
-        {"skillId": 34},
-        {"skillId": 76},
-        {"skillId": 78},
-        {"skillId": 33}
+        {
+          "skillId": 33
+        },
+        {
+          "skillId": 75
+        },
+        {
+          "skillId": 77
+        },
+        {
+          "skillId": 32
+        }
       ]
     }
   },
   {
-    "id": 16,
+    "id": 15,
     "title": "Schalungsbau Spezialist",
     "description": "Schalungstechnik, Stahlbau, Betonbau, Sicherheit am Schalungsbau, Statik-Grundlagen",
     "length": 32,
     "skillList": {
       "skills": [
-        {"skillId": 16},
-        {"skillId": 60},
-        {"skillId": 39}
+        {
+          "skillId": 15
+        },
+        {
+          "skillId": 59
+        },
+        {
+          "skillId": 38
+        }
       ]
     }
   },
   {
-    "id": 17,
+    "id": 16,
     "title": "Stahlbau Schweißer",
     "description": "Schweißverfahren, Stahlbau-Konstruktion, Baustatik, Schweißnahtprüfung, Sicherheitsstandards",
     "length": 40,
     "skillList": {
       "skills": [
-        {"skillId": 37},
-        {"skillId": 10},
-        {"skillId": 20}
+        {
+          "skillId": 36
+        },
+        {
+          "skillId": 9
+        },
+        {
+          "skillId": 19
+        }
       ]
     }
   },
   {
-    "id": 18,
+    "id": 17,
     "title": "Logistik & Fuhrpark",
     "description": "Fuhrparkmanagement, Gabelstapler, Kranführerschein, Transportrecht, Ladeplanung",
     "length": 20,
     "skillList": {
       "skills": [
-        {"skillId": 36},
-        {"skillId": 13},
-        {"skillId": 57}
+        {
+          "skillId": 35
+        },
+        {
+          "skillId": 12
+        },
+        {
+          "skillId": 56
+        }
       ]
     }
   },
   {
-    "id": 19,
+    "id": 18,
     "title": "VOB/Bauvertragsrecht",
     "description": "Vergabeordnung Bauwesen, Bauverträge, Mängelhaftung, Streitbeilegung, HOAI",
     "length": 16,
     "skillList": {
       "skills": [
-        {"skillId": 96},
-        {"skillId": 4},
-        {"skillId": 95}
+        {
+          "skillId": 95
+        },
+        {
+          "skillId": 3
+        },
+        {
+          "skillId": 94
+        }
       ]
     }
   },
   {
-    "id": 20,
+    "id": 19,
     "title": "Recruiting & Talent Acquisition",
     "description": "LinkedIn Sourcing, Assessment Center, Onboarding, ATS-Systeme, Employer Branding",
     "length": 24,
     "skillList": {
       "skills": [
-        {"skillId": 59},
-        {"skillId": 86},
-        {"skillId": 87}
+        {
+          "skillId": 58
+        },
+        {
+          "skillId": 85
+        },
+        {
+          "skillId": 86
+        }
       ]
     }
   },
   {
-    "id": 21,
+    "id": 20,
     "title": "DATEV Lohnabrechnung",
     "description": "Lohnsteuer, Sozialversicherung, DATEV Personal, Krankengeld, Sonderzahlungen",
     "length": 28,
     "skillList": {
       "skills": [
-        {"skillId": 24},
-        {"skillId": 44},
-        {"skillId": 42}
+        {
+          "skillId": 23
+        },
+        {
+          "skillId": 43
+        },
+        {
+          "skillId": 41
+        }
       ]
     }
   },
   {
-    "id": 22,
+    "id": 21,
     "title": "Finanzbuchhaltung HGB",
     "description": "Bilanzierung, GuV, DATEV Rechnungswesen, Umsatzsteuer, Jahresabschluss",
     "length": 32,
     "skillList": {
       "skills": [
-        {"skillId": 45},
-        {"skillId": 24},
-        {"skillId": 90}
+        {
+          "skillId": 44
+        },
+        {
+          "skillId": 23
+        },
+        {
+          "skillId": 89
+        }
       ]
     }
   },
   {
-    "id": 23,
+    "id": 22,
     "title": "Power BI für Controller",
     "description": "Dashboards, DAX, Datenmodellierung, KPI-Design, Datenvisualisierung",
     "length": 20,
     "skillList": {
       "skills": [
-        {"skillId": 82},
-        {"skillId": 23},
-        {"skillId": 7}
+        {
+          "skillId": 81
+        },
+        {
+          "skillId": 22
+        },
+        {
+          "skillId": 6
+        }
       ]
     }
   },
   {
-    "id": 24,
+    "id": 23,
     "title": "Windows Server Admin",
     "description": "Active Directory, GPO, DHCP, DNS, PowerShell, Sicherheitskonfiguration",
     "length": 36,
     "skillList": {
       "skills": [
-        {"skillId": 26},
-        {"skillId": 41},
-        {"skillId": 29}
+        {
+          "skillId": 25
+        },
+        {
+          "skillId": 40
+        },
+        {
+          "skillId": 28
+        }
       ]
     }
   },
   {
-    "id": 25,
+    "id": 24,
     "title": "Cisco Networking CCNA",
     "description": "Routing, Switching, VLAN, OSPF, NAT, Netzwerksicherheit",
     "length": 40,
     "skillList": {
       "skills": [
-        {"skillId": 28},
-        {"skillId": 63},
-        {"skillId": 42}
+        {
+          "skillId": 27
+        },
+        {
+          "skillId": 62
+        },
+        {
+          "skillId": 41
+        }
       ]
     }
   },
   {
-    "id": 26,
+    "id": 25,
     "title": "Frontend Development React",
     "description": "React Hooks, Redux, TypeScript, Component Design, Performance",
     "length": 32,
     "skillList": {
       "skills": [
-        {"skillId": 74},
-        {"skillId": 33},
-        {"skillId": 45}
+        {
+          "skillId": 73
+        },
+        {
+          "skillId": 32
+        },
+        {
+          "skillId": 44
+        }
       ]
     }
   },
   {
-    "id": 27,
+    "id": 26,
     "title": "JavaScript Fullstack",
     "description": "Node.js, Express, MongoDB, REST APIs, Authentication, Testing",
     "length": 36,
     "skillList": {
       "skills": [
-        {"skillId": 32},
-        {"skillId": 77},
-        {"skillId": 79}
+        {
+          "skillId": 31
+        },
+        {
+          "skillId": 76
+        },
+        {
+          "skillId": 78
+        }
       ]
     }
   },
   {
-    "id": 28,
+    "id": 27,
     "title": "Agile Scrum Master",
     "description": "Scrum Framework, Sprint Planning, Retrospectives, SAFe, Kanban",
     "length": 24,
     "skillList": {
       "skills": [
-        {"skillId": 65},
-        {"skillId": 66},
-        {"skillId": 1}
+        {
+          "skillId": 64
+        },
+        {
+          "skillId": 65
+        },
+        {
+          "skillId": 0
+        }
       ]
     }
   },
   {
-    "id": 29,
+    "id": 28,
     "title": "Nachhaltiges Bauen",
     "description": "DGNB Zertifizierung, Kreislaufwirtschaft, CO2-Bilanzierung, nachhaltige Materialien",
     "length": 28,
     "skillList": {
       "skills": [
-        {"skillId": 13},
-        {"skillId": 8},
-        {"skillId": 7}
+        {
+          "skillId": 12
+        },
+        {
+          "skillId": 7
+        },
+        {
+          "skillId": 6
+        }
       ]
     }
   },
   {
-    "id": 30,
+    "id": 29,
     "title": "Kostenkalkulation AVA",
     "description": "AVA-Software, Leistungsverzeichnis, Kalkulationsmethoden, Ausschreibung",
     "length": 24,
     "skillList": {
       "skills": [
-        {"skillId": 61},
-        {"skillId": 33},
-        {"skillId": 23}
+        {
+          "skillId": 60
+        },
+        {
+          "skillId": 32
+        },
+        {
+          "skillId": 22
+        }
       ]
     }
   },
   {
-    "id": 31,
+    "id": 30,
     "title": "Brandschutzbeauftragter",
     "description": "MBO, Brandschutzkonzepte, Evakuierungspläne, Prüfprotokolle",
     "length": 16,
     "skillList": {
       "skills": [
-        {"skillId": 94},
-        {"skillId": 20},
-        {"skillId": 93}
+        {
+          "skillId": 93
+        },
+        {
+          "skillId": 19
+        },
+        {
+          "skillId": 92
+        }
       ]
     }
   },
   {
-    "id": 32,
+    "id": 31,
     "title": "ERP SAP Grundlagen",
     "description": "SAP Navigation, MM, FI, CO Module, Customizing, Reporting",
     "length": 32,
     "skillList": {
       "skills": [
-        {"skillId": 84},
-        {"skillId": 25},
-        {"skillId": 82}
+        {
+          "skillId": 83
+        },
+        {
+          "skillId": 24
+        },
+        {
+          "skillId": 81
+        }
       ]
     }
   },
   {
-    "id": 33,
+    "id": 32,
     "title": "Six Sigma Green Belt",
     "description": "DMAIC, Statistik, Prozessanalyse, FMEA, Minitab",
     "length": 40,
     "skillList": {
       "skills": [
-        {"skillId": 88},
-        {"skillId": 7},
-        {"skillId": 23}
+        {
+          "skillId": 87
+        },
+        {
+          "skillId": 6
+        },
+        {
+          "skillId": 22
+        }
       ]
     }
   },
   {
-    "id": 34,
+    "id": 33,
     "title": "Vertriebsakademie B2B",
     "description": "Kundenakquise, CRM, Verhandlungstechnik, Key Account Management",
     "length": 24,
     "skillList": {
       "skills": [
-        {"skillId": 47},
-        {"skillId": 18},
-        {"skillId": 85}
+        {
+          "skillId": 46
+        },
+        {
+          "skillId": 17
+        },
+        {
+          "skillId": 84
+        }
       ]
     }
   },
   {
-    "id": 35,
+    "id": 34,
     "title": "Compliance Manager",
     "description": "Compliance Framework, Risikomanagement, ISO 37301, Whistleblower-Systeme",
     "length": 28,
     "skillList": {
       "skills": [
-        {"skillId": 91},
-        {"skillId": 15},
-        {"skillId": 92}
+        {
+          "skillId": 90
+        },
+        {
+          "skillId": 14
+        },
+        {
+          "skillId": 91
+        }
       ]
     }
   }

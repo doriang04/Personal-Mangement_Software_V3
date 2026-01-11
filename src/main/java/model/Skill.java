@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 public class Skill {
 
     private int id;
@@ -8,8 +10,8 @@ public class Skill {
     private int required_years;
 
 
-    public Skill(int id, int required_years, String name, String description) {
-        this.id = id;
+    public Skill(int required_years, String name, String description) {
+        this.id = ServiceLocator.getSkillContainer().getNextFreeId();
         this.name = name;
         this.description = description;
         this.required_years = required_years;

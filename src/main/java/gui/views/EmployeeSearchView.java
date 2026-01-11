@@ -1,5 +1,6 @@
 package gui.views;
 
+import core.ServiceLocator;
 import gui.UIController;
 import model.*;
 

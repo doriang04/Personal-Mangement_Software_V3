@@ -28,4 +28,12 @@ public class TeamContainer {
         }
         return null;
     }
+
+    public int getNextFreeId() {
+        int i = 0;
+        while (true) {
+            if (getTeamById(i) == null) return i;
+            i++;
+        }
+    }
 }

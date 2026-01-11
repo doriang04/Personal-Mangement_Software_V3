@@ -1,9 +1,9 @@
 package database;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import core.ServiceLocator;
 import model.*;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -332,15 +332,22 @@ public class DatabaseManager {
     public void loadDataFromDb() throws SQLException {
         System.out.println("📥 Lade Daten aus der Datenbank in den Speicher...");
 
+        ServiceLocator.getCompanyContainer().getCompanies().clear();
+        ServiceLocator.getDepartmentContainer().getDepartments().clear();
+        ServiceLocator.getTeamContainer().getTeams().clear();
+        ServiceLocator.getRoleContainer().getRoles().clear();
+        ServiceLocator.getSkillContainer().getSkills().clear();
+        ServiceLocator.getEmployeeContainer().getEmployees().clear();
+        ServiceLocator.getTrainingContainer().getTrainings().clear();
+        ServiceLocator.getRoleManagerContainer().getRoleManagers().clear();
+
         loadCompanies();
         loadDepartments();
         loadTeams();
         loadRoles();
         loadSkills();
         loadTrainings();
-
         loadEmployees();
-
         loadRoleHistories();
         loadSkillHistories();
         loadTrainingHistories();
@@ -364,8 +371,8 @@ public class DatabaseManager {
              ResultSet rs = stmt.executeQuery("SELECT * FROM departments")) {
             var container = ServiceLocator.getDepartmentContainer();
             while (rs.next()) {
+                if (container.getDepartmentById(rs.getInt("id")) != null) throw new SQLException("Department with this ID already exists");
                 Department d = new Department(
-                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("company_id")
                 );
@@ -379,8 +386,8 @@ public class DatabaseManager {
              ResultSet rs = stmt.executeQuery("SELECT * FROM teams")) {
             var container = ServiceLocator.getTeamContainer();
             while (rs.next()) {
+                if (container.getTeamById(rs.getInt("id")) != null) throw new SQLException("Team with this ID already exists");
                 Team t = new Team(
-                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("department_id")
                 );
@@ -394,8 +401,8 @@ public class DatabaseManager {
              ResultSet rs = stmt.executeQuery("SELECT * FROM roles")) {
             var container = ServiceLocator.getRoleContainer();
             while (rs.next()) {
+                if (container.getRoleById(rs.getInt("id")) != null) throw new SQLException("Role with this ID already exists");
                 Role r = new Role(
-                        rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("description"),
                         rs.getString("system_permission")
@@ -410,8 +417,8 @@ public class DatabaseManager {
              ResultSet rs = stmt.executeQuery("SELECT * FROM skills")) {
             var container = ServiceLocator.getSkillContainer();
             while (rs.next()) {
+                if (container.getSkillById(rs.getInt("id")) != null) throw new SQLException("Skill with this ID already exists");
                 Skill s = new Skill(
-                        rs.getInt("id"),
                         rs.getInt("required_years"),
                         rs.getString("name"),
                         rs.getString("description")
@@ -578,40 +585,147 @@ public class DatabaseManager {
     }
 
     public void saveAllData() {
-        System.out.println("💾 Speichere Daten in die Datenbank...");
+        System.out.println("💾 Speichere Daten (Full Rewrite mit Constraint-Pause)...");
         try {
             openConnection();
+            Statement stmt = connection.createStatement();
+
+            // 1. Foreign Keys global deaktivieren
+            stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
+
+            // 2. Alle Tabellen leeren
+            clearDatabaseTables();
+
+            // 3. Kataloge & Struktur einfügen
+            reinsertSkills();
+            reinsertRoles();
+            reinsertDepartments();
+            reinsertTeams();
+
+            // 4. Mitarbeiter und deren History einfügen
             for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
-                updateEmployeeBaseData(e);
+                // WICHTIG: Stelle sicher, dass updateEmployeeBaseData ein INSERT nutzt!
+                reinsertEmployeeBaseData(e);
                 updateRoleHistory(e);
                 updateTrainingHistory(e);
+                // Falls vorhanden: updateSkillHistory(e);
             }
+
+            // 5. Foreign Keys wieder aktivieren
+            stmt.execute("SET REFERENTIAL_INTEGRITY TRUE");
+            stmt.close();
+
             System.out.println("✅ Speichern erfolgreich!");
         } catch (SQLException e) {
-            System.err.println("❌ Fehler beim Speichern: " + e.getMessage());
+            System.err.println("❌ Fehler beim Full-Rewrite: " + e.getMessage());
+            e.printStackTrace();
+
+            // Versuch, die Integrität im Fehlerfall wieder einzuschalten
+            try {
+                connection.createStatement().execute("SET REFERENTIAL_INTEGRITY TRUE");
+            } catch (SQLException ignore) {}
+
+        } finally {
+            closeConnection();
         }
-        closeConnection();
     }
 
-    private void updateEmployeeBaseData(Employee e) throws SQLException {
-        String sql = "UPDATE employees SET first_name=?, last_name=?, email=?, phone_number=?, address=?, password=?, team_id=? WHERE id=?";
+    private void clearDatabaseTables() throws SQLException {
+        Statement stmt = connection.createStatement();
+        // 1. Kind-Tabellen (Mitarbeiter-Daten)
+        stmt.executeUpdate("DELETE FROM training_history");
+        stmt.executeUpdate("DELETE FROM skill_history");
+        stmt.executeUpdate("DELETE FROM role_history");
+        stmt.executeUpdate("DELETE FROM employees");
+
+        // 2. Struktur-Tabellen
+        stmt.executeUpdate("DELETE FROM teams");
+        stmt.executeUpdate("DELETE FROM departments");
+
+        // 3. Unabhängige Kataloge
+        stmt.executeUpdate("DELETE FROM skills");
+        stmt.executeUpdate("DELETE FROM roles");
+        stmt.close();
+        System.out.println("🧹 Datenbank bereinigt für neuen Schreibvorgang.");
+    }
+
+    private void reinsertSkills() throws SQLException {
+        String sql = "INSERT INTO skills (id, name, description, required_years) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, e.getFirstName());
-            stmt.setString(2, e.getLastName());
-            stmt.setString(3, e.getEMail());
-            stmt.setString(4, e.getPhoneNumber());
-            stmt.setString(5, e.getAddress());
-            stmt.setString(6, e.getPassword());
-
-            if (e.getTeamId() > 0) stmt.setInt(7, e.getTeamId());
-            else stmt.setNull(7, Types.INTEGER);
-
-            stmt.setInt(8, e.getId());
-            stmt.executeUpdate();
+            for (Skill s : ServiceLocator.getSkillContainer().getSkills()) {
+                stmt.setInt(1, s.getId());
+                stmt.setString(2, s.getName());
+                stmt.setString(3, s.getDescription());
+                stmt.setInt(4, s.getRequired_years());
+                stmt.executeUpdate();
+            }
         }
     }
 
-    private void updateRoleHistory(Employee e) throws SQLException { // TODO fix this method
+    private void reinsertRoles() throws SQLException {
+        String sql = "INSERT INTO roles (id, name, description, system_permission) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (Role r : ServiceLocator.getRoleContainer().getRoles()) {
+                stmt.setInt(1, r.getId());
+                stmt.setString(2, r.getName());
+                stmt.setString(3, r.getDescription());
+                stmt.setString(4, r.getSystemPermission());
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    private void reinsertDepartments() throws SQLException {
+        String sql = "INSERT INTO departments (id, name, company_id) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (Department d : ServiceLocator.getDepartmentContainer().getDepartments()) {
+                stmt.setInt(1, d.getId());
+                stmt.setString(2, d.getName());
+                stmt.setInt(3, d.getCompanyId());
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    private void reinsertTeams() throws SQLException {
+        String sql = "INSERT INTO teams (id, name, department_id) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
+                stmt.setInt(1, t.getId());
+                stmt.setString(2, t.getName());
+                stmt.setInt(3, t.getDepartmentId());
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    private void reinsertEmployeeBaseData(Employee e) throws SQLException {
+        String sql = "INSERT INTO employees (id, username, password, first_name, last_name, email, " +
+                "phone_number, address, gender, employment_active, date_of_birth, hire_date, " +
+                "team_id, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, e.getId());
+            pstmt.setString(2, e.getUsername());
+            pstmt.setString(3, e.getPassword());
+            pstmt.setString(4, e.getFirstName());
+            pstmt.setString(5, e.getLastName());
+            pstmt.setString(6, e.getEMail());
+            pstmt.setString(7, e.getPhoneNumber());
+            pstmt.setString(8, e.getAddress());
+            pstmt.setString(9, String.valueOf(e.getGender()));
+            pstmt.setBoolean(10, e.isEmploymentStatus());
+            pstmt.setDate(11, e.getDateOfBirth() != null ? new java.sql.Date(e.getDateOfBirth().getTime()) : null);
+            pstmt.setDate(12, e.getHireDate() != null ? new java.sql.Date(e.getHireDate().getTime()) : null);
+
+            if (e.getTeamId() > 0) pstmt.setInt(13, e.getTeamId()); else pstmt.setNull(13, java.sql.Types.INTEGER);
+            if (e.getManagerId() > 0) pstmt.setInt(14, e.getManagerId()); else pstmt.setNull(14, java.sql.Types.INTEGER);
+
+            pstmt.executeUpdate();
+        }
+    }
+
+    private void updateRoleHistory(Employee e) throws SQLException {
         String deleteSql = "DELETE FROM role_history WHERE employee_id=?";
         try (PreparedStatement delStmt = connection.prepareStatement(deleteSql)) {
             delStmt.setInt(1, e.getId());
@@ -638,7 +752,7 @@ public class DatabaseManager {
         }
     }
 
-    private void updateTrainingHistory(Employee e) throws SQLException { // TODO fix this method
+    private void updateTrainingHistory(Employee e) throws SQLException {
         String deleteSql = "DELETE FROM training_history WHERE employee_id=?";
         try (PreparedStatement delStmt = connection.prepareStatement(deleteSql)) {
             delStmt.setInt(1, e.getId());
@@ -682,7 +796,6 @@ public class DatabaseManager {
     }
 
     public void addEmployee(Employee e) {
-        // Falls du andere Spaltennamen in der H2-DB hast, hier anpassen!
         String sql = "INSERT INTO employees (id, username, password, first_name, last_name, email, phone_number, " +
                 "date_of_birth, address, gender, hire_date, employment_active, team_id, manager_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -695,14 +808,12 @@ public class DatabaseManager {
             stmt.setString(5, e.getLastName());
             stmt.setString(6, e.getEMail());
             stmt.setString(7, e.getPhoneNumber());
-            // Datum konvertieren (java.util.Date -> java.sql.Date)
             stmt.setDate(8, new java.sql.Date(e.getDateOfBirth().getTime()));
             stmt.setString(9, e.getAddress());
             stmt.setString(10, String.valueOf(e.getGender()));
             stmt.setDate(11, new java.sql.Date(e.getHireDate().getTime()));
             stmt.setBoolean(12, e.isEmploymentStatus());
 
-            // Bei 0 setzen wir NULL, falls kein Team/Manager existiert (optional)
             if (e.getTeamId() == 0) stmt.setNull(13, Types.INTEGER);
             else stmt.setInt(13, e.getTeamId());
 
@@ -712,7 +823,7 @@ public class DatabaseManager {
             stmt.executeUpdate();
             System.out.println("✅ Mitarbeiter " + e.getId() + " in DB gespeichert.");
         } catch (SQLException ex) {
-            System.err.println("❌ Fehler beim Speichern: " + ex.getMessage());
+            System.err.println("❌ Fehler beim Speichern (add Employee): " + ex.getMessage());
             ex.printStackTrace();
         }
     }

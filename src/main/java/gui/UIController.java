@@ -1,6 +1,6 @@
 package gui;
 
-import model.ServiceLocator;
+import core.ServiceLocator;
 import core.SessionManager;
 import gui.views.*;
 
@@ -100,12 +100,14 @@ public class UIController {
         if ("TEAM_LEAD".equals(role)) {
             mainWindow.addNavigationSection("Teamleitung");
             // Beispiel:
-            // mainWindow.addNavigationEntry("Mein Team", "icons/team.png",
+            // mainWindow.addNavigationEntry("Mein Team",
             //      () -> openTabOrFocus(TeamOverviewView.class, TeamOverviewView::new, true));
         }
 
         if ("ADMIN".equals(role)) {
             mainWindow.addNavigationSection("Administration");
+            mainWindow.addNavigationEntry("Daten Konfiguration",
+                    () -> openTabOrFocus(new ConfigurationView(), true));
             // mainWindow.addNavigationEntry("Einstellungen", ...);
         }
 
@@ -115,9 +117,8 @@ public class UIController {
         }
 
         if ("ADMIN".equals(role) || "HR".equals(role)) {
-            mainWindow.addNavigationEntry("Personal verwalten (+/-)", () -> {
-                openTabOrFocus(new gui.views.EmployeeManagementView(), true);
-            });
+            mainWindow.addNavigationEntry("Personal verwalten (+/-)",
+                    () -> openTabOrFocus(new EmployeeManagementView(), true));
         }
 
         mainWindow.addGlueToNav();

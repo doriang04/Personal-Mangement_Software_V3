@@ -1,5 +1,6 @@
 package gui.views;
 
+import core.ServiceLocator;
 import core.SessionManager;
 import model.*;
 import model.TrainingManager.TrainingHistoryEntry;

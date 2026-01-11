@@ -1,12 +1,10 @@
 package gui.views;
 
-import core.SessionManager;
 import model.Employee;
-import model.ServiceLocator;
+import core.ServiceLocator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 
 public class MyProfileView extends JPanel implements View {
 

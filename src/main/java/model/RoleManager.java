@@ -1,11 +1,13 @@
 package model;
 
+import core.ServiceLocator;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class RoleManager {
 
-    private int employeeId; // corresponds to role_history.employee_id / employees.id  // war mal final
+    private int employeeId;
     private final ArrayList<RoleHistoryEntry> roleHistory = new ArrayList<>();
 
     public  int getId() {

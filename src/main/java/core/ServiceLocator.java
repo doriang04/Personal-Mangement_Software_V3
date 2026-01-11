@@ -1,6 +1,6 @@
-package model; // TODO move this to core package?
+package core; // TODO move this to core package?
 
-import core.SessionManager;
+import model.*;
 
 public class ServiceLocator {
 

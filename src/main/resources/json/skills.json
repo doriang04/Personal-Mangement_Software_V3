@@ -1,600 +1,600 @@
 [
   {
-    "id": 1,
+    "id": 0,
     "required_years": 5,
     "name": "Agiles Führen im Bauwesen",
     "description": "Führungskompetenzen für Bauprojekte mit agilen Methoden"
   },
   {
-    "id": 2,
+    "id": 1,
     "required_years": 3,
     "name": "Projektmanagement",
     "description": "Grundlegende Projektmanagement-Kenntnisse für Bauprojekte"
   },
   {
-    "id": 3,
+    "id": 2,
     "required_years": 2,
     "name": "BIM-Zertifikat",
     "description": "Building Information Modeling für digitale Bauprojekte"
   },
   {
-    "id": 4,
+    "id": 3,
     "required_years": 4,
     "name": "Bauvertragsrecht",
     "description": "Rechtliche Grundlagen für Bauprojekte und Verträge"
   },
   {
-    "id": 5,
+    "id": 4,
     "required_years": 3,
     "name": "CAD-Vertiefung",
     "description": "Erweiterte CAD-Kenntnisse für Baukonstruktionen"
   },
   {
-    "id": 6,
+    "id": 5,
     "required_years": 2,
     "name": "Change Management",
     "description": "Veränderungsprozesse in Bauprojekten steuern"
   },
   {
-    "id": 7,
+    "id": 6,
     "required_years": 3,
     "name": "Datenanalyse im Baukontext",
     "description": "Datenanalyse für Bauprojektoptimierung"
   },
   {
-    "id": 8,
+    "id": 7,
     "required_years": 4,
     "name": "Digitalisierung im Bauwesen",
     "description": "Digitale Transformation im Bausektor"
   },
   {
-    "id": 9,
+    "id": 8,
     "required_years": 2,
     "name": "Dokumentationstechniken",
     "description": "Effiziente Bauprojektdokumentation"
   },
   {
-    "id": 10,
+    "id": 9,
     "required_years": 3,
     "name": "Fortbildung Arbeitssicherheit",
     "description": "Sichere Arbeitsbedingungen auf Baustellen"
   },
   {
-    "id": 11,
+    "id": 10,
     "required_years": 5,
     "name": "Führungskompetenz",
     "description": "Führungsqualifikationen für Bauleiter"
   },
   {
-    "id": 12,
+    "id": 11,
     "required_years": 2,
     "name": "Lean Construction Training",
     "description": "Effiziente Bauprozesse mit Lean-Methoden"
   },
   {
-    "id": 13,
+    "id": 12,
     "required_years": 4,
     "name": "Nachhaltiges Bauen",
     "description": "Nachhaltige Baukonzepte und Materialien"
   },
   {
-    "id": 14,
+    "id": 13,
     "required_years": 1,
     "name": "Office-Kenntnisse",
     "description": "MS Office Anwendungen für Bauprojekte"
   },
   {
-    "id": 15,
+    "id": 14,
     "required_years": 3,
     "name": "Risikomanagement",
     "description": "Risikoanalyse und -management in Bauprojekten"
   },
   {
-    "id": 16,
+    "id": 15,
     "required_years": 2,
     "name": "Schalungsbau-Spezialisierung",
     "description": "Spezialisierte Schalungsbau-Techniken"
   },
   {
-    "id": 17,
+    "id": 16,
     "required_years": 4,
     "name": "Strategisches Projektmanagement",
     "description": "Strategische Projektsteuerung im Bauwesen"
   },
   {
-    "id": 18,
+    "id": 17,
     "required_years": 3,
     "name": "Verhandlungstechniken",
     "description": "Verhandlungsführung bei Bauprojekten"
   },
   {
-    "id": 19,
+    "id": 18,
     "required_years": 2,
     "name": "Zeitmanagement",
     "description": "Effektives Zeitmanagement auf Baustellen"
   },
   {
-    "id": 20,
+    "id": 19,
     "required_years": 3,
     "name": "SiGeKo",
     "description": "Sicherheitskoordinator auf Baustellen"
   },
   {
-    "id": 21,
+    "id": 20,
     "required_years": 4,
     "name": "Bauverwaltung",
     "description": "Baurechtliche Abwicklungen und Genehmigungen"
   },
   {
-    "id": 22,
+    "id": 21,
     "required_years": 2,
     "name": "MS Project",
     "description": "Projektplanung mit Microsoft Project"
   },
   {
-    "id": 23,
+    "id": 22,
     "required_years": 3,
     "name": "Excel Pivot",
     "description": "Datenanalyse mit Excel Pivot-Tabellen"
   },
   {
-    "id": 24,
+    "id": 23,
     "required_years": 1,
     "name": "DATEV",
     "description": "DATEV Buchhaltungssoftware"
   },
   {
-    "id": 25,
+    "id": 24,
     "required_years": 2,
     "name": "ERP-Systeme",
     "description": "Enterprise Resource Planning Grundkenntnisse"
   },
   {
-    "id": 26,
+    "id": 25,
     "required_years": 3,
     "name": "Windows Server",
     "description": "Windows Server Administration"
   },
   {
-    "id": 27,
+    "id": 26,
     "required_years": 2,
     "name": "Linux Administration",
     "description": "Linux Server-Management"
   },
   {
-    "id": 28,
+    "id": 27,
     "required_years": 3,
     "name": "Cisco CCNA",
     "description": "Netzwerkgrundlagen Cisco Certified"
   },
   {
-    "id": 29,
+    "id": 28,
     "required_years": 2,
     "name": "ISO 27001",
     "description": "Informationssicherheitsmanagement"
   },
   {
-    "id": 30,
+    "id": 29,
     "required_years": 4,
     "name": "DSGVO",
     "description": "Datenschutz-Grundverordnung Compliance"
   },
   {
-    "id": 31,
+    "id": 30,
     "required_years": 3,
     "name": "C# Programmierung",
     "description": "Softwareentwicklung mit C#"
   },
   {
-    "id": 32,
+    "id": 31,
     "required_years": 3,
     "name": "Python Programmierung",
     "description": "Python Entwicklung für Automatisierung"
   },
   {
-    "id": 33,
+    "id": 32,
     "required_years": 2,
     "name": "Git",
     "description": "Versionskontrolle mit Git"
   },
   {
-    "id": 34,
+    "id": 33,
     "required_years": 3,
     "name": "Java",
     "description": "Java Enterprise Entwicklung"
   },
   {
-    "id": 35,
+    "id": 34,
     "required_years": 2,
     "name": "SQL",
     "description": "Datenbankabfragen und -design"
   },
   {
-    "id": 36,
+    "id": 35,
     "required_years": 1,
     "name": "Gabelstapler",
     "description": "Gabelstapler Führerschein"
   },
   {
-    "id": 37,
+    "id": 36,
     "required_years": 2,
     "name": "Schweißtechnik",
     "description": "Schweißscheine und Techniken"
   },
   {
-    "id": 38,
+    "id": 37,
     "required_years": 3,
     "name": "Baumaschinenführerschein",
     "description": "Führerscheine für Baumaschinen"
   },
   {
-    "id": 39,
+    "id": 38,
     "required_years": 4,
     "name": "Bauingenieurwesen",
     "description": "Studium Bauingenieurwesen"
   },
   {
-    "id": 40,
+    "id": 39,
     "required_years": 3,
     "name": "Informatik",
     "description": "Informatik Studium"
   },
   {
-    "id": 41,
+    "id": 40,
     "required_years": 4,
     "name": "BWL",
     "description": "Betriebswirtschaftslehre"
   },
   {
-    "id": 42,
+    "id": 41,
     "required_years": 2,
     "name": "HR Management",
     "description": "Personalmanagement Zertifikat"
   },
   {
-    "id": 43,
+    "id": 42,
     "required_years": 3,
     "name": "Controlling",
     "description": "Controlling und Kostenrechnung"
   },
   {
-    "id": 44,
+    "id": 43,
     "required_years": 2,
     "name": "Lohnsteuer",
     "description": "Lohn- und Gehaltsabrechnung"
   },
   {
-    "id": 45,
+    "id": 44,
     "required_years": 3,
     "name": "HGB",
     "description": "Handelsgesetzbuch Buchführung"
   },
   {
-    "id": 46,
+    "id": 45,
     "required_years": 4,
     "name": "Jurastudium",
     "description": "Rechtswissenschaften"
   },
   {
-    "id": 47,
+    "id": 46,
     "required_years": 2,
     "name": "CRM",
     "description": "Customer Relationship Management"
   },
   {
-    "id": 48,
+    "id": 47,
     "required_years": 1,
     "name": "Kommunikation",
     "description": "Kommunikationstraining"
   },
   {
-    "id": 49,
+    "id": 48,
     "required_years": 2,
     "name": "Teamführung",
     "description": "Teamführungsqualifikationen"
   },
   {
-    "id": 50,
+    "id": 49,
     "required_years": 3,
     "name": "Projektkoordination",
     "description": "Projektkoordination und Steuerung"
   },
   {
-    "id": 51,
+    "id": 50,
     "required_years": 2,
     "name": "Meister Maurerhandwerk",
     "description": "Maurermeister Ausbildung"
   },
   {
-    "id": 52,
+    "id": 51,
     "required_years": 2,
     "name": "Meister Betonbau",
     "description": "Betonbau Meister"
   },
   {
-    "id": 53,
+    "id": 52,
     "required_years": 1,
     "name": "Maurer Ausbildung",
     "description": "Maurer Gesellenbrief"
   },
   {
-    "id": 54,
+    "id": 53,
     "required_years": 3,
     "name": "KFZ Mechatroniker",
     "description": "Kfz-Mechatroniker Ausbildung"
   },
   {
-    "id": 55,
+    "id": 54,
     "required_years": 2,
     "name": "Mechatronik",
     "description": "Mechatroniker für Baumaschinen"
   },
   {
-    "id": 56,
+    "id": 55,
     "required_years": 1,
     "name": "Fuhrerschein C",
     "description": "Lkw Führerschein Klasse C"
   },
   {
-    "id": 57,
+    "id": 56,
     "required_years": 2,
     "name": "Lagerwirtschaft",
     "description": "Fachkraft Lagerwirtschaft"
   },
   {
-    "id": 58,
+    "id": 57,
     "required_years": 3,
     "name": "Einkäufer",
     "description": "Geprüfter Einkäufer"
   },
   {
-    "id": 59,
+    "id": 58,
     "required_years": 2,
     "name": "Recruiting",
     "description": "Personalrekrutierung"
   },
   {
-    "id": 60,
+    "id": 59,
     "required_years": 3,
     "name": "Statik",
     "description": "Baustatik Grundlagen"
   },
   {
-    "id": 61,
+    "id": 60,
     "required_years": 2,
     "name": "AVA",
     "description": "Ausschreibung Vergabe Abrechnung"
   },
   {
-    "id": 62,
+    "id": 61,
     "required_years": 1,
     "name": "Helpdesk",
     "description": "IT Helpdesk Qualifikation"
   },
   {
-    "id": 63,
+    "id": 62,
     "required_years": 3,
     "name": "Netzwerke",
     "description": "Computer Netzwerke"
   },
   {
-    "id": 64,
+    "id": 63,
     "required_years": 2,
     "name": "Cloud Computing",
     "description": "Cloud Lösungen AWS Azure"
   },
   {
-    "id": 65,
+    "id": 64,
     "required_years": 3,
     "name": "Agile Scrum",
     "description": "Scrum Master Zertifizierung"
   },
   {
-    "id": 66,
+    "id": 65,
     "required_years": 2,
     "name": "Kanban",
     "description": "Kanban Methodik"
   },
   {
-    "id": 67,
+    "id": 66,
     "required_years": 4,
     "name": "PMP",
     "description": "Project Management Professional"
   },
   {
-    "id": 68,
+    "id": 67,
     "required_years": 3,
     "name": "PRINCE2",
     "description": "PRINCE2 Projektmanagement"
   },
   {
-    "id": 69,
+    "id": 68,
     "required_years": 2,
     "name": "ITIL",
     "description": "IT Service Management"
   },
   {
-    "id": 70,
+    "id": 69,
     "required_years": 1,
     "name": "Ticket System",
     "description": "IT Ticket Systeme"
   },
   {
-    "id": 71,
+    "id": 70,
     "required_years": 3,
     "name": "CI/CD",
     "description": "Continuous Integration Deployment"
   },
   {
-    "id": 72,
+    "id": 71,
     "required_years": 2,
     "name": "Docker",
     "description": "Container Technologie Docker"
   },
   {
-    "id": 73,
+    "id": 72,
     "required_years": 3,
     "name": "Kubernetes",
     "description": "Container Orchestrierung"
   },
   {
-    "id": 74,
+    "id": 73,
     "required_years": 2,
     "name": "React",
     "description": "Frontend Entwicklung React"
   },
   {
-    "id": 75,
+    "id": 74,
     "required_years": 2,
     "name": "Angular",
     "description": "Frontend Framework Angular"
   },
   {
-    "id": 76,
+    "id": 75,
     "required_years": 3,
     "name": "Spring Boot",
     "description": "Java Backend Spring Boot"
   },
   {
-    "id": 77,
+    "id": 76,
     "required_years": 2,
     "name": "REST API",
     "description": "RESTful Web Services"
   },
   {
-    "id": 78,
+    "id": 77,
     "required_years": 3,
     "name": "PostgreSQL",
     "description": "PostgreSQL Datenbank"
   },
   {
-    "id": 79,
+    "id": 78,
     "required_years": 2,
     "name": "MongoDB",
     "description": "NoSQL Datenbank MongoDB"
   },
   {
-    "id": 80,
+    "id": 79,
     "required_years": 1,
     "name": "Jira",
     "description": "Projektmanagement Tool Jira"
   },
   {
-    "id": 81,
+    "id": 80,
     "required_years": 2,
     "name": "Confluence",
     "description": "Dokumentenmanagement Confluence"
   },
   {
-    "id": 82,
+    "id": 81,
     "required_years": 3,
     "name": "Power BI",
     "description": "Business Intelligence Power BI"
   },
   {
-    "id": 83,
+    "id": 82,
     "required_years": 2,
     "name": "Tableau",
     "description": "Data Visualization Tableau"
   },
   {
-    "id": 84,
+    "id": 83,
     "required_years": 3,
     "name": "SAP",
     "description": "SAP ERP Grundkenntnisse"
   },
   {
-    "id": 85,
+    "id": 84,
     "required_years": 2,
     "name": "Dynamics 365",
     "description": "Microsoft Dynamics CRM ERP"
   },
   {
-    "id": 86,
+    "id": 85,
     "required_years": 1,
     "name": "LinkedIn Recruiter",
     "description": "LinkedIn Recruiting Tools"
   },
   {
-    "id": 87,
+    "id": 86,
     "required_years": 2,
     "name": "ATS Systeme",
     "description": "Applicant Tracking Systems"
   },
   {
-    "id": 88,
+    "id": 87,
     "required_years": 3,
     "name": "Six Sigma",
     "description": "Prozessoptimierung Six Sigma"
   },
   {
-    "id": 89,
+    "id": 88,
     "required_years": 2,
     "name": "Lean Management",
     "description": "Lean Prozessoptimierung"
   },
   {
-    "id": 90,
+    "id": 89,
     "required_years": 4,
     "name": "IFRS",
     "description": "International Financial Reporting"
   },
   {
-    "id": 91,
+    "id": 90,
     "required_years": 3,
     "name": "COBIT",
     "description": "IT Governance Framework"
   },
   {
-    "id": 92,
+    "id": 91,
     "required_years": 2,
     "name": "GDPR",
     "description": "EU Datenschutzrecht"
   },
   {
-    "id": 93,
+    "id": 92,
     "required_years": 1,
     "name": "First Aid",
     "description": "Erste Hilfe Ausbildung"
   },
   {
-    "id": 94,
+    "id": 93,
     "required_years": 2,
     "name": "Fire Safety",
     "description": "Brandschutzbeauftragter"
   },
   {
-    "id": 95,
+    "id": 94,
     "required_years": 3,
     "name": "HOAI",
     "description": "Honorarordnung Architekten Ingenieure"
   },
   {
-    "id": 96,
+    "id": 95,
     "required_years": 2,
     "name": "VOB",
     "description": "Vergabe und Vertragsordnung Bauwesen"
   },
   {
-    "id": 97,
+    "id": 96,
     "required_years": 1,
     "name": "BASt",
     "description": "Baustellenabsicherung Technik"
   },
   {
-    "id": 98,
+    "id": 97,
     "required_years": 3,
     "name": "BIM Manager",
     "description": "Building Information Modeling Manager"
   },
   {
-    "id": 99,
+    "id": 98,
     "required_years": 2,
     "name": "Revit",
     "description": "BIM Software Revit"
   },
   {
-    "id": 100,
+    "id": 99,
     "required_years": 4,
     "name": "Leadership Development",
     "description": "Führungskräfteentwicklung Programm"

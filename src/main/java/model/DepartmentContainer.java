@@ -32,4 +32,12 @@ public class DepartmentContainer {
         }
         return null;
     }
+
+    public int getNextFreeId() {
+        int i = 0;
+        while (true) {
+            if (getDepartmentById(i) == null) return i;
+            i++;
+        }
+    }
 }

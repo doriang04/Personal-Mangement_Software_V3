@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": 0,
     "username": "ceo.hans",
     "password": "secure123",
     "firstName": "Hans",
@@ -12,22 +12,22 @@
     "gender": "M",
     "hireDate": "2010-01-01",
     "employmentStatus": true,
-    "teamId": 12,
-    "managerId": 1,
+    "teamId": 11,
+    "managerId": 0,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 1,
+          "roleId": 0,
           "acquireDate": "2020-01-01",
           "endDate": null
         },
         {
-          "roleId": 2,
+          "roleId": 1,
           "acquireDate": "2015-01-01",
           "endDate": "2019-12-31"
         },
         {
-          "roleId": 3,
+          "roleId": 2,
           "acquireDate": "2010-01-01",
           "endDate": "2014-12-31"
         }
@@ -36,19 +36,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 1,
+          "skillId": 0,
           "acquireDate": "2015-06-01"
         },
         {
-          "skillId": 11,
+          "skillId": 10,
           "acquireDate": "2012-03-01"
         },
         {
-          "skillId": 17,
+          "skillId": 16,
           "acquireDate": "2018-09-01"
         },
         {
-          "skillId": 67,
+          "skillId": 66,
           "acquireDate": "2020-05-01"
         }
       ]
@@ -56,12 +56,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 1,
+          "trainingId": 0,
           "assignedAt": "2023-12-01",
           "completedAt": "2023-12-01"
         },
         {
-          "trainingId": 5,
+          "trainingId": 4,
           "assignedAt": "2024-03-15",
           "completedAt": "2024-03-15"
         }
@@ -69,7 +69,7 @@
     }
   },
   {
-    "id": 2,
+    "id": 1,
     "username": "bauleiter.karl",
     "password": "bauleiter2025",
     "firstName": "Karl",
@@ -81,12 +81,12 @@
     "gender": "M",
     "hireDate": "2015-04-01",
     "employmentStatus": true,
-    "teamId": 2,
-    "managerId": 1,
+    "teamId": 1,
+    "managerId": 0,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 2,
+          "roleId": 1,
           "acquireDate": "2015-04-01",
           "endDate": null
         }
@@ -95,19 +95,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 2,
+          "skillId": 1,
           "acquireDate": "2018-02-01"
         },
         {
-          "skillId": 22,
+          "skillId": 21,
           "acquireDate": "2019-11-01"
         },
         {
-          "skillId": 20,
+          "skillId": 19,
           "acquireDate": "2020-06-01"
         },
         {
-          "skillId": 12,
+          "skillId": 11,
           "acquireDate": "2023-04-01"
         }
       ]
@@ -115,12 +115,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 3,
+          "trainingId": 2,
           "assignedAt": "2025-02-01",
           "completedAt": null
         },
         {
-          "trainingId": 1,
+          "trainingId": 0,
           "assignedAt": "2024-01-15",
           "completedAt": "2024-01-15"
         }
@@ -128,7 +128,7 @@
     }
   },
   {
-    "id": 3,
+    "id": 2,
     "username": "maurer.vorarbeiter",
     "password": "maurer123",
     "firstName": "Peter",
@@ -140,17 +140,17 @@
     "gender": "M",
     "hireDate": "2018-09-01",
     "employmentStatus": true,
-    "teamId": 2,
-    "managerId": 2,
+    "teamId": 1,
+    "managerId": 1,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 3,
+          "roleId": 2,
           "acquireDate": "2022-01-01",
           "endDate": null
         },
         {
-          "roleId": 4,
+          "roleId": 3,
           "acquireDate": "2018-09-01",
           "endDate": "2021-12-31"
         }
@@ -159,15 +159,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 51,
+          "skillId": 50,
           "acquireDate": "2020-05-01"
         },
         {
-          "skillId": 49,
+          "skillId": 48,
           "acquireDate": "2021-03-01"
         },
         {
-          "skillId": 16,
+          "skillId": 15,
           "acquireDate": "2022-07-01"
         }
       ]
@@ -175,12 +175,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 2,
+          "trainingId": 1,
           "assignedAt": "2025-01-20",
           "completedAt": null
         },
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2023-11-01",
           "completedAt": "2023-11-01"
         }
@@ -188,7 +188,7 @@
     }
   },
   {
-    "id": 4,
+    "id": 3,
     "username": "fachmaurer.anna",
     "password": "fachkraft456",
     "firstName": "Anna",
@@ -200,12 +200,12 @@
     "gender": "F",
     "hireDate": "2020-03-01",
     "employmentStatus": true,
-    "teamId": 2,
-    "managerId": 3,
+    "teamId": 1,
+    "managerId": 2,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 4,
+          "roleId": 3,
           "acquireDate": "2020-03-01",
           "endDate": null
         }
@@ -214,15 +214,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 53,
+          "skillId": 52,
           "acquireDate": "2020-08-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2021-12-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-05-01"
         }
       ]
@@ -230,7 +230,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 16,
+          "trainingId": 15,
           "assignedAt": "2024-06-01",
           "completedAt": "2024-06-01"
         }
@@ -238,7 +238,7 @@
     }
   },
   {
-    "id": 5,
+    "id": 4,
     "username": "beton.vorarbeiter",
     "password": "beton789",
     "firstName": "Thomas",
@@ -250,12 +250,12 @@
     "gender": "M",
     "hireDate": "2017-06-01",
     "employmentStatus": true,
-    "teamId": 3,
-    "managerId": 2,
+    "teamId": 2,
+    "managerId": 1,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 6,
+          "roleId": 5,
           "acquireDate": "2021-03-01",
           "endDate": null
         }
@@ -264,15 +264,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 52,
+          "skillId": 51,
           "acquireDate": "2019-04-01"
         },
         {
-          "skillId": 60,
+          "skillId": 59,
           "acquireDate": "2020-10-01"
         },
         {
-          "skillId": 16,
+          "skillId": 15,
           "acquireDate": "2021-08-01"
         }
       ]
@@ -280,12 +280,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 16,
+          "trainingId": 15,
           "assignedAt": "2025-03-15",
           "completedAt": null
         },
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2022-09-01",
           "completedAt": "2022-09-01"
         }
@@ -293,7 +293,7 @@
     }
   },
   {
-    "id": 6,
+    "id": 5,
     "username": "stahl.planer.max",
     "password": "stahlplaner2025",
     "firstName": "Max",
@@ -305,17 +305,17 @@
     "gender": "M",
     "hireDate": "2016-08-01",
     "employmentStatus": true,
-    "teamId": 4,
-    "managerId": 2,
+    "teamId": 3,
+    "managerId": 1,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 9,
+          "roleId": 8,
           "acquireDate": "2020-01-01",
           "endDate": null
         },
         {
-          "roleId": 10,
+          "roleId": 9,
           "acquireDate": "2016-08-01",
           "endDate": "2019-12-31"
         }
@@ -324,19 +324,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 39,
+          "skillId": 38,
           "acquireDate": "2017-03-01"
         },
         {
-          "skillId": 60,
+          "skillId": 59,
           "acquireDate": "2018-11-01"
         },
         {
-          "skillId": 5,
+          "skillId": 4,
           "acquireDate": "2020-06-01"
         },
         {
-          "skillId": 98,
+          "skillId": 97,
           "acquireDate": "2023-02-01"
         }
       ]
@@ -344,17 +344,17 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 17,
+          "trainingId": 16,
           "assignedAt": "2025-04-01",
           "completedAt": null
         },
         {
-          "trainingId": 3,
+          "trainingId": 2,
           "assignedAt": "2022-09-15",
           "completedAt": "2022-09-15"
         },
         {
-          "trainingId": 12,
+          "trainingId": 11,
           "assignedAt": "2024-01-20",
           "completedAt": "2024-01-20"
         }
@@ -362,7 +362,7 @@
     }
   },
   {
-    "id": 7,
+    "id": 6,
     "username": "stahlbauer.lukas",
     "password": "schweisser456",
     "firstName": "Lukas",
@@ -374,12 +374,12 @@
     "gender": "M",
     "hireDate": "2019-05-01",
     "employmentStatus": true,
-    "teamId": 4,
-    "managerId": 6,
+    "teamId": 3,
+    "managerId": 5,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 10,
+          "roleId": 9,
           "acquireDate": "2019-05-01",
           "endDate": null
         }
@@ -388,19 +388,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 37,
+          "skillId": 36,
           "acquireDate": "2019-09-01"
         },
         {
-          "skillId": 10,
+          "skillId": 9,
           "acquireDate": "2020-04-01"
         },
         {
-          "skillId": 20,
+          "skillId": 19,
           "acquireDate": "2021-03-01"
         },
         {
-          "skillId": 16,
+          "skillId": 15,
           "acquireDate": "2022-08-01"
         }
       ]
@@ -408,12 +408,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 17,
+          "trainingId": 16,
           "assignedAt": "2024-05-10",
           "completedAt": "2024-05-10"
         },
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2023-10-01",
           "completedAt": "2023-10-01"
         }
@@ -421,7 +421,7 @@
     }
   },
   {
-    "id": 8,
+    "id": 7,
     "username": "metallbauer.sophie",
     "password": "metall789",
     "firstName": "Sophie",
@@ -433,12 +433,12 @@
     "gender": "F",
     "hireDate": "2021-02-01",
     "employmentStatus": true,
-    "teamId": 4,
-    "managerId": 6,
+    "teamId": 3,
+    "managerId": 5,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 11,
+          "roleId": 10,
           "acquireDate": "2021-02-01",
           "endDate": null
         }
@@ -447,19 +447,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 55,
+          "skillId": 54,
           "acquireDate": "2021-06-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2022-01-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-09-01"
         },
         {
-          "skillId": 36,
+          "skillId": 35,
           "acquireDate": "2023-11-01"
         }
       ]
@@ -467,12 +467,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 10,
+          "trainingId": 9,
           "assignedAt": "2025-05-15",
           "completedAt": null
         },
         {
-          "trainingId": 16,
+          "trainingId": 15,
           "assignedAt": "2024-03-20",
           "completedAt": "2024-03-20"
         }
@@ -480,7 +480,7 @@
     }
   },
   {
-    "id": 9,
+    "id": 8,
     "username": "stahl.helper.martin",
     "password": "helfer123",
     "firstName": "Martin",
@@ -492,12 +492,12 @@
     "gender": "M",
     "hireDate": "2022-07-01",
     "employmentStatus": true,
-    "teamId": 4,
-    "managerId": 7,
+    "teamId": 3,
+    "managerId": 6,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 10,
+          "roleId": 9,
           "acquireDate": "2022-07-01",
           "endDate": null
         }
@@ -506,15 +506,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 37,
+          "skillId": 36,
           "acquireDate": "2022-11-01"
         },
         {
-          "skillId": 93,
+          "skillId": 92,
           "acquireDate": "2023-02-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2023-08-01"
         }
       ]
@@ -522,12 +522,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 17,
+          "trainingId": 16,
           "assignedAt": "2025-06-01",
           "completedAt": null
         },
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2023-12-15",
           "completedAt": "2023-12-15"
         }
@@ -535,7 +535,7 @@
     }
   },
   {
-    "id": 10,
+    "id": 9,
     "username": "stahl.tech.nina",
     "password": "techniker456",
     "firstName": "Nina",
@@ -547,12 +547,12 @@
     "gender": "F",
     "hireDate": "2018-11-01",
     "employmentStatus": true,
-    "teamId": 4,
-    "managerId": 6,
+    "teamId": 3,
+    "managerId": 5,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 11,
+          "roleId": 10,
           "acquireDate": "2018-11-01",
           "endDate": null
         }
@@ -561,19 +561,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 5,
+          "skillId": 4,
           "acquireDate": "2019-05-01"
         },
         {
-          "skillId": 55,
+          "skillId": 54,
           "acquireDate": "2020-09-01"
         },
         {
-          "skillId": 60,
+          "skillId": 59,
           "acquireDate": "2021-12-01"
         },
         {
-          "skillId": 99,
+          "skillId": 98,
           "acquireDate": "2023-07-01"
         }
       ]
@@ -581,12 +581,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 12,
+          "trainingId": 11,
           "assignedAt": "2023-11-10",
           "completedAt": "2023-11-10"
         },
         {
-          "trainingId": 3,
+          "trainingId": 2,
           "assignedAt": "2022-06-01",
           "completedAt": "2022-06-01"
         }
@@ -594,7 +594,7 @@
     }
   },
   {
-    "id": 11,
+    "id": 10,
     "username": "logistik.planer.felix",
     "password": "logistik2025",
     "firstName": "Felix",
@@ -606,17 +606,17 @@
     "gender": "M",
     "hireDate": "2017-03-01",
     "employmentStatus": true,
-    "teamId": 6,
-    "managerId": 2,
+    "teamId": 5,
+    "managerId": 1,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 13,
+          "roleId": 12,
           "acquireDate": "2020-06-01",
           "endDate": null
         },
         {
-          "roleId": 14,
+          "roleId": 13,
           "acquireDate": "2017-03-01",
           "endDate": "2020-05-31"
         }
@@ -625,23 +625,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 13,
+          "skillId": 12,
           "acquireDate": "2018-07-01"
         },
         {
-          "skillId": 57,
+          "skillId": 56,
           "acquireDate": "2019-05-01"
         },
         {
-          "skillId": 25,
+          "skillId": 24,
           "acquireDate": "2020-11-01"
         },
         {
-          "skillId": 22,
+          "skillId": 21,
           "acquireDate": "2022-03-01"
         },
         {
-          "skillId": 80,
+          "skillId": 79,
           "acquireDate": "2023-09-01"
         }
       ]
@@ -649,17 +649,17 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 18,
+          "trainingId": 17,
           "assignedAt": "2025-04-20",
           "completedAt": null
         },
         {
-          "trainingId": 30,
+          "trainingId": 29,
           "assignedAt": "2024-02-15",
           "completedAt": "2024-02-15"
         },
         {
-          "trainingId": 11,
+          "trainingId": 10,
           "assignedAt": "2023-10-01",
           "completedAt": "2023-10-01"
         }
@@ -667,7 +667,7 @@
     }
   },
   {
-    "id": 12,
+    "id": 11,
     "username": "gabelstapler.michaela",
     "password": "stapler123",
     "firstName": "Michaela",
@@ -679,12 +679,12 @@
     "gender": "F",
     "hireDate": "2020-09-01",
     "employmentStatus": true,
-    "teamId": 6,
-    "managerId": 11,
+    "teamId": 5,
+    "managerId": 10,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 14,
+          "roleId": 13,
           "acquireDate": "2020-09-01",
           "endDate": null
         }
@@ -693,19 +693,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 36,
+          "skillId": 35,
           "acquireDate": "2020-12-01"
         },
         {
-          "skillId": 93,
+          "skillId": 92,
           "acquireDate": "2021-04-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2021-11-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-06-01"
         }
       ]
@@ -713,12 +713,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 18,
+          "trainingId": 17,
           "assignedAt": "2024-08-10",
           "completedAt": "2024-08-10"
         },
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2023-03-15",
           "completedAt": "2023-03-15"
         }
@@ -726,7 +726,7 @@
     }
   },
   {
-    "id": 13,
+    "id": 12,
     "username": "logistik.jonas",
     "password": "jonaslogistik",
     "firstName": "Jonas",
@@ -738,12 +738,12 @@
     "gender": "M",
     "hireDate": "2019-01-15",
     "employmentStatus": true,
-    "teamId": 6,
-    "managerId": 11,
+    "teamId": 5,
+    "managerId": 10,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 14,
+          "roleId": 13,
           "acquireDate": "2019-01-15",
           "endDate": null
         }
@@ -752,19 +752,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 36,
+          "skillId": 35,
           "acquireDate": "2019-04-01"
         },
         {
-          "skillId": 56,
+          "skillId": 55,
           "acquireDate": "2019-08-01"
         },
         {
-          "skillId": 57,
+          "skillId": 56,
           "acquireDate": "2020-05-01"
         },
         {
-          "skillId": 10,
+          "skillId": 9,
           "acquireDate": "2021-02-01"
         }
       ]
@@ -772,12 +772,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 10,
+          "trainingId": 9,
           "assignedAt": "2025-05-15",
           "completedAt": null
         },
         {
-          "trainingId": 18,
+          "trainingId": 17,
           "assignedAt": "2024-01-20",
           "completedAt": "2024-01-20"
         }
@@ -785,7 +785,7 @@
     }
   },
   {
-    "id": 14,
+    "id": 13,
     "username": "lager.sabrina",
     "password": "lager456",
     "firstName": "Sabrina",
@@ -797,12 +797,12 @@
     "gender": "F",
     "hireDate": "2021-11-01",
     "employmentStatus": true,
-    "teamId": 6,
-    "managerId": 11,
+    "teamId": 5,
+    "managerId": 10,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 14,
+          "roleId": 13,
           "acquireDate": "2021-11-01",
           "endDate": null
         }
@@ -811,19 +811,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 57,
+          "skillId": 56,
           "acquireDate": "2022-02-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2022-07-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2023-01-01"
         },
         {
-          "skillId": 93,
+          "skillId": 92,
           "acquireDate": "2023-05-01"
         }
       ]
@@ -831,7 +831,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 18,
+          "trainingId": 17,
           "assignedAt": "2024-06-05",
           "completedAt": "2024-06-05"
         }
@@ -839,7 +839,7 @@
     }
   },
   {
-    "id": 15,
+    "id": 14,
     "username": "logistik.planer2.dennis",
     "password": "planer789",
     "firstName": "Dennis",
@@ -851,17 +851,17 @@
     "gender": "M",
     "hireDate": "2018-07-01",
     "employmentStatus": true,
-    "teamId": 6,
-    "managerId": 11,
+    "teamId": 5,
+    "managerId": 10,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 13,
+          "roleId": 12,
           "acquireDate": "2022-03-01",
           "endDate": null
         },
         {
-          "roleId": 14,
+          "roleId": 13,
           "acquireDate": "2018-07-01",
           "endDate": "2022-02-28"
         }
@@ -870,19 +870,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 13,
+          "skillId": 12,
           "acquireDate": "2019-01-01"
         },
         {
-          "skillId": 25,
+          "skillId": 24,
           "acquireDate": "2019-10-01"
         },
         {
-          "skillId": 80,
+          "skillId": 79,
           "acquireDate": "2021-04-01"
         },
         {
-          "skillId": 23,
+          "skillId": 22,
           "acquireDate": "2022-12-01"
         }
       ]
@@ -890,17 +890,17 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 32,
+          "trainingId": 31,
           "assignedAt": "2025-07-01",
           "completedAt": null
         },
         {
-          "trainingId": 11,
+          "trainingId": 10,
           "assignedAt": "2023-05-15",
           "completedAt": "2023-05-15"
         },
         {
-          "trainingId": 30,
+          "trainingId": 29,
           "assignedAt": "2024-03-10",
           "completedAt": "2024-03-10"
         }
@@ -908,7 +908,7 @@
     }
   },
   {
-    "id": 16,
+    "id": 15,
     "username": "it.leiter.stefan",
     "password": "itchef2025",
     "firstName": "Stefan",
@@ -920,17 +920,17 @@
     "gender": "M",
     "hireDate": "2014-02-01",
     "employmentStatus": true,
-    "teamId": 21,
-    "managerId": 1,
+    "teamId": 20,
+    "managerId": 0,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 40,
+          "roleId": 39,
           "acquireDate": "2018-06-01",
           "endDate": null
         },
         {
-          "roleId": 41,
+          "roleId": 40,
           "acquireDate": "2014-02-01",
           "endDate": "2018-05-31"
         }
@@ -939,23 +939,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 40,
+          "skillId": 39,
           "acquireDate": "2015-06-01"
         },
         {
-          "skillId": 26,
+          "skillId": 25,
           "acquireDate": "2016-03-01"
         },
         {
-          "skillId": 91,
+          "skillId": 90,
           "acquireDate": "2018-09-01"
         },
         {
-          "skillId": 65,
+          "skillId": 64,
           "acquireDate": "2021-05-01"
         },
         {
-          "skillId": 84,
+          "skillId": 83,
           "acquireDate": "2023-02-01"
         }
       ]
@@ -963,17 +963,17 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 24,
+          "trainingId": 23,
           "assignedAt": "2025-08-10",
           "completedAt": null
         },
         {
-          "trainingId": 9,
+          "trainingId": 8,
           "assignedAt": "2022-11-15",
           "completedAt": "2022-11-15"
         },
         {
-          "trainingId": 28,
+          "trainingId": 27,
           "assignedAt": "2024-04-01",
           "completedAt": "2024-04-01"
         }
@@ -981,7 +981,7 @@
     }
   },
   {
-    "id": 17,
+    "id": 16,
     "username": "sysadmin.marco",
     "password": "sysadmin123",
     "firstName": "Marco",
@@ -993,12 +993,12 @@
     "gender": "M",
     "hireDate": "2019-08-01",
     "employmentStatus": true,
-    "teamId": 22,
-    "managerId": 16,
+    "teamId": 21,
+    "managerId": 15,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 41,
+          "roleId": 40,
           "acquireDate": "2019-08-01",
           "endDate": null
         }
@@ -1007,19 +1007,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 26,
+          "skillId": 25,
           "acquireDate": "2020-01-01"
         },
         {
-          "skillId": 27,
+          "skillId": 26,
           "acquireDate": "2020-07-01"
         },
         {
-          "skillId": 29,
+          "skillId": 28,
           "acquireDate": "2021-11-01"
         },
         {
-          "skillId": 64,
+          "skillId": 63,
           "acquireDate": "2023-03-01"
         }
       ]
@@ -1027,12 +1027,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 24,
+          "trainingId": 23,
           "assignedAt": "2025-09-01",
           "completedAt": null
         },
         {
-          "trainingId": 24,
+          "trainingId": 23,
           "assignedAt": "2024-02-20",
           "completedAt": "2024-02-20"
         }
@@ -1040,7 +1040,7 @@
     }
   },
   {
-    "id": 18,
+    "id": 17,
     "username": "netzwerk.tim",
     "password": "ccna456",
     "firstName": "Tim",
@@ -1052,12 +1052,12 @@
     "gender": "M",
     "hireDate": "2021-05-01",
     "employmentStatus": true,
-    "teamId": 22,
-    "managerId": 16,
+    "teamId": 21,
+    "managerId": 15,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 42,
+          "roleId": 41,
           "acquireDate": "2021-05-01",
           "endDate": null
         }
@@ -1066,19 +1066,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 28,
+          "skillId": 27,
           "acquireDate": "2021-09-01"
         },
         {
-          "skillId": 63,
+          "skillId": 62,
           "acquireDate": "2022-02-01"
         },
         {
-          "skillId": 42,
+          "skillId": 41,
           "acquireDate": "2022-10-01"
         },
         {
-          "skillId": 64,
+          "skillId": 63,
           "acquireDate": "2023-06-01"
         }
       ]
@@ -1086,12 +1086,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 25,
+          "trainingId": 24,
           "assignedAt": "2025-10-01",
           "completedAt": null
         },
         {
-          "trainingId": 25,
+          "trainingId": 24,
           "assignedAt": "2024-07-15",
           "completedAt": "2024-07-15"
         }
@@ -1099,7 +1099,7 @@
     }
   },
   {
-    "id": 19,
+    "id": 18,
     "username": "support.lara",
     "password": "helpdesk789",
     "firstName": "Lara",
@@ -1111,12 +1111,12 @@
     "gender": "F",
     "hireDate": "2022-03-01",
     "employmentStatus": true,
-    "teamId": 23,
-    "managerId": 16,
+    "teamId": 22,
+    "managerId": 15,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 43,
+          "roleId": 42,
           "acquireDate": "2022-03-01",
           "endDate": null
         }
@@ -1125,19 +1125,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 62,
+          "skillId": 61,
           "acquireDate": "2022-06-01"
         },
         {
-          "skillId": 70,
+          "skillId": 69,
           "acquireDate": "2022-11-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2023-04-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2023-09-01"
         }
       ]
@@ -1145,12 +1145,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 9,
+          "trainingId": 8,
           "assignedAt": "2023-12-10",
           "completedAt": "2023-12-10"
         },
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2023-06-01",
           "completedAt": "2023-06-01"
         }
@@ -1158,7 +1158,7 @@
     }
   },
   {
-    "id": 20,
+    "id": 19,
     "username": "dev.julia",
     "password": "coder2025",
     "firstName": "Julia",
@@ -1170,12 +1170,12 @@
     "gender": "F",
     "hireDate": "2020-10-01",
     "employmentStatus": true,
-    "teamId": 24,
-    "managerId": 16,
+    "teamId": 23,
+    "managerId": 15,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 45,
+          "roleId": 44,
           "acquireDate": "2020-10-01",
           "endDate": null
         }
@@ -1184,23 +1184,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 34,
+          "skillId": 33,
           "acquireDate": "2021-02-01"
         },
         {
-          "skillId": 76,
+          "skillId": 75,
           "acquireDate": "2021-08-01"
         },
         {
-          "skillId": 33,
+          "skillId": 32,
           "acquireDate": "2022-01-01"
         },
         {
-          "skillId": 71,
+          "skillId": 70,
           "acquireDate": "2023-05-01"
         },
         {
-          "skillId": 77,
+          "skillId": 76,
           "acquireDate": "2024-01-01"
         }
       ]
@@ -1208,12 +1208,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 15,
+          "trainingId": 14,
           "assignedAt": "2025-11-01",
           "completedAt": null
         },
         {
-          "trainingId": 15,
+          "trainingId": 14,
           "assignedAt": "2024-09-20",
           "completedAt": "2024-09-20"
         }
@@ -1221,7 +1221,7 @@
     }
   },
   {
-    "id": 21,
+    "id": 20,
     "username": "hr.leiter.eva",
     "password": "hrchef2025",
     "firstName": "Eva",
@@ -1233,17 +1233,17 @@
     "gender": "F",
     "hireDate": "2013-05-01",
     "employmentStatus": true,
-    "teamId": 25,
-    "managerId": 1,
+    "teamId": 24,
+    "managerId": 0,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 47,
+          "roleId": 46,
           "acquireDate": "2017-09-01",
           "endDate": null
         },
         {
-          "roleId": 48,
+          "roleId": 47,
           "acquireDate": "2013-05-01",
           "endDate": "2017-08-31"
         }
@@ -1252,23 +1252,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 41,
+          "skillId": 40,
           "acquireDate": "2014-09-01"
         },
         {
-          "skillId": 42,
+          "skillId": 41,
           "acquireDate": "2016-03-01"
         },
         {
-          "skillId": 44,
+          "skillId": 43,
           "acquireDate": "2018-11-01"
         },
         {
-          "skillId": 59,
+          "skillId": 58,
           "acquireDate": "2020-06-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-02-01"
         }
       ]
@@ -1276,17 +1276,17 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 20,
+          "trainingId": 19,
           "assignedAt": "2025-05-25",
           "completedAt": null
         },
         {
-          "trainingId": 13,
+          "trainingId": 12,
           "assignedAt": "2023-10-15",
           "completedAt": "2023-10-15"
         },
         {
-          "trainingId": 21,
+          "trainingId": 20,
           "assignedAt": "2024-03-01",
           "completedAt": "2024-03-01"
         }
@@ -1294,7 +1294,7 @@
     }
   },
   {
-    "id": 22,
+    "id": 21,
     "username": "recruiter.anna",
     "password": "recruit123",
     "firstName": "Anna",
@@ -1306,12 +1306,12 @@
     "gender": "F",
     "hireDate": "2019-09-01",
     "employmentStatus": true,
-    "teamId": 26,
-    "managerId": 21,
+    "teamId": 25,
+    "managerId": 20,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 48,
+          "roleId": 47,
           "acquireDate": "2019-09-01",
           "endDate": null
         }
@@ -1320,23 +1320,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 59,
+          "skillId": 58,
           "acquireDate": "2020-02-01"
         },
         {
-          "skillId": 86,
+          "skillId": 85,
           "acquireDate": "2020-08-01"
         },
         {
-          "skillId": 87,
+          "skillId": 86,
           "acquireDate": "2021-05-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-01-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2022-10-01"
         }
       ]
@@ -1344,12 +1344,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 20,
+          "trainingId": 19,
           "assignedAt": "2024-09-10",
           "completedAt": "2024-09-10"
         },
         {
-          "trainingId": 13,
+          "trainingId": 12,
           "assignedAt": "2023-12-05",
           "completedAt": "2023-12-05"
         }
@@ -1357,7 +1357,7 @@
     }
   },
   {
-    "id": 23,
+    "id": 22,
     "username": "lohn.simon",
     "password": "datev456",
     "firstName": "Simon",
@@ -1369,12 +1369,12 @@
     "gender": "M",
     "hireDate": "2018-04-01",
     "employmentStatus": true,
-    "teamId": 27,
-    "managerId": 21,
+    "teamId": 26,
+    "managerId": 20,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 49,
+          "roleId": 48,
           "acquireDate": "2018-04-01",
           "endDate": null
         }
@@ -1383,23 +1383,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 24,
+          "skillId": 23,
           "acquireDate": "2018-08-01"
         },
         {
-          "skillId": 44,
+          "skillId": 43,
           "acquireDate": "2019-02-01"
         },
         {
-          "skillId": 42,
+          "skillId": 41,
           "acquireDate": "2020-07-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2021-11-01"
         },
         {
-          "skillId": 45,
+          "skillId": 44,
           "acquireDate": "2023-04-01"
         }
       ]
@@ -1407,12 +1407,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 21,
+          "trainingId": 20,
           "assignedAt": "2025-06-15",
           "completedAt": null
         },
         {
-          "trainingId": 21,
+          "trainingId": 20,
           "assignedAt": "2024-01-20",
           "completedAt": "2024-01-20"
         }
@@ -1420,7 +1420,7 @@
     }
   },
   {
-    "id": 24,
+    "id": 23,
     "username": "hr.berater.maria",
     "password": "berater789",
     "firstName": "Maria",
@@ -1432,12 +1432,12 @@
     "gender": "F",
     "hireDate": "2021-01-01",
     "employmentStatus": true,
-    "teamId": 28,
-    "managerId": 21,
+    "teamId": 27,
+    "managerId": 20,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 50,
+          "roleId": 49,
           "acquireDate": "2021-01-01",
           "endDate": null
         }
@@ -1446,19 +1446,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 42,
+          "skillId": 41,
           "acquireDate": "2021-05-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2021-12-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2022-06-01"
         },
         {
-          "skillId": 49,
+          "skillId": 48,
           "acquireDate": "2023-03-01"
         }
       ]
@@ -1466,12 +1466,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 13,
+          "trainingId": 12,
           "assignedAt": "2023-08-15",
           "completedAt": "2023-08-15"
         },
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2022-11-01",
           "completedAt": "2022-11-01"
         }
@@ -1479,7 +1479,7 @@
     }
   },
   {
-    "id": 25,
+    "id": 24,
     "username": "talent.sourcer.david",
     "password": "sourcer123",
     "firstName": "David",
@@ -1491,12 +1491,12 @@
     "gender": "M",
     "hireDate": "2022-07-01",
     "employmentStatus": true,
-    "teamId": 26,
-    "managerId": 22,
+    "teamId": 25,
+    "managerId": 21,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 48,
+          "roleId": 47,
           "acquireDate": "2022-07-01",
           "endDate": null
         }
@@ -1505,19 +1505,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 86,
+          "skillId": 85,
           "acquireDate": "2022-11-01"
         },
         {
-          "skillId": 87,
+          "skillId": 86,
           "acquireDate": "2023-02-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2023-07-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2023-12-01"
         }
       ]
@@ -1525,12 +1525,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 20,
+          "trainingId": 19,
           "assignedAt": "2025-08-01",
           "completedAt": null
         },
         {
-          "trainingId": 20,
+          "trainingId": 19,
           "assignedAt": "2024-11-15",
           "completedAt": "2024-11-15"
         }
@@ -1538,7 +1538,7 @@
     }
   },
   {
-    "id": 26,
+    "id": 25,
     "username": "finanzen.leiter.paul",
     "password": "finanzchef2025",
     "firstName": "Paul",
@@ -1550,17 +1550,17 @@
     "gender": "M",
     "hireDate": "2012-09-01",
     "employmentStatus": true,
-    "teamId": 29,
-    "managerId": 1,
+    "teamId": 28,
+    "managerId": 0,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 50,
+          "roleId": 49,
           "acquireDate": "2016-03-01",
           "endDate": null
         },
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2012-09-01",
           "endDate": "2016-02-29"
         }
@@ -1569,23 +1569,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 41,
+          "skillId": 40,
           "acquireDate": "2013-04-01"
         },
         {
-          "skillId": 43,
+          "skillId": 42,
           "acquireDate": "2015-10-01"
         },
         {
-          "skillId": 45,
+          "skillId": 44,
           "acquireDate": "2017-03-01"
         },
         {
-          "skillId": 90,
+          "skillId": 89,
           "acquireDate": "2019-08-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2022-02-01"
         }
       ]
@@ -1593,17 +1593,17 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 22,
+          "trainingId": 21,
           "assignedAt": "2025-07-01",
           "completedAt": null
         },
         {
-          "trainingId": 14,
+          "trainingId": 13,
           "assignedAt": "2023-11-20",
           "completedAt": "2023-11-20"
         },
         {
-          "trainingId": 23,
+          "trainingId": 22,
           "assignedAt": "2024-05-15",
           "completedAt": "2024-05-15"
         }
@@ -1611,7 +1611,7 @@
     }
   },
   {
-    "id": 27,
+    "id": 26,
     "username": "controlling.klara",
     "password": "controlling123",
     "firstName": "Klara",
@@ -1623,12 +1623,12 @@
     "gender": "F",
     "hireDate": "2017-02-01",
     "employmentStatus": true,
-    "teamId": 30,
-    "managerId": 26,
+    "teamId": 29,
+    "managerId": 25,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2017-02-01",
           "endDate": null
         }
@@ -1637,23 +1637,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 43,
+          "skillId": 42,
           "acquireDate": "2017-08-01"
         },
         {
-          "skillId": 23,
+          "skillId": 22,
           "acquireDate": "2018-05-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2019-12-01"
         },
         {
-          "skillId": 7,
+          "skillId": 6,
           "acquireDate": "2021-06-01"
         },
         {
-          "skillId": 88,
+          "skillId": 87,
           "acquireDate": "2023-04-01"
         }
       ]
@@ -1661,12 +1661,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 23,
+          "trainingId": 22,
           "assignedAt": "2025-08-20",
           "completedAt": null
         },
         {
-          "trainingId": 23,
+          "trainingId": 22,
           "assignedAt": "2024-03-10",
           "completedAt": "2024-03-10"
         }
@@ -1674,7 +1674,7 @@
     }
   },
   {
-    "id": 28,
+    "id": 27,
     "username": "buchhalter.oleg",
     "password": "hgb456",
     "firstName": "Oleg",
@@ -1686,12 +1686,12 @@
     "gender": "M",
     "hireDate": "2016-07-01",
     "employmentStatus": true,
-    "teamId": 31,
-    "managerId": 26,
+    "teamId": 30,
+    "managerId": 25,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2016-07-01",
           "endDate": null
         }
@@ -1700,19 +1700,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 45,
+          "skillId": 44,
           "acquireDate": "2017-01-01"
         },
         {
-          "skillId": 24,
+          "skillId": 23,
           "acquireDate": "2017-09-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2018-04-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2020-11-01"
         }
       ]
@@ -1720,12 +1720,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 22,
+          "trainingId": 21,
           "assignedAt": "2024-01-25",
           "completedAt": "2024-01-25"
         },
         {
-          "trainingId": 14,
+          "trainingId": 13,
           "assignedAt": "2023-09-15",
           "completedAt": "2023-09-15"
         }
@@ -1733,7 +1733,7 @@
     }
   },
   {
-    "id": 29,
+    "id": 28,
     "username": "kosten.ctrl.lisa",
     "password": "kosten789",
     "firstName": "Lisa",
@@ -1745,12 +1745,12 @@
     "gender": "F",
     "hireDate": "2020-04-01",
     "employmentStatus": true,
-    "teamId": 30,
-    "managerId": 27,
+    "teamId": 29,
+    "managerId": 26,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2020-04-01",
           "endDate": null
         }
@@ -1759,19 +1759,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 43,
+          "skillId": 42,
           "acquireDate": "2020-10-01"
         },
         {
-          "skillId": 23,
+          "skillId": 22,
           "acquireDate": "2021-06-01"
         },
         {
-          "skillId": 61,
+          "skillId": 60,
           "acquireDate": "2022-03-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2023-09-01"
         }
       ]
@@ -1779,12 +1779,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 33,
+          "trainingId": 32,
           "assignedAt": "2025-09-15",
           "completedAt": null
         },
         {
-          "trainingId": 14,
+          "trainingId": 13,
           "assignedAt": "2024-06-20",
           "completedAt": "2024-06-20"
         }
@@ -1792,7 +1792,7 @@
     }
   },
   {
-    "id": 30,
+    "id": 29,
     "username": "rechnung.franz",
     "password": "rechnung123",
     "firstName": "Franz",
@@ -1804,12 +1804,12 @@
     "gender": "M",
     "hireDate": "2019-11-01",
     "employmentStatus": true,
-    "teamId": 31,
-    "managerId": 26,
+    "teamId": 30,
+    "managerId": 25,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2019-11-01",
           "endDate": null
         }
@@ -1818,19 +1818,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 24,
+          "skillId": 23,
           "acquireDate": "2020-03-01"
         },
         {
-          "skillId": 45,
+          "skillId": 44,
           "acquireDate": "2020-10-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2021-07-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2023-02-01"
         }
       ]
@@ -1838,12 +1838,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 22,
+          "trainingId": 21,
           "assignedAt": "2024-04-10",
           "completedAt": "2024-04-10"
         },
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2023-02-15",
           "completedAt": "2023-02-15"
         }
@@ -1851,7 +1851,7 @@
     }
   },
   {
-    "id": 31,
+    "id": 30,
     "username": "vertrieb.leiter.henrik",
     "password": "vertriebschef2025",
     "firstName": "Henrik",
@@ -1863,17 +1863,17 @@
     "gender": "M",
     "hireDate": "2011-06-01",
     "employmentStatus": true,
-    "teamId": 35,
-    "managerId": 1,
+    "teamId": 34,
+    "managerId": 0,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2015-08-01",
           "endDate": null
         },
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2011-06-01",
           "endDate": "2015-07-31"
         }
@@ -1882,23 +1882,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 41,
+          "skillId": 40,
           "acquireDate": "2012-10-01"
         },
         {
-          "skillId": 47,
+          "skillId": 46,
           "acquireDate": "2015-04-01"
         },
         {
-          "skillId": 18,
+          "skillId": 17,
           "acquireDate": "2017-09-01"
         },
         {
-          "skillId": 85,
+          "skillId": 84,
           "acquireDate": "2020-03-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2022-11-01"
         }
       ]
@@ -1906,17 +1906,17 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 34,
+          "trainingId": 33,
           "assignedAt": "2025-02-20",
           "completedAt": null
         },
         {
-          "trainingId": 5,
+          "trainingId": 4,
           "assignedAt": "2023-08-15",
           "completedAt": "2023-08-15"
         },
         {
-          "trainingId": 34,
+          "trainingId": 33,
           "assignedAt": "2024-06-10",
           "completedAt": "2024-06-10"
         }
@@ -1924,7 +1924,7 @@
     }
   },
   {
-    "id": 32,
+    "id": 31,
     "username": "b2b.manager.tobias",
     "password": "b2b123",
     "firstName": "Tobias",
@@ -1936,12 +1936,12 @@
     "gender": "M",
     "hireDate": "2018-03-01",
     "employmentStatus": true,
-    "teamId": 36,
-    "managerId": 31,
+    "teamId": 35,
+    "managerId": 30,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2018-03-01",
           "endDate": null
         }
@@ -1950,23 +1950,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 47,
+          "skillId": 46,
           "acquireDate": "2018-08-01"
         },
         {
-          "skillId": 85,
+          "skillId": 84,
           "acquireDate": "2019-05-01"
         },
         {
-          "skillId": 18,
+          "skillId": 17,
           "acquireDate": "2020-11-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-03-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2023-09-01"
         }
       ]
@@ -1974,12 +1974,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 34,
+          "trainingId": 33,
           "assignedAt": "2024-11-05",
           "completedAt": "2024-11-05"
         },
         {
-          "trainingId": 13,
+          "trainingId": 12,
           "assignedAt": "2023-10-20",
           "completedAt": "2023-10-20"
         }
@@ -1987,7 +1987,7 @@
     }
   },
   {
-    "id": 33,
+    "id": 32,
     "username": "stratege.sophie",
     "password": "stratege456",
     "firstName": "Sophie",
@@ -1999,12 +1999,12 @@
     "gender": "F",
     "hireDate": "2019-11-01",
     "employmentStatus": true,
-    "teamId": 36,
-    "managerId": 31,
+    "teamId": 35,
+    "managerId": 30,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2019-11-01",
           "endDate": null
         }
@@ -2013,23 +2013,23 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 7,
+          "skillId": 6,
           "acquireDate": "2020-03-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2021-01-01"
         },
         {
-          "skillId": 18,
+          "skillId": 17,
           "acquireDate": "2021-09-01"
         },
         {
-          "skillId": 47,
+          "skillId": 46,
           "acquireDate": "2022-06-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2023-02-01"
         }
       ]
@@ -2037,12 +2037,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 28,
+          "trainingId": 27,
           "assignedAt": "2025-10-25",
           "completedAt": null
         },
         {
-          "trainingId": 34,
+          "trainingId": 33,
           "assignedAt": "2024-03-15",
           "completedAt": "2024-03-15"
         }
@@ -2050,7 +2050,7 @@
     }
   },
   {
-    "id": 34,
+    "id": 33,
     "username": "support.leon",
     "password": "support789",
     "firstName": "Leon",
@@ -2062,12 +2062,12 @@
     "gender": "M",
     "hireDate": "2021-05-01",
     "employmentStatus": true,
-    "teamId": 37,
-    "managerId": 31,
+    "teamId": 36,
+    "managerId": 30,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2021-05-01",
           "endDate": null
         }
@@ -2076,19 +2076,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2021-09-01"
         },
         {
-          "skillId": 85,
+          "skillId": 84,
           "acquireDate": "2022-02-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2022-08-01"
         },
         {
-          "skillId": 47,
+          "skillId": 46,
           "acquireDate": "2023-05-01"
         }
       ]
@@ -2096,12 +2096,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 34,
+          "trainingId": 33,
           "assignedAt": "2024-09-01",
           "completedAt": "2024-09-01"
         },
         {
-          "trainingId": 9,
+          "trainingId": 8,
           "assignedAt": "2023-07-20",
           "completedAt": "2023-07-20"
         }
@@ -2109,7 +2109,7 @@
     }
   },
   {
-    "id": 35,
+    "id": 34,
     "username": "kunden.sara",
     "password": "kunden123",
     "firstName": "Sara",
@@ -2121,12 +2121,12 @@
     "gender": "F",
     "hireDate": "2022-09-01",
     "employmentStatus": true,
-    "teamId": 37,
-    "managerId": 31,
+    "teamId": 36,
+    "managerId": 30,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2022-09-01",
           "endDate": null
         }
@@ -2135,19 +2135,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2023-01-01"
         },
         {
-          "skillId": 85,
+          "skillId": 84,
           "acquireDate": "2023-06-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2023-12-01"
         },
         {
-          "skillId": 62,
+          "skillId": 61,
           "acquireDate": "2024-05-01"
         }
       ]
@@ -2155,12 +2155,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 9,
+          "trainingId": 8,
           "assignedAt": "2025-12-01",
           "completedAt": null
         },
         {
-          "trainingId": 34,
+          "trainingId": 33,
           "assignedAt": "2024-05-10",
           "completedAt": "2024-05-10"
         }
@@ -2168,7 +2168,7 @@
     }
   },
   {
-    "id": 36,
+    "id": 35,
     "username": "safety.christian",
     "password": "sicherheit123",
     "firstName": "Christian",
@@ -2180,17 +2180,17 @@
     "gender": "M",
     "hireDate": "2016-10-01",
     "employmentStatus": true,
-    "teamId": 7,
-    "managerId": 2,
+    "teamId": 6,
+    "managerId": 1,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 15,
+          "roleId": 14,
           "acquireDate": "2019-07-01",
           "endDate": null
         },
         {
-          "roleId": 16,
+          "roleId": 15,
           "acquireDate": "2016-10-01",
           "endDate": "2019-06-30"
         }
@@ -2199,19 +2199,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 20,
+          "skillId": 19,
           "acquireDate": "2017-05-01"
         },
         {
-          "skillId": 93,
+          "skillId": 92,
           "acquireDate": "2018-03-01"
         },
         {
-          "skillId": 94,
+          "skillId": 93,
           "acquireDate": "2019-09-01"
         },
         {
-          "skillId": 10,
+          "skillId": 9,
           "acquireDate": "2021-02-01"
         }
       ]
@@ -2219,7 +2219,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2023-06-20",
           "completedAt": "2023-06-20"
         }
@@ -2227,7 +2227,7 @@
     }
   },
   {
-    "id": 37,
+    "id": 36,
     "username": "site.coord.katharina",
     "password": "koordinator456",
     "firstName": "Katharina",
@@ -2239,12 +2239,12 @@
     "gender": "F",
     "hireDate": "2019-04-01",
     "employmentStatus": true,
-    "teamId": 8,
-    "managerId": 2,
+    "teamId": 7,
+    "managerId": 1,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 17,
+          "roleId": 16,
           "acquireDate": "2019-04-01",
           "endDate": null
         }
@@ -2253,19 +2253,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 2,
+          "skillId": 1,
           "acquireDate": "2020-01-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2020-10-01"
         },
         {
-          "skillId": 22,
+          "skillId": 21,
           "acquireDate": "2021-07-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2022-03-01"
         }
       ]
@@ -2273,12 +2273,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 1,
+          "trainingId": 0,
           "assignedAt": "2025-03-01",
           "completedAt": null
         },
         {
-          "trainingId": 5,
+          "trainingId": 4,
           "assignedAt": "2024-01-15",
           "completedAt": "2024-01-15"
         }
@@ -2286,7 +2286,7 @@
     }
   },
   {
-    "id": 38,
+    "id": 37,
     "username": "bagger.michael",
     "password": "bagger789",
     "firstName": "Michael",
@@ -2298,12 +2298,12 @@
     "gender": "M",
     "hireDate": "2020-07-01",
     "employmentStatus": true,
-    "teamId": 10,
-    "managerId": 19,
+    "teamId": 9,
+    "managerId": 18,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 20,
+          "roleId": 19,
           "acquireDate": "2020-07-01",
           "endDate": null
         }
@@ -2312,19 +2312,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 38,
+          "skillId": 37,
           "acquireDate": "2020-11-01"
         },
         {
-          "skillId": 56,
+          "skillId": 55,
           "acquireDate": "2021-02-01"
         },
         {
-          "skillId": 93,
+          "skillId": 92,
           "acquireDate": "2021-08-01"
         },
         {
-          "skillId": 10,
+          "skillId": 9,
           "acquireDate": "2022-04-01"
         }
       ]
@@ -2332,7 +2332,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 10,
+          "trainingId": 9,
           "assignedAt": "2024-02-10",
           "completedAt": "2024-02-10"
         }
@@ -2340,7 +2340,7 @@
     }
   },
   {
-    "id": 39,
+    "id": 38,
     "username": "projekt.admin.sandra",
     "password": "projekt123",
     "firstName": "Sandra",
@@ -2352,12 +2352,12 @@
     "gender": "F",
     "hireDate": "2018-11-01",
     "employmentStatus": true,
-    "teamId": 13,
-    "managerId": 24,
+    "teamId": 12,
+    "managerId": 23,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 25,
+          "roleId": 24,
           "acquireDate": "2018-11-01",
           "endDate": null
         }
@@ -2366,19 +2366,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2019-03-01"
         },
         {
-          "skillId": 22,
+          "skillId": 21,
           "acquireDate": "2020-01-01"
         },
         {
-          "skillId": 80,
+          "skillId": 79,
           "acquireDate": "2021-09-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-06-01"
         }
       ]
@@ -2386,12 +2386,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 6,
+          "trainingId": 5,
           "assignedAt": "2025-04-15",
           "completedAt": null
         },
         {
-          "trainingId": 6,
+          "trainingId": 5,
           "assignedAt": "2023-12-05",
           "completedAt": "2023-12-05"
         }
@@ -2399,7 +2399,7 @@
     }
   },
   {
-    "id": 40,
+    "id": 39,
     "username": "kalkulation.daniel",
     "password": "kalkulation456",
     "firstName": "Daniel",
@@ -2411,12 +2411,12 @@
     "gender": "M",
     "hireDate": "2017-09-01",
     "employmentStatus": true,
-    "teamId": 17,
-    "managerId": 30,
+    "teamId": 16,
+    "managerId": 29,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 33,
+          "roleId": 32,
           "acquireDate": "2017-09-01",
           "endDate": null
         }
@@ -2425,19 +2425,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 61,
+          "skillId": 60,
           "acquireDate": "2018-04-01"
         },
         {
-          "skillId": 23,
+          "skillId": 22,
           "acquireDate": "2019-01-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2020-08-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2022-05-01"
         }
       ]
@@ -2445,7 +2445,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 30,
+          "trainingId": 29,
           "assignedAt": "2024-07-20",
           "completedAt": "2024-07-20"
         }
@@ -2453,7 +2453,7 @@
     }
   },
   {
-    "id": 41,
+    "id": 40,
     "username": "einkauf.melanie",
     "password": "einkauf789",
     "firstName": "Melanie",
@@ -2465,12 +2465,12 @@
     "gender": "F",
     "hireDate": "2019-02-01",
     "employmentStatus": true,
-    "teamId": 19,
-    "managerId": 18,
+    "teamId": 18,
+    "managerId": 17,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 36,
+          "roleId": 35,
           "acquireDate": "2019-02-01",
           "endDate": null
         }
@@ -2479,19 +2479,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 58,
+          "skillId": 57,
           "acquireDate": "2019-07-01"
         },
         {
-          "skillId": 18,
+          "skillId": 17,
           "acquireDate": "2020-04-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2021-01-01"
         },
         {
-          "skillId": 25,
+          "skillId": 24,
           "acquireDate": "2022-09-01"
         }
       ]
@@ -2499,7 +2499,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 11,
+          "trainingId": 10,
           "assignedAt": "2024-03-15",
           "completedAt": "2024-03-15"
         }
@@ -2507,7 +2507,7 @@
     }
   },
   {
-    "id": 42,
+    "id": 41,
     "username": "helpdesk.florian",
     "password": "helpdesk123",
     "firstName": "Florian",
@@ -2519,12 +2519,12 @@
     "gender": "M",
     "hireDate": "2022-01-01",
     "employmentStatus": true,
-    "teamId": 23,
-    "managerId": 19,
+    "teamId": 22,
+    "managerId": 18,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 44,
+          "roleId": 43,
           "acquireDate": "2022-01-01",
           "endDate": null
         }
@@ -2533,19 +2533,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 62,
+          "skillId": 61,
           "acquireDate": "2022-04-01"
         },
         {
-          "skillId": 70,
+          "skillId": 69,
           "acquireDate": "2022-10-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2023-03-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2023-08-01"
         }
       ]
@@ -2553,7 +2553,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 9,
+          "trainingId": 8,
           "assignedAt": "2024-01-10",
           "completedAt": "2024-01-10"
         }
@@ -2561,7 +2561,7 @@
     }
   },
   {
-    "id": 43,
+    "id": 42,
     "username": "system.integrator.lea",
     "password": "integrator456",
     "firstName": "Lea",
@@ -2573,12 +2573,12 @@
     "gender": "F",
     "hireDate": "2021-08-01",
     "employmentStatus": true,
-    "teamId": 24,
-    "managerId": 20,
+    "teamId": 23,
+    "managerId": 19,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 46,
+          "roleId": 45,
           "acquireDate": "2021-08-01",
           "endDate": null
         }
@@ -2587,19 +2587,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 34,
+          "skillId": 33,
           "acquireDate": "2022-01-01"
         },
         {
-          "skillId": 77,
+          "skillId": 76,
           "acquireDate": "2022-07-01"
         },
         {
-          "skillId": 25,
+          "skillId": 24,
           "acquireDate": "2023-02-01"
         },
         {
-          "skillId": 84,
+          "skillId": 83,
           "acquireDate": "2023-11-01"
         }
       ]
@@ -2607,1011 +2607,8 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 32,
-          "assignedAt": "2025-07-10",
-          "completedAt": null
-        },
-        {
-          "trainingId": 15,
-          "assignedAt": "2024-05-25",
-          "completedAt": "2024-05-25"
-        }
-      ]
-    }
-  },
-  {
-    "id": 44,
-    "username": "sichereinspektor.patrik",
-    "password": "inspektor789",
-    "firstName": "Patrik",
-    "lastName": "Günther",
-    "email": "patrik.guenther@bauxyz.de",
-    "phoneNumber": "01794567890",
-    "dateOfBirth": "1983-04-17",
-    "address": "Kontrollweg 21, 80999 München",
-    "gender": "M",
-    "hireDate": "2018-06-01",
-    "employmentStatus": true,
-    "teamId": 7,
-    "managerId": 36,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 16,
-          "acquireDate": "2018-06-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 20,
-          "acquireDate": "2019-01-01"
-        },
-        {
-          "skillId": 93,
-          "acquireDate": "2019-09-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2020-05-01"
-        },
-        {
-          "skillId": 48,
-          "acquireDate": "2021-11-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
           "trainingId": 31,
-          "assignedAt": "2024-02-15",
-          "completedAt": "2024-02-15"
-        }
-      ]
-    }
-  },
-  {
-    "id": 45,
-    "username": "equip.tech.sebastian",
-    "password": "equip123",
-    "firstName": "Sebastian",
-    "lastName": "Vogt",
-    "email": "sebastian.vogt@bauxyz.de",
-    "phoneNumber": "01795678901",
-    "dateOfBirth": "1991-11-08",
-    "address": "Werkstattstr. 14, 81479 München",
-    "gender": "M",
-    "hireDate": "2020-03-01",
-    "employmentStatus": true,
-    "teamId": 10,
-    "managerId": 19,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 21,
-          "acquireDate": "2020-03-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 55,
-          "acquireDate": "2020-08-01"
-        },
-        {
-          "skillId": 54,
-          "acquireDate": "2021-02-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2021-10-01"
-        },
-        {
-          "skillId": 10,
-          "acquireDate": "2022-06-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 10,
-          "assignedAt": "2023-11-20",
-          "completedAt": "2023-11-20"
-        }
-      ]
-    }
-  },
-  {
-    "id": 46,
-    "username": "dok.spezialist.nadine",
-    "password": "doku456",
-    "firstName": "Nadine",
-    "lastName": "Brandt",
-    "email": "nadine.brandt@bauxyz.de",
-    "phoneNumber": "01796789012",
-    "dateOfBirth": "1987-07-19",
-    "address": "Archivstr. 10, 81679 München",
-    "gender": "F",
-    "hireDate": "2019-12-01",
-    "employmentStatus": true,
-    "teamId": 13,
-    "managerId": 39,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 26,
-          "acquireDate": "2019-12-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 9,
-          "acquireDate": "2020-04-01"
-        },
-        {
-          "skillId": 81,
-          "acquireDate": "2021-01-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2021-09-01"
-        },
-        {
-          "skillId": 48,
-          "acquireDate": "2022-05-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 12,
-          "assignedAt": "2024-04-05",
-          "completedAt": "2024-04-05"
-        }
-      ]
-    }
-  },
-  {
-    "id": 47,
-    "username": "zeitplaner.emanuel",
-    "password": "zeitplan789",
-    "firstName": "Emanuel",
-    "lastName": "Fuchs",
-    "email": "emanuel.fuchs@bauxyz.de",
-    "phoneNumber": "01797890123",
-    "dateOfBirth": "1984-02-25",
-    "address": "Zeitplanweg 7, 81739 München",
-    "gender": "M",
-    "hireDate": "2017-08-01",
-    "employmentStatus": true,
-    "teamId": 16,
-    "managerId": 30,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 32,
-          "acquireDate": "2020-05-01",
-          "endDate": null
-        },
-        {
-          "roleId": 29,
-          "acquireDate": "2017-08-01",
-          "endDate": "2020-04-30"
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 22,
-          "acquireDate": "2018-03-01"
-        },
-        {
-          "skillId": 12,
-          "acquireDate": "2019-10-01"
-        },
-        {
-          "skillId": 23,
-          "acquireDate": "2021-06-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2022-02-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 6,
-          "assignedAt": "2025-05-20",
-          "completedAt": null
-        },
-        {
-          "trainingId": 6,
-          "assignedAt": "2023-09-10",
-          "completedAt": "2023-09-10"
-        }
-      ]
-    }
-  },
-  {
-    "id": 48,
-    "username": "bestell.sascha",
-    "password": "bestell123",
-    "firstName": "Sascha",
-    "lastName": "Ludwig",
-    "email": "sascha.ludwig@bauxyz.de",
-    "phoneNumber": "01798901234",
-    "dateOfBirth": "1992-05-16",
-    "address": "Bestellzentrum 15, 80636 München",
-    "gender": "M",
-    "hireDate": "2021-06-01",
-    "employmentStatus": true,
-    "teamId": 20,
-    "managerId": 41,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 38,
-          "acquireDate": "2021-06-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 25,
-          "acquireDate": "2021-10-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2022-03-01"
-        },
-        {
-          "skillId": 48,
-          "acquireDate": "2022-09-01"
-        },
-        {
-          "skillId": 57,
-          "acquireDate": "2023-04-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 11,
-          "assignedAt": "2024-01-25",
-          "completedAt": "2024-01-25"
-        }
-      ]
-    }
-  },
-  {
-    "id": 49,
-    "username": "lager.konstanze",
-    "password": "lager456",
-    "firstName": "Konstanze",
-    "lastName": "Maier",
-    "email": "konstanze.maier@bauxyz.de",
-    "phoneNumber": "01799012345",
-    "dateOfBirth": "1989-12-02",
-    "address": "Lagerpark 23, 82031 Grünwald",
-    "gender": "F",
-    "hireDate": "2020-10-01",
-    "employmentStatus": true,
-    "teamId": 20,
-    "managerId": 41,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 39,
-          "acquireDate": "2020-10-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 57,
-          "acquireDate": "2021-02-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2021-08-01"
-        },
-        {
-          "skillId": 36,
-          "acquireDate": "2022-04-01"
-        },
-        {
-          "skillId": 93,
-          "acquireDate": "2022-11-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 18,
-          "assignedAt": "2024-06-15",
-          "completedAt": "2024-06-15"
-        }
-      ]
-    }
-  },
-  {
-    "id": 50,
-    "username": "bauleiter2.ralf",
-    "password": "bauleiter2",
-    "firstName": "Ralf",
-    "lastName": "Kraus",
-    "email": "ralf.kraus@bauxyz.de",
-    "phoneNumber": "01800123456",
-    "dateOfBirth": "1979-07-09",
-    "address": "Bauleitung 2, 80999 München",
-    "gender": "M",
-    "hireDate": "2015-01-01",
-    "employmentStatus": true,
-    "teamId": 5,
-    "managerId": 1,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 2,
-          "acquireDate": "2015-01-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 2,
-          "acquireDate": "2016-06-01"
-        },
-        {
-          "skillId": 22,
-          "acquireDate": "2018-03-01"
-        },
-        {
-          "skillId": 20,
-          "acquireDate": "2019-09-01"
-        },
-        {
-          "skillId": 12,
-          "acquireDate": "2022-02-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 7,
-          "assignedAt": "2025-06-20",
-          "completedAt": null
-        },
-        {
-          "trainingId": 1,
-          "assignedAt": "2023-12-10",
-          "completedAt": "2023-12-10"
-        }
-      ]
-    }
-  },
-  {
-    "id": 51,
-    "username": "betonbauer.emanuel",
-    "password": "beton456",
-    "firstName": "Emanuel",
-    "lastName": "Schulz",
-    "email": "emanuel.schulz@bauxyz.de",
-    "phoneNumber": "01802345678",
-    "dateOfBirth": "1988-11-22",
-    "address": "Betonweg 19, 81929 München",
-    "gender": "M",
-    "hireDate": "2019-08-01",
-    "employmentStatus": true,
-    "teamId": 3,
-    "managerId": 5,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 7,
-          "acquireDate": "2019-08-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 52,
-          "acquireDate": "2020-02-01"
-        },
-        {
-          "skillId": 60,
-          "acquireDate": "2021-01-01"
-        },
-        {
-          "skillId": 16,
-          "acquireDate": "2022-06-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 16,
-          "assignedAt": "2024-02-20",
-          "completedAt": "2024-02-20"
-        }
-      ]
-    }
-  },
-  {
-    "id": 52,
-    "username": "stahlhelfer.ronja",
-    "password": "helfer789",
-    "firstName": "Ronja",
-    "lastName": "Berg",
-    "email": "ronja.berg@bauxyz.de",
-    "phoneNumber": "01803456789",
-    "dateOfBirth": "1995-03-07",
-    "address": "Stahlhelferweg 12, 81243 München",
-    "gender": "F",
-    "hireDate": "2023-01-01",
-    "employmentStatus": true,
-    "teamId": 4,
-    "managerId": 7,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 10,
-          "acquireDate": "2023-01-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 37,
-          "acquireDate": "2023-04-01"
-        },
-        {
-          "skillId": 93,
-          "acquireDate": "2023-08-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2023-12-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 17,
-          "assignedAt": "2025-08-01",
-          "completedAt": null
-        }
-      ]
-    }
-  },
-  {
-    "id": 53,
-    "username": "baustellen.mover.lars",
-    "password": "mover123",
-    "firstName": "Lars",
-    "lastName": "Jensen",
-    "email": "lars.jensen@bauxyz.de",
-    "phoneNumber": "01804567890",
-    "dateOfBirth": "1992-09-16",
-    "address": "Transportstr. 34, 82061 Neuried",
-    "gender": "M",
-    "hireDate": "2022-04-01",
-    "employmentStatus": true,
-    "teamId": 6,
-    "managerId": 12,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 14,
-          "acquireDate": "2022-04-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 36,
-          "acquireDate": "2022-07-01"
-        },
-        {
-          "skillId": 56,
-          "acquireDate": "2022-11-01"
-        },
-        {
-          "skillId": 10,
-          "acquireDate": "2023-05-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 18,
-          "assignedAt": "2024-05-10",
-          "completedAt": "2024-05-10"
-        }
-      ]
-    }
-  },
-  {
-    "id": 54,
-    "username": "baukontrolle.inga",
-    "password": "kontrolle456",
-    "firstName": "Inga",
-    "lastName": "Holm",
-    "email": "inga.holm@bauxyz.de",
-    "phoneNumber": "01805678901",
-    "dateOfBirth": "1985-12-29",
-    "address": "Kontrolleweg 8, 80939 München",
-    "gender": "F",
-    "hireDate": "2018-10-01",
-    "employmentStatus": true,
-    "teamId": 7,
-    "managerId": 36,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 16,
-          "acquireDate": "2018-10-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 20,
-          "acquireDate": "2019-04-01"
-        },
-        {
-          "skillId": 93,
-          "acquireDate": "2020-02-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2021-09-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 4,
-          "assignedAt": "2023-11-15",
-          "completedAt": "2023-11-15"
-        }
-      ]
-    }
-  },
-  {
-    "id": 55,
-    "username": "fuhrpark.mech.dominik",
-    "password": "fuhrpark789",
-    "firstName": "Dominik",
-    "lastName": "Koch",
-    "email": "dominik.koch@bauxyz.de",
-    "phoneNumber": "01806789012",
-    "dateOfBirth": "1989-05-03",
-    "address": "Fuhrparkstr. 25, 81475 München",
-    "gender": "M",
-    "hireDate": "2019-12-01",
-    "employmentStatus": true,
-    "teamId": 11,
-    "managerId": 19,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 22,
-          "acquireDate": "2019-12-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 54,
-          "acquireDate": "2020-04-01"
-        },
-        {
-          "skillId": 55,
-          "acquireDate": "2021-01-01"
-        },
-        {
-          "skillId": 56,
-          "acquireDate": "2021-08-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 10,
-          "assignedAt": "2024-03-05",
-          "completedAt": "2024-03-05"
-        }
-      ]
-    }
-  },
-  {
-    "id": 56,
-    "username": "projekt.assist.tanja",
-    "password": "assist123",
-    "firstName": "Tanja",
-    "lastName": "Weber",
-    "email": "tanja.weber@bauxyz.de",
-    "phoneNumber": "01807890123",
-    "dateOfBirth": "1991-07-18",
-    "address": "Assistenzweg 16, 81675 München",
-    "gender": "F",
-    "hireDate": "2021-09-01",
-    "employmentStatus": true,
-    "teamId": 13,
-    "managerId": 24,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 27,
-          "acquireDate": "2021-09-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 14,
-          "acquireDate": "2022-01-01"
-        },
-        {
-          "skillId": 22,
-          "acquireDate": "2022-06-01"
-        },
-        {
-          "skillId": 48,
-          "acquireDate": "2023-02-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 6,
-          "assignedAt": "2025-06-01",
-          "completedAt": null
-        }
-      ]
-    }
-  },
-  {
-    "id": 57,
-    "username": "ressourcen.lena",
-    "password": "ressourcen456",
-    "firstName": "Lena",
-    "lastName": "Hoffmann",
-    "email": "lena.hoffmann@bauxyz.de",
-    "phoneNumber": "01808901234",
-    "dateOfBirth": "1987-10-25",
-    "address": "Ressourcenstr. 11, 81737 München",
-    "gender": "F",
-    "hireDate": "2020-02-01",
-    "employmentStatus": true,
-    "teamId": 14,
-    "managerId": 30,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 28,
-          "acquireDate": "2020-02-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 23,
-          "acquireDate": "2020-07-01"
-        },
-        {
-          "skillId": 14,
-          "acquireDate": "2021-03-01"
-        },
-        {
-          "skillId": 22,
-          "acquireDate": "2022-01-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 6,
-          "assignedAt": "2024-01-20",
-          "completedAt": "2024-01-20"
-        }
-      ]
-    }
-  },
-  {
-    "id": 58,
-    "username": "termin.assist.benjamin",
-    "password": "termin789",
-    "firstName": "Benjamin",
-    "lastName": "Kaiser",
-    "email": "benjamin.kaiser@bauxyz.de",
-    "phoneNumber": "01809012345",
-    "dateOfBirth": "1993-01-30",
-    "address": "Terminweg 20, 81739 München",
-    "gender": "M",
-    "hireDate": "2022-11-01",
-    "employmentStatus": true,
-    "teamId": 16,
-    "managerId": 47,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 29,
-          "acquireDate": "2022-11-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 14,
-          "acquireDate": "2023-02-01"
-        },
-        {
-          "skillId": 22,
-          "acquireDate": "2023-07-01"
-        },
-        {
-          "skillId": 48,
-          "acquireDate": "2023-12-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 6,
-          "assignedAt": "2025-07-15",
-          "completedAt": null
-        }
-      ]
-    }
-  },
-  {
-    "id": 59,
-    "username": "lieferant.carina",
-    "password": "lieferant123",
-    "firstName": "Carina",
-    "lastName": "Schmidt",
-    "email": "carina.schmidt@bauxyz.de",
-    "phoneNumber": "01810123456",
-    "dateOfBirth": "1986-04-12",
-    "address": "Lieferantenstr. 13, 80689 München",
-    "gender": "F",
-    "hireDate": "2019-07-01",
-    "employmentStatus": true,
-    "teamId": 19,
-    "managerId": 41,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 37,
-          "acquireDate": "2019-07-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 58,
-          "acquireDate": "2020-01-01"
-        },
-        {
-          "skillId": 48,
-          "acquireDate": "2020-09-01"
-        },
-        {
-          "skillId": 18,
-          "acquireDate": "2021-05-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 11,
-          "assignedAt": "2024-02-10",
-          "completedAt": "2024-02-10"
-        }
-      ]
-    }
-  },
-  {
-    "id": 60,
-    "username": "it.dev2.moritz",
-    "password": "dev2456",
-    "firstName": "Moritz",
-    "lastName": "Lehmann",
-    "email": "moritz.lehmann@bauxyz.de",
-    "phoneNumber": "01811234567",
-    "dateOfBirth": "1990-08-05",
-    "address": "Dev-Center 9, 85748 Garching",
-    "gender": "M",
-    "hireDate": "2021-12-01",
-    "employmentStatus": true,
-    "teamId": 24,
-    "managerId": 20,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 45,
-          "acquireDate": "2021-12-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 31,
-          "acquireDate": "2022-04-01"
-        },
-        {
-          "skillId": 33,
-          "acquireDate": "2022-10-01"
-        },
-        {
-          "skillId": 71,
-          "acquireDate": "2023-06-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 27,
-          "assignedAt": "2025-10-05",
-          "completedAt": null
-        },
-        {
-          "trainingId": 15,
-          "assignedAt": "2024-07-20",
-          "completedAt": "2024-07-20"
-        }
-      ]
-    }
-  },
-  {
-    "id": 61,
-    "username": "recruiter2.micha",
-    "password": "recruit2789",
-    "firstName": "Michaela",
-    "lastName": "Gross",
-    "email": "michaela.gross@bauxyz.de",
-    "phoneNumber": "01812345678",
-    "dateOfBirth": "1989-11-27",
-    "address": "Talent-Center 4, 80636 München",
-    "gender": "F",
-    "hireDate": "2022-03-01",
-    "employmentStatus": true,
-    "teamId": 26,
-    "managerId": 22,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 48,
-          "acquireDate": "2022-03-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 59,
-          "acquireDate": "2022-07-01"
-        },
-        {
-          "skillId": 86,
-          "acquireDate": "2023-01-01"
-        },
-        {
-          "skillId": 87,
-          "acquireDate": "2023-08-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 20,
-          "assignedAt": "2024-09-15",
-          "completedAt": "2024-09-15"
-        }
-      ]
-    }
-  },
-  {
-    "id": 62,
-    "username": "controller2.fabio",
-    "password": "ctrl2123",
-    "firstName": "Fabio",
-    "lastName": "Rossi",
-    "email": "fabio.rossi@bauxyz.de",
-    "phoneNumber": "01813456789",
-    "dateOfBirth": "1987-06-19",
-    "address": "Controlling2 18, 80469 München",
-    "gender": "M",
-    "hireDate": "2020-09-01",
-    "employmentStatus": true,
-    "teamId": 30,
-    "managerId": 27,
-    "roleManager": {
-      "roleHistory": [
-        {
-          "roleId": 51,
-          "acquireDate": "2020-09-01",
-          "endDate": null
-        }
-      ]
-    },
-    "skillManager": {
-      "skillHistory": [
-        {
-          "skillId": 43,
-          "acquireDate": "2021-02-01"
-        },
-        {
-          "skillId": 23,
-          "acquireDate": "2021-09-01"
-        },
-        {
-          "skillId": 82,
-          "acquireDate": "2023-04-01"
-        }
-      ]
-    },
-    "trainingManager": {
-      "trainingHistory": [
-        {
-          "trainingId": 23,
-          "assignedAt": "2025-08-20",
+          "assignedAt": "2025-07-10",
           "completedAt": null
         },
         {
@@ -3623,7 +2620,1010 @@
     }
   },
   {
-    "id": 63,
+    "id": 43,
+    "username": "sichereinspektor.patrik",
+    "password": "inspektor789",
+    "firstName": "Patrik",
+    "lastName": "Günther",
+    "email": "patrik.guenther@bauxyz.de",
+    "phoneNumber": "01794567890",
+    "dateOfBirth": "1983-04-17",
+    "address": "Kontrollweg 21, 80999 München",
+    "gender": "M",
+    "hireDate": "2018-06-01",
+    "employmentStatus": true,
+    "teamId": 6,
+    "managerId": 35,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 15,
+          "acquireDate": "2018-06-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 19,
+          "acquireDate": "2019-01-01"
+        },
+        {
+          "skillId": 92,
+          "acquireDate": "2019-09-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2020-05-01"
+        },
+        {
+          "skillId": 47,
+          "acquireDate": "2021-11-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 30,
+          "assignedAt": "2024-02-15",
+          "completedAt": "2024-02-15"
+        }
+      ]
+    }
+  },
+  {
+    "id": 44,
+    "username": "equip.tech.sebastian",
+    "password": "equip123",
+    "firstName": "Sebastian",
+    "lastName": "Vogt",
+    "email": "sebastian.vogt@bauxyz.de",
+    "phoneNumber": "01795678901",
+    "dateOfBirth": "1991-11-08",
+    "address": "Werkstattstr. 14, 81479 München",
+    "gender": "M",
+    "hireDate": "2020-03-01",
+    "employmentStatus": true,
+    "teamId": 9,
+    "managerId": 18,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 20,
+          "acquireDate": "2020-03-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 54,
+          "acquireDate": "2020-08-01"
+        },
+        {
+          "skillId": 53,
+          "acquireDate": "2021-02-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2021-10-01"
+        },
+        {
+          "skillId": 9,
+          "acquireDate": "2022-06-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 9,
+          "assignedAt": "2023-11-20",
+          "completedAt": "2023-11-20"
+        }
+      ]
+    }
+  },
+  {
+    "id": 45,
+    "username": "dok.spezialist.nadine",
+    "password": "doku456",
+    "firstName": "Nadine",
+    "lastName": "Brandt",
+    "email": "nadine.brandt@bauxyz.de",
+    "phoneNumber": "01796789012",
+    "dateOfBirth": "1987-07-19",
+    "address": "Archivstr. 10, 81679 München",
+    "gender": "F",
+    "hireDate": "2019-12-01",
+    "employmentStatus": true,
+    "teamId": 12,
+    "managerId": 38,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 25,
+          "acquireDate": "2019-12-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 8,
+          "acquireDate": "2020-04-01"
+        },
+        {
+          "skillId": 80,
+          "acquireDate": "2021-01-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2021-09-01"
+        },
+        {
+          "skillId": 47,
+          "acquireDate": "2022-05-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 11,
+          "assignedAt": "2024-04-05",
+          "completedAt": "2024-04-05"
+        }
+      ]
+    }
+  },
+  {
+    "id": 46,
+    "username": "zeitplaner.emanuel",
+    "password": "zeitplan789",
+    "firstName": "Emanuel",
+    "lastName": "Fuchs",
+    "email": "emanuel.fuchs@bauxyz.de",
+    "phoneNumber": "01797890123",
+    "dateOfBirth": "1984-02-25",
+    "address": "Zeitplanweg 7, 81739 München",
+    "gender": "M",
+    "hireDate": "2017-08-01",
+    "employmentStatus": true,
+    "teamId": 15,
+    "managerId": 29,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 31,
+          "acquireDate": "2020-05-01",
+          "endDate": null
+        },
+        {
+          "roleId": 28,
+          "acquireDate": "2017-08-01",
+          "endDate": "2020-04-30"
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 21,
+          "acquireDate": "2018-03-01"
+        },
+        {
+          "skillId": 11,
+          "acquireDate": "2019-10-01"
+        },
+        {
+          "skillId": 22,
+          "acquireDate": "2021-06-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2022-02-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 5,
+          "assignedAt": "2025-05-20",
+          "completedAt": null
+        },
+        {
+          "trainingId": 5,
+          "assignedAt": "2023-09-10",
+          "completedAt": "2023-09-10"
+        }
+      ]
+    }
+  },
+  {
+    "id": 47,
+    "username": "bestell.sascha",
+    "password": "bestell123",
+    "firstName": "Sascha",
+    "lastName": "Ludwig",
+    "email": "sascha.ludwig@bauxyz.de",
+    "phoneNumber": "01798901234",
+    "dateOfBirth": "1992-05-16",
+    "address": "Bestellzentrum 15, 80636 München",
+    "gender": "M",
+    "hireDate": "2021-06-01",
+    "employmentStatus": true,
+    "teamId": 19,
+    "managerId": 40,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 37,
+          "acquireDate": "2021-06-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 24,
+          "acquireDate": "2021-10-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2022-03-01"
+        },
+        {
+          "skillId": 47,
+          "acquireDate": "2022-09-01"
+        },
+        {
+          "skillId": 56,
+          "acquireDate": "2023-04-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 10,
+          "assignedAt": "2024-01-25",
+          "completedAt": "2024-01-25"
+        }
+      ]
+    }
+  },
+  {
+    "id": 48,
+    "username": "lager.konstanze",
+    "password": "lager456",
+    "firstName": "Konstanze",
+    "lastName": "Maier",
+    "email": "konstanze.maier@bauxyz.de",
+    "phoneNumber": "01799012345",
+    "dateOfBirth": "1989-12-02",
+    "address": "Lagerpark 23, 82031 Grünwald",
+    "gender": "F",
+    "hireDate": "2020-10-01",
+    "employmentStatus": true,
+    "teamId": 19,
+    "managerId": 40,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 38,
+          "acquireDate": "2020-10-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 56,
+          "acquireDate": "2021-02-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2021-08-01"
+        },
+        {
+          "skillId": 35,
+          "acquireDate": "2022-04-01"
+        },
+        {
+          "skillId": 92,
+          "acquireDate": "2022-11-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 17,
+          "assignedAt": "2024-06-15",
+          "completedAt": "2024-06-15"
+        }
+      ]
+    }
+  },
+  {
+    "id": 49,
+    "username": "bauleiter2.ralf",
+    "password": "bauleiter2",
+    "firstName": "Ralf",
+    "lastName": "Kraus",
+    "email": "ralf.kraus@bauxyz.de",
+    "phoneNumber": "01800123456",
+    "dateOfBirth": "1979-07-09",
+    "address": "Bauleitung 2, 80999 München",
+    "gender": "M",
+    "hireDate": "2015-01-01",
+    "employmentStatus": true,
+    "teamId": 4,
+    "managerId": 0,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 1,
+          "acquireDate": "2015-01-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 1,
+          "acquireDate": "2016-06-01"
+        },
+        {
+          "skillId": 21,
+          "acquireDate": "2018-03-01"
+        },
+        {
+          "skillId": 19,
+          "acquireDate": "2019-09-01"
+        },
+        {
+          "skillId": 11,
+          "acquireDate": "2022-02-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 6,
+          "assignedAt": "2025-06-20",
+          "completedAt": null
+        },
+        {
+          "trainingId": 0,
+          "assignedAt": "2023-12-10",
+          "completedAt": "2023-12-10"
+        }
+      ]
+    }
+  },
+  {
+    "id": 50,
+    "username": "betonbauer.emanuel",
+    "password": "beton456",
+    "firstName": "Emanuel",
+    "lastName": "Schulz",
+    "email": "emanuel.schulz@bauxyz.de",
+    "phoneNumber": "01802345678",
+    "dateOfBirth": "1988-11-22",
+    "address": "Betonweg 19, 81929 München",
+    "gender": "M",
+    "hireDate": "2019-08-01",
+    "employmentStatus": true,
+    "teamId": 2,
+    "managerId": 4,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 6,
+          "acquireDate": "2019-08-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 51,
+          "acquireDate": "2020-02-01"
+        },
+        {
+          "skillId": 59,
+          "acquireDate": "2021-01-01"
+        },
+        {
+          "skillId": 15,
+          "acquireDate": "2022-06-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 15,
+          "assignedAt": "2024-02-20",
+          "completedAt": "2024-02-20"
+        }
+      ]
+    }
+  },
+  {
+    "id": 51,
+    "username": "stahlhelfer.ronja",
+    "password": "helfer789",
+    "firstName": "Ronja",
+    "lastName": "Berg",
+    "email": "ronja.berg@bauxyz.de",
+    "phoneNumber": "01803456789",
+    "dateOfBirth": "1995-03-07",
+    "address": "Stahlhelferweg 12, 81243 München",
+    "gender": "F",
+    "hireDate": "2023-01-01",
+    "employmentStatus": true,
+    "teamId": 3,
+    "managerId": 6,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 9,
+          "acquireDate": "2023-01-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 36,
+          "acquireDate": "2023-04-01"
+        },
+        {
+          "skillId": 92,
+          "acquireDate": "2023-08-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2023-12-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 16,
+          "assignedAt": "2025-08-01",
+          "completedAt": null
+        }
+      ]
+    }
+  },
+  {
+    "id": 52,
+    "username": "baustellen.mover.lars",
+    "password": "mover123",
+    "firstName": "Lars",
+    "lastName": "Jensen",
+    "email": "lars.jensen@bauxyz.de",
+    "phoneNumber": "01804567890",
+    "dateOfBirth": "1992-09-16",
+    "address": "Transportstr. 34, 82061 Neuried",
+    "gender": "M",
+    "hireDate": "2022-04-01",
+    "employmentStatus": true,
+    "teamId": 5,
+    "managerId": 11,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 13,
+          "acquireDate": "2022-04-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 35,
+          "acquireDate": "2022-07-01"
+        },
+        {
+          "skillId": 55,
+          "acquireDate": "2022-11-01"
+        },
+        {
+          "skillId": 9,
+          "acquireDate": "2023-05-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 17,
+          "assignedAt": "2024-05-10",
+          "completedAt": "2024-05-10"
+        }
+      ]
+    }
+  },
+  {
+    "id": 53,
+    "username": "baukontrolle.inga",
+    "password": "kontrolle456",
+    "firstName": "Inga",
+    "lastName": "Holm",
+    "email": "inga.holm@bauxyz.de",
+    "phoneNumber": "01805678901",
+    "dateOfBirth": "1985-12-29",
+    "address": "Kontrolleweg 8, 80939 München",
+    "gender": "F",
+    "hireDate": "2018-10-01",
+    "employmentStatus": true,
+    "teamId": 6,
+    "managerId": 35,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 15,
+          "acquireDate": "2018-10-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 19,
+          "acquireDate": "2019-04-01"
+        },
+        {
+          "skillId": 92,
+          "acquireDate": "2020-02-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2021-09-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 3,
+          "assignedAt": "2023-11-15",
+          "completedAt": "2023-11-15"
+        }
+      ]
+    }
+  },
+  {
+    "id": 54,
+    "username": "fuhrpark.mech.dominik",
+    "password": "fuhrpark789",
+    "firstName": "Dominik",
+    "lastName": "Koch",
+    "email": "dominik.koch@bauxyz.de",
+    "phoneNumber": "01806789012",
+    "dateOfBirth": "1989-05-03",
+    "address": "Fuhrparkstr. 25, 81475 München",
+    "gender": "M",
+    "hireDate": "2019-12-01",
+    "employmentStatus": true,
+    "teamId": 10,
+    "managerId": 18,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 21,
+          "acquireDate": "2019-12-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 53,
+          "acquireDate": "2020-04-01"
+        },
+        {
+          "skillId": 54,
+          "acquireDate": "2021-01-01"
+        },
+        {
+          "skillId": 55,
+          "acquireDate": "2021-08-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 9,
+          "assignedAt": "2024-03-05",
+          "completedAt": "2024-03-05"
+        }
+      ]
+    }
+  },
+  {
+    "id": 55,
+    "username": "projekt.assist.tanja",
+    "password": "assist123",
+    "firstName": "Tanja",
+    "lastName": "Weber",
+    "email": "tanja.weber@bauxyz.de",
+    "phoneNumber": "01807890123",
+    "dateOfBirth": "1991-07-18",
+    "address": "Assistenzweg 16, 81675 München",
+    "gender": "F",
+    "hireDate": "2021-09-01",
+    "employmentStatus": true,
+    "teamId": 12,
+    "managerId": 23,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 26,
+          "acquireDate": "2021-09-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 13,
+          "acquireDate": "2022-01-01"
+        },
+        {
+          "skillId": 21,
+          "acquireDate": "2022-06-01"
+        },
+        {
+          "skillId": 47,
+          "acquireDate": "2023-02-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 5,
+          "assignedAt": "2025-06-01",
+          "completedAt": null
+        }
+      ]
+    }
+  },
+  {
+    "id": 56,
+    "username": "ressourcen.lena",
+    "password": "ressourcen456",
+    "firstName": "Lena",
+    "lastName": "Hoffmann",
+    "email": "lena.hoffmann@bauxyz.de",
+    "phoneNumber": "01808901234",
+    "dateOfBirth": "1987-10-25",
+    "address": "Ressourcenstr. 11, 81737 München",
+    "gender": "F",
+    "hireDate": "2020-02-01",
+    "employmentStatus": true,
+    "teamId": 13,
+    "managerId": 29,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 27,
+          "acquireDate": "2020-02-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 22,
+          "acquireDate": "2020-07-01"
+        },
+        {
+          "skillId": 13,
+          "acquireDate": "2021-03-01"
+        },
+        {
+          "skillId": 21,
+          "acquireDate": "2022-01-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 5,
+          "assignedAt": "2024-01-20",
+          "completedAt": "2024-01-20"
+        }
+      ]
+    }
+  },
+  {
+    "id": 57,
+    "username": "termin.assist.benjamin",
+    "password": "termin789",
+    "firstName": "Benjamin",
+    "lastName": "Kaiser",
+    "email": "benjamin.kaiser@bauxyz.de",
+    "phoneNumber": "01809012345",
+    "dateOfBirth": "1993-01-30",
+    "address": "Terminweg 20, 81739 München",
+    "gender": "M",
+    "hireDate": "2022-11-01",
+    "employmentStatus": true,
+    "teamId": 15,
+    "managerId": 46,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 28,
+          "acquireDate": "2022-11-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 13,
+          "acquireDate": "2023-02-01"
+        },
+        {
+          "skillId": 21,
+          "acquireDate": "2023-07-01"
+        },
+        {
+          "skillId": 47,
+          "acquireDate": "2023-12-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 5,
+          "assignedAt": "2025-07-15",
+          "completedAt": null
+        }
+      ]
+    }
+  },
+  {
+    "id": 58,
+    "username": "lieferant.carina",
+    "password": "lieferant123",
+    "firstName": "Carina",
+    "lastName": "Schmidt",
+    "email": "carina.schmidt@bauxyz.de",
+    "phoneNumber": "01810123456",
+    "dateOfBirth": "1986-04-12",
+    "address": "Lieferantenstr. 13, 80689 München",
+    "gender": "F",
+    "hireDate": "2019-07-01",
+    "employmentStatus": true,
+    "teamId": 18,
+    "managerId": 40,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 36,
+          "acquireDate": "2019-07-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 57,
+          "acquireDate": "2020-01-01"
+        },
+        {
+          "skillId": 47,
+          "acquireDate": "2020-09-01"
+        },
+        {
+          "skillId": 17,
+          "acquireDate": "2021-05-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 10,
+          "assignedAt": "2024-02-10",
+          "completedAt": "2024-02-10"
+        }
+      ]
+    }
+  },
+  {
+    "id": 59,
+    "username": "it.dev2.moritz",
+    "password": "dev2456",
+    "firstName": "Moritz",
+    "lastName": "Lehmann",
+    "email": "moritz.lehmann@bauxyz.de",
+    "phoneNumber": "01811234567",
+    "dateOfBirth": "1990-08-05",
+    "address": "Dev-Center 9, 85748 Garching",
+    "gender": "M",
+    "hireDate": "2021-12-01",
+    "employmentStatus": true,
+    "teamId": 23,
+    "managerId": 19,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 44,
+          "acquireDate": "2021-12-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 30,
+          "acquireDate": "2022-04-01"
+        },
+        {
+          "skillId": 32,
+          "acquireDate": "2022-10-01"
+        },
+        {
+          "skillId": 70,
+          "acquireDate": "2023-06-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 26,
+          "assignedAt": "2025-10-05",
+          "completedAt": null
+        },
+        {
+          "trainingId": 14,
+          "assignedAt": "2024-07-20",
+          "completedAt": "2024-07-20"
+        }
+      ]
+    }
+  },
+  {
+    "id": 60,
+    "username": "recruiter2.micha",
+    "password": "recruit2789",
+    "firstName": "Michaela",
+    "lastName": "Gross",
+    "email": "michaela.gross@bauxyz.de",
+    "phoneNumber": "01812345678",
+    "dateOfBirth": "1989-11-27",
+    "address": "Talent-Center 4, 80636 München",
+    "gender": "F",
+    "hireDate": "2022-03-01",
+    "employmentStatus": true,
+    "teamId": 25,
+    "managerId": 21,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 47,
+          "acquireDate": "2022-03-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 58,
+          "acquireDate": "2022-07-01"
+        },
+        {
+          "skillId": 85,
+          "acquireDate": "2023-01-01"
+        },
+        {
+          "skillId": 86,
+          "acquireDate": "2023-08-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 19,
+          "assignedAt": "2024-09-15",
+          "completedAt": "2024-09-15"
+        }
+      ]
+    }
+  },
+  {
+    "id": 61,
+    "username": "controller2.fabio",
+    "password": "ctrl2123",
+    "firstName": "Fabio",
+    "lastName": "Rossi",
+    "email": "fabio.rossi@bauxyz.de",
+    "phoneNumber": "01813456789",
+    "dateOfBirth": "1987-06-19",
+    "address": "Controlling2 18, 80469 München",
+    "gender": "M",
+    "hireDate": "2020-09-01",
+    "employmentStatus": true,
+    "teamId": 29,
+    "managerId": 26,
+    "roleManager": {
+      "roleHistory": [
+        {
+          "roleId": 50,
+          "acquireDate": "2020-09-01",
+          "endDate": null
+        }
+      ]
+    },
+    "skillManager": {
+      "skillHistory": [
+        {
+          "skillId": 42,
+          "acquireDate": "2021-02-01"
+        },
+        {
+          "skillId": 22,
+          "acquireDate": "2021-09-01"
+        },
+        {
+          "skillId": 81,
+          "acquireDate": "2023-04-01"
+        }
+      ]
+    },
+    "trainingManager": {
+      "trainingHistory": [
+        {
+          "trainingId": 22,
+          "assignedAt": "2025-08-20",
+          "completedAt": null
+        },
+        {
+          "trainingId": 13,
+          "assignedAt": "2024-05-25",
+          "completedAt": "2024-05-25"
+        }
+      ]
+    }
+  },
+  {
+    "id": 62,
     "username": "material.kauf.theresa",
     "password": "material456",
     "firstName": "Theresa",
@@ -3635,12 +3635,12 @@
     "gender": "F",
     "hireDate": "2021-10-01",
     "employmentStatus": true,
-    "teamId": 20,
-    "managerId": 41,
+    "teamId": 19,
+    "managerId": 40,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 37,
+          "roleId": 36,
           "acquireDate": "2021-10-01",
           "endDate": null
         }
@@ -3649,15 +3649,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 58,
+          "skillId": 57,
           "acquireDate": "2022-02-01"
         },
         {
-          "skillId": 25,
+          "skillId": 24,
           "acquireDate": "2022-08-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2023-03-01"
         }
       ]
@@ -3665,7 +3665,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 11,
+          "trainingId": 10,
           "assignedAt": "2024-06-10",
           "completedAt": "2024-06-10"
         }
@@ -3673,7 +3673,7 @@
     }
   },
   {
-    "id": 64,
+    "id": 63,
     "username": "compliance.luca",
     "password": "compliance789",
     "firstName": "Luca",
@@ -3685,17 +3685,17 @@
     "gender": "M",
     "hireDate": "2018-05-01",
     "employmentStatus": true,
-    "teamId": 33,
-    "managerId": 1,
+    "teamId": 32,
+    "managerId": 0,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2021-03-01",
           "endDate": null
         },
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2018-05-01",
           "endDate": "2021-02-28"
         }
@@ -3704,15 +3704,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 91,
+          "skillId": 90,
           "acquireDate": "2019-01-01"
         },
         {
-          "skillId": 92,
+          "skillId": 91,
           "acquireDate": "2020-07-01"
         },
         {
-          "skillId": 15,
+          "skillId": 14,
           "acquireDate": "2022-03-01"
         }
       ]
@@ -3720,12 +3720,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 35,
+          "trainingId": 34,
           "assignedAt": "2025-03-10",
           "completedAt": null
         },
         {
-          "trainingId": 8,
+          "trainingId": 7,
           "assignedAt": "2023-12-01",
           "completedAt": "2023-12-01"
         }
@@ -3733,7 +3733,7 @@
     }
   },
   {
-    "id": 65,
+    "id": 64,
     "username": "datenschutz.mira",
     "password": "dsb123",
     "firstName": "Mira",
@@ -3745,12 +3745,12 @@
     "gender": "F",
     "hireDate": "2020-03-01",
     "employmentStatus": true,
-    "teamId": 34,
-    "managerId": 64,
+    "teamId": 33,
+    "managerId": 63,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2020-03-01",
           "endDate": null
         }
@@ -3759,15 +3759,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 30,
+          "skillId": 29,
           "acquireDate": "2020-08-01"
         },
         {
-          "skillId": 92,
+          "skillId": 91,
           "acquireDate": "2021-04-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2022-01-01"
         }
       ]
@@ -3775,7 +3775,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 8,
+          "trainingId": 7,
           "assignedAt": "2024-02-15",
           "completedAt": "2024-02-15"
         }
@@ -3783,7 +3783,7 @@
     }
   },
   {
-    "id": 66,
+    "id": 65,
     "username": "legal.berater.andreas",
     "password": "recht123",
     "firstName": "Andreas",
@@ -3795,12 +3795,12 @@
     "gender": "M",
     "hireDate": "2017-09-01",
     "employmentStatus": true,
-    "teamId": 33,
-    "managerId": 64,
+    "teamId": 32,
+    "managerId": 63,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2017-09-01",
           "endDate": null
         }
@@ -3809,19 +3809,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 46,
+          "skillId": 45,
           "acquireDate": "2018-03-01"
         },
         {
-          "skillId": 96,
+          "skillId": 95,
           "acquireDate": "2019-06-01"
         },
         {
-          "skillId": 4,
+          "skillId": 3,
           "acquireDate": "2021-02-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-09-01"
         }
       ]
@@ -3829,12 +3829,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 19,
+          "trainingId": 18,
           "assignedAt": "2025-05-05",
           "completedAt": null
         },
         {
-          "trainingId": 8,
+          "trainingId": 7,
           "assignedAt": "2023-11-10",
           "completedAt": "2023-11-10"
         }
@@ -3842,7 +3842,7 @@
     }
   },
   {
-    "id": 67,
+    "id": 66,
     "username": "it.security.jonas2",
     "password": "security456",
     "firstName": "Jonas",
@@ -3854,12 +3854,12 @@
     "gender": "M",
     "hireDate": "2020-06-01",
     "employmentStatus": true,
-    "teamId": 22,
-    "managerId": 17,
+    "teamId": 21,
+    "managerId": 16,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2020-06-01",
           "endDate": null
         }
@@ -3868,19 +3868,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 29,
+          "skillId": 28,
           "acquireDate": "2021-01-01"
         },
         {
-          "skillId": 91,
+          "skillId": 90,
           "acquireDate": "2021-09-01"
         },
         {
-          "skillId": 92,
+          "skillId": 91,
           "acquireDate": "2022-05-01"
         },
         {
-          "skillId": 64,
+          "skillId": 63,
           "acquireDate": "2023-11-01"
         }
       ]
@@ -3888,7 +3888,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 24,
+          "trainingId": 23,
           "assignedAt": "2024-04-20",
           "completedAt": "2024-04-20"
         }
@@ -3896,7 +3896,7 @@
     }
   },
   {
-    "id": 68,
+    "id": 67,
     "username": "sales.stratege2.marc",
     "password": "stratege2789",
     "firstName": "Marc",
@@ -3908,12 +3908,12 @@
     "gender": "M",
     "hireDate": "2021-02-01",
     "employmentStatus": true,
-    "teamId": 36,
-    "managerId": 31,
+    "teamId": 35,
+    "managerId": 30,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 51,
+          "roleId": 50,
           "acquireDate": "2021-02-01",
           "endDate": null
         }
@@ -3922,15 +3922,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 7,
+          "skillId": 6,
           "acquireDate": "2021-07-01"
         },
         {
-          "skillId": 82,
+          "skillId": 81,
           "acquireDate": "2022-03-01"
         },
         {
-          "skillId": 47,
+          "skillId": 46,
           "acquireDate": "2023-01-01"
         }
       ]
@@ -3938,12 +3938,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 34,
+          "trainingId": 33,
           "assignedAt": "2025-11-01",
           "completedAt": null
         },
         {
-          "trainingId": 34,
+          "trainingId": 33,
           "assignedAt": "2024-07-15",
           "completedAt": "2024-07-15"
         }
@@ -3951,7 +3951,7 @@
     }
   },
   {
-    "id": 69,
+    "id": 68,
     "username": "maurerhelfer.timo",
     "password": "helfer123",
     "firstName": "Timo",
@@ -3963,12 +3963,12 @@
     "gender": "M",
     "hireDate": "2023-09-01",
     "employmentStatus": true,
-    "teamId": 2,
-    "managerId": 50,
+    "teamId": 1,
+    "managerId": 49,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 5,
+          "roleId": 4,
           "acquireDate": "2023-09-01",
           "endDate": null
         }
@@ -3977,15 +3977,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2023-12-01"
         },
         {
-          "skillId": 93,
+          "skillId": 92,
           "acquireDate": "2024-03-01"
         },
         {
-          "skillId": 10,
+          "skillId": 9,
           "acquireDate": "2024-06-01"
         }
       ]
@@ -3993,7 +3993,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2025-09-01",
           "completedAt": null
         }
@@ -4001,7 +4001,7 @@
     }
   },
   {
-    "id": 70,
+    "id": 69,
     "username": "betonhelfer.kim",
     "password": "betonhelfer456",
     "firstName": "Kim",
@@ -4013,12 +4013,12 @@
     "gender": "F",
     "hireDate": "2023-04-01",
     "employmentStatus": true,
-    "teamId": 3,
-    "managerId": 51,
+    "teamId": 2,
+    "managerId": 50,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 8,
+          "roleId": 7,
           "acquireDate": "2023-04-01",
           "endDate": null
         }
@@ -4027,15 +4027,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2023-07-01"
         },
         {
-          "skillId": 93,
+          "skillId": 92,
           "acquireDate": "2023-11-01"
         },
         {
-          "skillId": 10,
+          "skillId": 9,
           "acquireDate": "2024-02-01"
         }
       ]
@@ -4043,7 +4043,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 4,
+          "trainingId": 3,
           "assignedAt": "2025-10-01",
           "completedAt": null
         }
@@ -4051,7 +4051,7 @@
     }
   },
   {
-    "id": 71,
+    "id": 70,
     "username": "site.supervisor.otto",
     "password": "supervisor789",
     "firstName": "Otto",
@@ -4063,12 +4063,12 @@
     "gender": "M",
     "hireDate": "2019-07-01",
     "employmentStatus": true,
-    "teamId": 8,
-    "managerId": 37,
+    "teamId": 7,
+    "managerId": 36,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 18,
+          "roleId": 17,
           "acquireDate": "2019-07-01",
           "endDate": null
         }
@@ -4077,15 +4077,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 2,
+          "skillId": 1,
           "acquireDate": "2020-02-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2021-01-01"
         },
         {
-          "skillId": 20,
+          "skillId": 19,
           "acquireDate": "2022-06-01"
         }
       ]
@@ -4093,7 +4093,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 1,
+          "trainingId": 0,
           "assignedAt": "2024-01-25",
           "completedAt": "2024-01-25"
         }
@@ -4101,7 +4101,7 @@
     }
   },
   {
-    "id": 72,
+    "id": 71,
     "username": "equip.head.viktor",
     "password": "equipleiter123",
     "firstName": "Viktor",
@@ -4113,17 +4113,17 @@
     "gender": "M",
     "hireDate": "2015-11-01",
     "employmentStatus": true,
-    "teamId": 9,
-    "managerId": 2,
+    "teamId": 8,
+    "managerId": 1,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 19,
+          "roleId": 18,
           "acquireDate": "2018-05-01",
           "endDate": null
         },
         {
-          "roleId": 21,
+          "roleId": 20,
           "acquireDate": "2015-11-01",
           "endDate": "2018-04-30"
         }
@@ -4132,15 +4132,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 40,
+          "skillId": 39,
           "acquireDate": "2016-05-01"
         },
         {
-          "skillId": 55,
+          "skillId": 54,
           "acquireDate": "2018-03-01"
         },
         {
-          "skillId": 56,
+          "skillId": 55,
           "acquireDate": "2020-09-01"
         }
       ]
@@ -4148,12 +4148,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 10,
+          "trainingId": 9,
           "assignedAt": "2025-07-01",
           "completedAt": null
         },
         {
-          "trainingId": 18,
+          "trainingId": 17,
           "assignedAt": "2023-12-15",
           "completedAt": "2023-12-15"
         }
@@ -4161,7 +4161,7 @@
     }
   },
   {
-    "id": 73,
+    "id": 72,
     "username": "fleet.tech.emma",
     "password": "fuhrpark456",
     "firstName": "Emma",
@@ -4173,12 +4173,12 @@
     "gender": "F",
     "hireDate": "2021-08-01",
     "employmentStatus": true,
-    "teamId": 11,
-    "managerId": 55,
+    "teamId": 10,
+    "managerId": 54,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 23,
+          "roleId": 22,
           "acquireDate": "2021-08-01",
           "endDate": null
         }
@@ -4187,15 +4187,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 54,
+          "skillId": 53,
           "acquireDate": "2022-01-01"
         },
         {
-          "skillId": 55,
+          "skillId": 54,
           "acquireDate": "2022-07-01"
         },
         {
-          "skillId": 56,
+          "skillId": 55,
           "acquireDate": "2023-03-01"
         }
       ]
@@ -4203,7 +4203,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 10,
+          "trainingId": 9,
           "assignedAt": "2024-05-20",
           "completedAt": "2024-05-20"
         }
@@ -4211,7 +4211,7 @@
     }
   },
   {
-    "id": 74,
+    "id": 73,
     "username": "project.calc.miriam",
     "password": "kalkulator789",
     "firstName": "Miriam",
@@ -4223,12 +4223,12 @@
     "gender": "F",
     "hireDate": "2019-05-01",
     "employmentStatus": true,
-    "teamId": 17,
-    "managerId": 40,
+    "teamId": 16,
+    "managerId": 39,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 34,
+          "roleId": 33,
           "acquireDate": "2019-05-01",
           "endDate": null
         }
@@ -4237,15 +4237,15 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 61,
+          "skillId": 60,
           "acquireDate": "2019-10-01"
         },
         {
-          "skillId": 23,
+          "skillId": 22,
           "acquireDate": "2021-02-01"
         },
         {
-          "skillId": 14,
+          "skillId": 13,
           "acquireDate": "2022-08-01"
         }
       ]
@@ -4253,7 +4253,7 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 30,
+          "trainingId": 29,
           "assignedAt": "2024-03-10",
           "completedAt": "2024-03-10"
         }
@@ -4261,7 +4261,7 @@
     }
   },
   {
-    "id": 75,
+    "id": 74,
     "username": "procurement.head.alex",
     "password": "einkaufleiter123",
     "firstName": "Alex",
@@ -4273,17 +4273,17 @@
     "gender": "M",
     "hireDate": "2016-04-01",
     "employmentStatus": true,
-    "teamId": 18,
-    "managerId": 1,
+    "teamId": 17,
+    "managerId": 0,
     "roleManager": {
       "roleHistory": [
         {
-          "roleId": 35,
+          "roleId": 34,
           "acquireDate": "2019-08-01",
           "endDate": null
         },
         {
-          "roleId": 36,
+          "roleId": 35,
           "acquireDate": "2016-04-01",
           "endDate": "2019-07-31"
         }
@@ -4292,19 +4292,19 @@
     "skillManager": {
       "skillHistory": [
         {
-          "skillId": 58,
+          "skillId": 57,
           "acquireDate": "2017-01-01"
         },
         {
-          "skillId": 18,
+          "skillId": 17,
           "acquireDate": "2018-09-01"
         },
         {
-          "skillId": 25,
+          "skillId": 24,
           "acquireDate": "2020-05-01"
         },
         {
-          "skillId": 48,
+          "skillId": 47,
           "acquireDate": "2022-02-01"
         }
       ]
@@ -4312,12 +4312,12 @@
     "trainingManager": {
       "trainingHistory": [
         {
-          "trainingId": 11,
+          "trainingId": 10,
           "assignedAt": "2025-04-01",
           "completedAt": null
         },
         {
-          "trainingId": 11,
+          "trainingId": 10,
           "assignedAt": "2023-10-20",
           "completedAt": "2023-10-20"
         }

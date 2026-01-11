@@ -1,8 +1,7 @@
 package gui.views;
 
-import core.SessionManager;
+import core.ServiceLocator;
 import model.*;
-import model.RoleManager.RoleHistoryEntry;
 
 import javax.swing.*;
 import java.awt.*;

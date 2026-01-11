@@ -2,7 +2,6 @@ package core;
 
 import database.DatabaseManager;
 import gui.UIController;
-import model.ServiceLocator;
 import model.Employee;
 
 import java.io.IOException;

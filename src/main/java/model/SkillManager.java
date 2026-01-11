@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,6 +19,13 @@ public class SkillManager {
 
     public int getId() {
         return employeeId;
+    }
+
+    public Skill getSkillById(int id) {
+        for (SkillHistoryEntry skill: skillHistory) {
+            if (skill.skillId == id) return ServiceLocator.getSkillContainer().getSkillById(id);
+        }
+        return null;
     }
 
     /**

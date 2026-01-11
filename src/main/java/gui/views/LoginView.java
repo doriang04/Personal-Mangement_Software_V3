@@ -1,7 +1,7 @@
 package gui.views;
 
 import gui.UIController;
-import model.ServiceLocator;
+import core.ServiceLocator;
 import core.SessionManager;
 
 import javax.swing.*;

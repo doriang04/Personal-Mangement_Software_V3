@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 public class Role {
 
     private int id;
@@ -9,8 +11,8 @@ public class Role {
 
     public Role() {}
 
-    public Role(int id, String name, String description, String systemPermission) {
-        this.id = id;
+    public Role(String name, String description, String systemPermission) {
+        this.id = ServiceLocator.getRoleContainer().getNextFreeId();
         this.name = name;
         this.description = description;
         this.systemPermission = systemPermission;

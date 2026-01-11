@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 public class Team {
 
     private int id;
@@ -8,8 +10,8 @@ public class Team {
     // TODO: Teams können Teams haben (Hierarchie)
     // TODO: note for above: leck ei
     
-    public Team(int id, String name, int departmentId) {
-        this.id = id;
+    public Team(String name, int departmentId) {
+        this.id = ServiceLocator.getTeamContainer().getNextFreeId();
         this.name = name;
         this.departmentId = departmentId;
     }

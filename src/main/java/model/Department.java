@@ -1,13 +1,15 @@
 package model;
 
+import core.ServiceLocator;
+
 public class Department {
 
     private int id;
     private String name;
     private int companyId;
 
-    public Department(int id, String name, int companyId) {
-        this.id = id;
+    public Department(String name, int companyId) {
+        this.id = ServiceLocator.getDepartmentContainer().getNextFreeId();
         this.name = name;
         this.companyId = companyId;
     }
@@ -38,5 +40,9 @@ public class Department {
 
     public void setCompanyId(int companyId) {
         this.companyId = companyId;
+    }
+
+    public String toString() {
+        return getId() + "_(" + getName() + ", compId:" + getCompanyId() + ")";
     }
 }
