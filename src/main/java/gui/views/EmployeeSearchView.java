@@ -152,9 +152,8 @@ public class EmployeeSearchView extends JPanel implements View {
                 deptMatch = false;
             }
 
-            if (nameMatch && deptMatch) {
+            if (nameMatch && deptMatch && emp.getId() != ServiceLocator.getSessionManager().getCurrentUser().getId()) {
                 ArrayList<Object> rowData = new ArrayList<>();
-                // WICHTIG: Die ID muss als Erstes (Index 0) hinzugefügt werden!
                 rowData.add(emp.getId());
 
                 rowData.add(emp.getLastName());
@@ -168,7 +167,7 @@ public class EmployeeSearchView extends JPanel implements View {
                         if (emp.getRoleManager().getActiveRole() != null) {
                             roleName = emp.getRoleManager().getActiveRole().getName();
                         }
-                    } catch (Exception ex) { /* Ignorieren */ }
+                    } catch (Exception _) {}
                     rowData.add(roleName);
                     rowData.add(emp.getPhoneNumber());
                 }
