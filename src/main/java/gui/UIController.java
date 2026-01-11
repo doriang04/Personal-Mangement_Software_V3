@@ -114,6 +114,12 @@ public class UIController {
                     () -> openTabOrFocus(new TrainingManagementView(), true));
         }
 
+        if ("ADMIN".equals(role) || "HR".equals(role)) {
+            mainWindow.addNavigationEntry("Personal verwalten (+/-)", () -> {
+                openTabOrFocus(new gui.views.EmployeeManagementView(), true);
+            });
+        }
+
         mainWindow.addGlueToNav();
     }
 
