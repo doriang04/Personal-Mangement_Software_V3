@@ -2,6 +2,7 @@ package gui.views;
 
 import core.ServiceLocator;
 import core.SessionManager;
+import gui.components.AssignTrainingDialog;
 import model.*;
 import model.TrainingManager.TrainingHistoryEntry;
 

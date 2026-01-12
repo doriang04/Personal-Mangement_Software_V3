@@ -1,6 +1,7 @@
 package gui.views;
 
 import core.ServiceLocator;
+import gui.components.RoleHistoryPanel;
 import model.*;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ public class EmployeeDetailView extends JPanel implements View {
     private JComboBox<TeamItem> cbTeam;
     private JComboBox<RoleItem> cbRole;
     private JButton btnSave;
+    private JButton btnShowRoleHistory; // NEUE VARIABLE
 
     /**
      * ÄNDERUNG: Konstruktor nimmt jetzt die ID (int) statt String!
@@ -130,6 +132,18 @@ public class EmployeeDetailView extends JPanel implements View {
         addFormRow(formPanel, gbc, row++, "Abteilung / Team:", cbTeam);
         addFormRow(formPanel, gbc, row++, "Aktuelle Rolle:", cbRole);
 
+        // --- NEUER TEIL: Button für Rollenhistorie ---
+        if (employee != null) {
+            btnShowRoleHistory = new JButton("Rollenhistorie anzeigen / bearbeiten");
+            btnShowRoleHistory.addActionListener(_ -> showRoleHistoryDialog());
+            // Füge den Button dem Layout hinzu
+            gbc.gridx = 1;
+            gbc.gridy = row++;
+            gbc.anchor = GridBagConstraints.EAST;
+            gbc.fill = GridBagConstraints.NONE;
+            formPanel.add(btnShowRoleHistory, gbc);
+        }
+
         add(new JScrollPane(formPanel), BorderLayout.CENTER);
 
         // Footer
@@ -141,6 +155,28 @@ public class EmployeeDetailView extends JPanel implements View {
             footer.add(btnSave);
             add(footer, BorderLayout.SOUTH);
         }
+    }
+
+    // NEUE METHODE
+    private void showRoleHistoryDialog() {
+        // Erstelle einen Dialog, der die App blockiert, solange er offen ist (modal)
+        JDialog historyDialog = new JDialog(
+                (Frame) SwingUtilities.getWindowAncestor(this),
+                "Rollenhistorie",
+                Dialog.ModalityType.APPLICATION_MODAL
+        );
+
+        // Erstelle das Panel mit dem Mitarbeiter und der Berechtigung aus diesem View
+        RoleHistoryPanel panel = new RoleHistoryPanel(this.employee, this.isEditable);
+
+        historyDialog.setContentPane(panel);
+        historyDialog.setSize(600, 400);
+        historyDialog.setLocationRelativeTo(this); // Zentriert über dem Hauptfenster
+        historyDialog.setVisible(true);
+
+        // Nachdem der Dialog geschlossen wurde, lade die Felder neu.
+        // Die aktive Rolle könnte sich geändert haben!
+        fillFields();
     }
 
     private void addFormRow(JPanel p, GridBagConstraints gbc, int row, String label, JComponent comp) {

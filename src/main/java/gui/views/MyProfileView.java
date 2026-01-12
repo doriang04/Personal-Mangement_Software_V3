@@ -1,5 +1,6 @@
 package gui.views;
 
+import gui.components.RoleHistoryPanel;
 import model.Employee;
 import core.ServiceLocator;
 
@@ -77,7 +78,17 @@ public class MyProfileView extends JPanel implements View {
         // Read-Only Block
         addFormRow(formPanel, gbc, row++, "Mitarbeiter-ID:", txtId);
         addFormRow(formPanel, gbc, row++, "Benutzername:", txtUsername);
-        addFormRow(formPanel, gbc, row++, "Rolle:", txtRole);
+
+        // --- NEUER TEIL: Button neben der Rolle ---
+        // Wir erstellen ein kleines Panel, um Textfeld und Button nebeneinander zu legen
+        JPanel rolePanel = new JPanel(new BorderLayout(5,0));
+        rolePanel.add(txtRole, BorderLayout.CENTER);
+        JButton btnHistory = new JButton("Historie");
+        btnHistory.setMargin(new Insets(2, 5, 2, 5)); // kleinerer Button
+        btnHistory.addActionListener(_ -> showRoleHistoryDialog());
+        rolePanel.add(btnHistory, BorderLayout.EAST);
+        addFormRow(formPanel, gbc, row++, "Rolle:", rolePanel);
+
         addFormRow(formPanel, gbc, row++, "Team / Abteilung:", txtTeam);
 
         // Separator
@@ -108,6 +119,23 @@ public class MyProfileView extends JPanel implements View {
         footer.add(btnSave);
         footer.setBorder(BorderFactory.createEmptyBorder(10,10,10,20));
         add(footer, BorderLayout.SOUTH);
+    }
+
+    private void showRoleHistoryDialog() {
+        JDialog historyDialog = new JDialog(
+                (Frame) SwingUtilities.getWindowAncestor(this),
+                "Meine Rollenhistorie",
+                Dialog.ModalityType.APPLICATION_MODAL
+        );
+
+        // Erstelle das Panel. isEditable ist hier IMMER false!
+        RoleHistoryPanel panel = new RoleHistoryPanel(this.currentUser, false);
+
+        historyDialog.setContentPane(panel);
+        historyDialog.setSize(600, 400);
+        historyDialog.setLocationRelativeTo(this);
+        historyDialog.setVisible(true);
+        // Kein Neuladen nötig, da keine Änderungen möglich sind.
     }
 
     private JTextField createReadOnlyField() {

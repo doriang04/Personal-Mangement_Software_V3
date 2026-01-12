@@ -18,6 +18,24 @@ public class RoleManager {
         roleHistory.add(entry);
     }
 
+    public void removeRoleHistoryEntry(RoleHistoryEntry entryToDelete) {
+        roleHistory.remove(entryToDelete);
+    }
+
+    public void updateRoleHistoryEntry(RoleHistoryEntry entryToEdit) {
+        RoleHistoryEntry internalEntry = getRoleHistoryEntryById(entryToEdit.getHistoryId());
+        internalEntry.setRoleId(entryToEdit.getRoleId());
+        internalEntry.setAcquireDate(entryToEdit.getAcquireDate());
+        internalEntry.setEndDate(entryToEdit.getEndDate());
+    }
+
+    public RoleHistoryEntry getRoleHistoryEntryById(int id) {
+        for (RoleHistoryEntry entry: roleHistory) {
+            if (entry.getHistoryId() == id) return entry;
+        }
+        return null;
+    }
+
     public static class RoleHistoryEntry {
         private int historyId;
         private int roleId;

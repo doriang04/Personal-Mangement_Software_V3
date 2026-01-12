@@ -1,4 +1,4 @@
-package gui.views;
+package gui.components;
 
 import core.ServiceLocator;
 import model.*;
