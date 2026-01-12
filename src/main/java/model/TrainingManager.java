@@ -17,6 +17,9 @@ public class TrainingManager {
         OPEN,
         DONE
     }
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
 
     public static class TrainingHistoryEntry {
         private int historyId;          // training_history.id

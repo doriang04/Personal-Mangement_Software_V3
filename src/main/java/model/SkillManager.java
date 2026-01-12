@@ -27,6 +27,9 @@ public class SkillManager {
         }
         return null;
     }
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
+    }
 
     /**
      * Represents one row in skill_history.

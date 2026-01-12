@@ -2,7 +2,6 @@ package gui.views;
 
 import core.ServiceLocator;
 import model.*;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -17,36 +16,35 @@ public class EmployeeManagementView extends JPanel implements View {
     private DefaultListModel<String> listModel;
     private ArrayList<Employee> currentListCache;
 
-    // --- ERWEITERTE EINGABEFELDER ---
+    // --- ERWEITERTE EINGABEFELDER (aus Version 1) ---
     private JTextField txtFirstName, txtLastName, txtUsername, txtEmail, txtPhone, txtAddress;
-    private JPasswordField txtPassword; // Sicherer für Passwörter
+    private JPasswordField txtPassword;
     private JComboBox<String> cbGender;
     private JComboBox<TeamItem> cbTeam;
     private JComboBox<RoleItem> cbRole;
-
-    // Hinweis: Für Datumsfelder wären JDatePicker-Bibliotheken ideal.
-    // Zur Vereinfachung verwenden wir Textfelder mit Platzhaltern.
     private JTextField txtDateOfBirth, txtHireDate;
 
     public EmployeeManagementView() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // --- LINKES PANEL: Liste & Löschen (unverändert) ---
+        // --- LINKES PANEL: Liste & Löschen ---
         JPanel leftPanel = new JPanel(new BorderLayout(5, 5));
         leftPanel.setBorder(new TitledBorder("Mitarbeiter verwalten"));
         listModel = new DefaultListModel<>();
         employeeList = new JList<>(listModel);
         leftPanel.add(new JScrollPane(employeeList), BorderLayout.CENTER);
+
         JButton btnDelete = new JButton("Ausgewählten Mitarbeiter löschen");
+        // Styling vom "Löschen"-Button aus Version 2 übernommen
+        btnDelete.setBackground(new Color(255, 100, 100));
+        btnDelete.setForeground(Color.WHITE);
         btnDelete.addActionListener(_ -> deleteSelectedEmployee());
         leftPanel.add(btnDelete, BorderLayout.SOUTH);
 
-        // --- RECHTES PANEL: Hinzufügen (komplett überarbeitet) ---
+        // --- RECHTES PANEL: Hinzufügen (Struktur aus Version 1) ---
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setBorder(new TitledBorder("Neuen Mitarbeiter anlegen"));
-
-        // Formular mit flexiblem GridBagLayout
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
@@ -62,7 +60,7 @@ public class EmployeeManagementView extends JPanel implements View {
         txtPhone = new JTextField(20);
         txtAddress = new JTextField(20);
         txtDateOfBirth = new JTextField("YYYY-MM-DD");
-        txtHireDate = new JTextField(LocalDate.now().toString()); // Standard heute
+        txtHireDate = new JTextField(LocalDate.now().toString());
         cbGender = new JComboBox<>(new String[]{"Männlich", "Weiblich", "Divers"});
         cbTeam = new JComboBox<>();
         cbRole = new JComboBox<>();
@@ -76,9 +74,7 @@ public class EmployeeManagementView extends JPanel implements View {
         addFormRow(formPanel, gbc, row++, "Passwort*:", txtPassword);
         addFormRow(formPanel, gbc, row++, "Team*:", cbTeam);
         addFormRow(formPanel, gbc, row++, "Rolle*:", cbRole);
-
         gbc.gridx=0; gbc.gridy=row++; gbc.gridwidth=2; formPanel.add(new JSeparator(), gbc); gbc.gridwidth=1;
-
         addFormRow(formPanel, gbc, row++, "E-Mail:", txtEmail);
         addFormRow(formPanel, gbc, row++, "Telefon:", txtPhone);
         addFormRow(formPanel, gbc, row++, "Adresse:", txtAddress);
@@ -86,11 +82,8 @@ public class EmployeeManagementView extends JPanel implements View {
         addFormRow(formPanel, gbc, row++, "Einstellungsdatum:", txtHireDate);
         addFormRow(formPanel, gbc, row++, "Geschlecht:", cbGender);
 
-        // Button zum Hinzufügen
         JButton btnAdd = new JButton("Mitarbeiter hinzufügen");
         btnAdd.addActionListener(e -> createEmployee());
-
-        // Das Formular scrollbar machen, falls es zu groß wird
         rightPanel.add(new JScrollPane(formPanel), BorderLayout.CENTER);
         rightPanel.add(btnAdd, BorderLayout.SOUTH);
 
@@ -102,28 +95,8 @@ public class EmployeeManagementView extends JPanel implements View {
         refreshList();
     }
 
-    // Hilfsmethode für das GridBagLayout
-    private void addFormRow(JPanel p, GridBagConstraints gbc, int row, String label, JComponent comp) {
-        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.1;
-        p.add(new JLabel(label), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.9;
-        p.add(comp, gbc);
-    }
-
-    // Befüllt die Dropdown-Menüs mit Daten
-    private void loadComboBoxData() {
-        cbTeam.addItem(new TeamItem(null)); // "Kein Team" Option
-        for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
-            cbTeam.addItem(new TeamItem(t));
-        }
-
-        for (Role r : ServiceLocator.getRoleContainer().getRoles()) {
-            cbRole.addItem(new RoleItem(r));
-        }
-    }
-
     private void createEmployee() {
-        // --- 1. Validierung der Pflichtfelder ---
+        // --- 1. Validierung der Pflichtfelder (aus Version 1) ---
         List<String> missingFields = new ArrayList<>();
         if (txtFirstName.getText().trim().isEmpty()) missingFields.add("Vorname");
         if (txtLastName.getText().trim().isEmpty()) missingFields.add("Nachname");
@@ -139,60 +112,38 @@ public class EmployeeManagementView extends JPanel implements View {
         }
 
         try {
-            // --- 2. Daten sammeln und Standardwerte für optionale Felder setzen ---
+            // --- 2. Daten sammeln und Standardwerte für optionale Felder setzen (aus Version 1) ---
             String firstName = txtFirstName.getText().trim();
             String lastName = txtLastName.getText().trim();
             String username = txtUsername.getText().trim();
             String password = new String(txtPassword.getPassword());
-
             TeamItem selectedTeamItem = (TeamItem) cbTeam.getSelectedItem();
             int teamId = selectedTeamItem.team.getId();
-
             RoleItem selectedRoleItem = (RoleItem) cbRole.getSelectedItem();
             Role selectedRole = selectedRoleItem.role;
-
             String email = txtEmail.getText().trim().isEmpty() ? "n/a" : txtEmail.getText().trim();
             String phone = txtPhone.getText().trim().isEmpty() ? "n/a" : txtPhone.getText().trim();
             String address = txtAddress.getText().trim().isEmpty() ? "n/a" : txtAddress.getText().trim();
-
             char gender = ((String)cbGender.getSelectedItem()).charAt(0);
-
-            LocalDate hireDate;
-            try {
-                hireDate = LocalDate.parse(txtHireDate.getText());
-            } catch (Exception e) {
-                hireDate = LocalDate.now(); // Fallback auf heute
-            }
-
-            // Für das alte 'Date' Objekt konvertieren, falls das Model es noch benötigt
+            LocalDate hireDate = LocalDate.parse(txtHireDate.getText());
             java.util.Date hireDateAsDate = java.sql.Date.valueOf(hireDate);
 
-            // --- 3. Neues Employee-Objekt erstellen ---
+            // --- 3. Neues Employee-Objekt erstellen (kombinierte Logik) ---
             int newId = EmployeeContainer.getInstance().getEmployees().stream()
                     .mapToInt(Employee::getId).max().orElse(0) + 1;
 
-            // Annahme: Es gibt einen Employee-Konstruktor, der die wichtigsten Felder setzt
-            // und intern einen RoleManager und SkillManager initialisiert.
+            // Explizite Manager-Initialisierung aus Version 2 übernommen
+            SkillManager newSkillManager = new SkillManager();
+            TrainingManager newTrainingManager = new TrainingManager();
+
             Employee newEmp = new Employee(
-                    newId,
-                    teamId,
-                    username,
-                    password,
-                    firstName,
-                    lastName,
-                    email,
-                    null, // dateOfBirth, für Demo null
-                    address,
-                    gender,
-                    hireDateAsDate,
-                    0, // managerId, für Demo 0
-                    true, // employmentStatus
-                    phone,
-                    null, // SkillManager
-                    null  // TrainingManager
+                    newId, teamId, username, password, firstName, lastName, email,
+                    null, address, gender, hireDateAsDate, 0, true, phone,
+                    newSkillManager, // Übergeben der erstellten Manager
+                    newTrainingManager
             );
 
-            // WICHTIG: Die Rolle über den RoleManager zuweisen
+            // Rollenzuweisung über den Manager (aus Version 1)
             if(newEmp.getRoleManager() != null) {
                 newEmp.getRoleManager().assignRole(selectedRole.getId(), hireDate);
             }
@@ -202,7 +153,7 @@ public class EmployeeManagementView extends JPanel implements View {
             DatabaseManager.getInstance().addEmployee(newEmp);
 
             refreshList();
-            clearForm();
+            clearForm(); // Formular zurücksetzen (aus Version 1)
 
             JOptionPane.showMessageDialog(this, "Mitarbeiter '" + firstName + " " + lastName + "' (ID: " + newId + ") erfolgreich angelegt.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
 
@@ -212,7 +163,25 @@ public class EmployeeManagementView extends JPanel implements View {
         }
     }
 
-    // Leert alle Felder im Formular
+    // --- Alle restlichen Methoden sind identisch oder aus Version 1 übernommen ---
+
+    private void addFormRow(JPanel p, GridBagConstraints gbc, int row, String label, JComponent comp) {
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.1;
+        p.add(new JLabel(label), gbc);
+        gbc.gridx = 1; gbc.weightx = 0.9;
+        p.add(comp, gbc);
+    }
+
+    private void loadComboBoxData() {
+        cbTeam.addItem(new TeamItem(null));
+        for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
+            cbTeam.addItem(new TeamItem(t));
+        }
+        for (Role r : ServiceLocator.getRoleContainer().getRoles()) {
+            cbRole.addItem(new RoleItem(r));
+        }
+    }
+
     private void clearForm() {
         txtFirstName.setText("");
         txtLastName.setText("");
@@ -227,8 +196,6 @@ public class EmployeeManagementView extends JPanel implements View {
         cbRole.setSelectedIndex(0);
         cbGender.setSelectedIndex(0);
     }
-
-    // --- Unveränderte Methoden und Helper-Klassen ---
 
     private void refreshList() {
         listModel.clear();
@@ -262,7 +229,6 @@ public class EmployeeManagementView extends JPanel implements View {
         }
     }
 
-    // Helper-Klassen für die Dropdowns
     static class TeamItem {
         Team team;
         public TeamItem(Team t) { this.team = t; }
