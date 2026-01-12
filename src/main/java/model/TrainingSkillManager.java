@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -72,5 +74,12 @@ public class TrainingSkillManager {
         if (entries != null) {
             skills.addAll(entries);
         }
+    }
+
+    public boolean hasReferences() {
+        for (Training training: ServiceLocator.getTrainingContainer().getTrainings()) {
+            if (training.getId() == getTrainingId()) return true;
+        }
+        return false;
     }
 }

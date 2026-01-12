@@ -16,7 +16,10 @@ public class TeamContainer {
 
     public void addTeam(Team team) { teams.add(team); }
 
-    public void removeTeam(Team team) { teams.remove(team); }
+    public void removeTeam(Team team) throws Exception {
+        if (team.hasReferences()) throw new Exception("Not allowed to delete company, as it is referenced.");
+        teams.remove(team);
+    }
 
     public ArrayList<Team> getTeams() {
         return teams;

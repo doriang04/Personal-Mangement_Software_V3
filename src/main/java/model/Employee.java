@@ -198,5 +198,10 @@ public class Employee {
     public void setRoleManager(RoleManager roleManager) {
         this.roleManager = roleManager;
     }
+
+    public boolean hasReferences() {
+        // TODO write out this method
+        return false;
+    }
 }
 

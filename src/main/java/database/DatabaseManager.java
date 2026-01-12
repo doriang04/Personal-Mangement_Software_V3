@@ -816,6 +816,7 @@ public class DatabaseManager {
         }
     }
 
+    // TODO are these needed? -> we reworked how saving and deletion works
     public void deleteEmployee(int id) {
 
         String sqlDeleteRoles = "DELETE FROM role_history WHERE employee_id = ?";
@@ -869,6 +870,7 @@ public class DatabaseManager {
         }
     }
 
+    // TODO are these needed? -> we reworked how saving and deletion works
     public void addEmployee(Employee e) {
         String sql = "INSERT INTO employees (id, username, password, first_name, last_name, email, phone_number, " +
                 "date_of_birth, address, gender, hire_date, employment_active, team_id, manager_id) " +
@@ -882,7 +884,7 @@ public class DatabaseManager {
             stmt.setString(5, e.getLastName());
             stmt.setString(6, e.getEMail());
             stmt.setString(7, e.getPhoneNumber());
-            stmt.setDate(8, new java.sql.Date(e.getDateOfBirth().getTime()));
+            stmt.setDate(8, (e.getDateOfBirth() == null) ? null : new java.sql.Date(e.getDateOfBirth().getTime()));
             stmt.setString(9, e.getAddress());
             stmt.setString(10, String.valueOf(e.getGender()));
             stmt.setDate(11, new java.sql.Date(e.getHireDate().getTime()));

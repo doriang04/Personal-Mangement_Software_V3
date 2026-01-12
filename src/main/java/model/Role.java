@@ -59,4 +59,13 @@ public class Role {
                 ", systemPermission='" + systemPermission + '\'' +
                 '}';
     }
+
+    public boolean hasReferences() {
+        for (RoleManager rm: ServiceLocator.getRoleManagerContainer().getRoleManagers()) {
+            for (RoleManager.RoleHistoryEntry rhe: rm.getRoleHistory()) {
+                if (rhe.getRoleId() == getId()) return true;
+            }
+        }
+        return false;
+    }
 }

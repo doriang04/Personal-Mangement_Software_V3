@@ -20,7 +20,8 @@ public class TrainingSkillManagerContainer {
         trainingSkillManagers.add(trainingSkillManager);
     }
 
-    public void removeTrainingSkillManager(TrainingSkillManager trainingSkillManager) {
+    public void removeTrainingSkillManager(TrainingSkillManager trainingSkillManager) throws Exception {
+        if (trainingSkillManager.hasReferences()) throw new Exception("Not allowed to delete trainingSkillManager, as it is referenced.");
         trainingSkillManagers.remove(trainingSkillManager);
     }
 

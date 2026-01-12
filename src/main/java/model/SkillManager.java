@@ -177,4 +177,9 @@ public class SkillManager {
             }
         }
     }
+
+    public boolean hasReferences() {
+        // TODO write out this method
+        return false;
+    }
 }
