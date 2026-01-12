@@ -5,31 +5,37 @@ import gui.components.RoleHistoryPanel;
 import model.*;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.time.LocalDate;
 
 public class EmployeeDetailView extends JPanel implements View {
 
     private final String viewId;
-    private String tabTitle; // Nicht mehr final, falls sich der Name ändert
+    private String tabTitle;
     private Employee employee;
-    private boolean isEditable;
+    private final boolean canEdit; // Finale Berechtigung, ändert sich nicht
+
+    // --- NEUE ZUSTANDS-VARIABLEN ---
+    private boolean isInEditMode = false;
+    private boolean hasUnsavedChanges = false;
 
     // UI Komponenten
     private JTextField txtFirstName, txtLastName, txtEmail, txtPhone, txtAddress, txtUsername;
     private JComboBox<TeamItem> cbTeam;
     private JComboBox<RoleItem> cbRole;
-    private JButton btnSave;
-    private JButton btnShowRoleHistory; // NEUE VARIABLE
+    private JButton btnShowRoleHistory;
 
-    /**
-     * ÄNDERUNG: Konstruktor nimmt jetzt die ID (int) statt String!
-     */
+    // Footer Komponenten
+    private JButton btnPrimaryAction; // Wird zu "Bearbeiten", "Speichern", "Verlassen"
+    private JButton btnDiscard;       // "Änderungen verwerfen"
+    private JLabel lblUnsavedChanges; // "* Ungespeicherte Änderungen"
+
     public EmployeeDetailView(int employeeId) {
-        // 1. Mitarbeiter anhand ID finden (Stabil)
         this.employee = findEmployeeById(employeeId);
-
-        this.isEditable = checkPermissions();
+        this.canEdit = checkPermissions();
 
         if (this.employee != null) {
             this.tabTitle = "Profil: " + employee.getFirstName();
@@ -38,19 +44,15 @@ public class EmployeeDetailView extends JPanel implements View {
             this.tabTitle = "Mitarbeiter nicht gefunden";
             this.viewId = "employee-detail-error-" + employeeId;
         }
-
         initUI();
     }
 
-    /**
-     * Fallback für "Neuer Mitarbeiter"
-     */
     public EmployeeDetailView() {
         this.tabTitle = "Neuer Mitarbeiter";
         this.viewId = "employee-detail-new";
         this.employee = null;
-        this.isEditable = true;
-
+        this.canEdit = true; // Neue Mitarbeiter können immer bearbeitet werden
+        this.isInEditMode = true; // Startet direkt im Bearbeitungsmodus
         initUI();
     }
 
@@ -62,6 +64,7 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private Employee findEmployeeById(int id) {
+        // Besser: ServiceLocator.getEmployeeContainer().getEmployeeById(id);
         for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
             if (e.getId() == id) {
                 return e;
@@ -75,19 +78,14 @@ public class EmployeeDetailView extends JPanel implements View {
 
         // --- Header ---
         JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Der Titel ist jetzt neutraler
         String headerText = (employee != null)
-                ? "Profil bearbeiten: " + employee.getFirstName() + " " + employee.getLastName()
-                : "Neuer Mitarbeiter";
+                ? "Profil von: " + employee.getFirstName() + " " + employee.getLastName()
+                : "Neuer Mitarbeiter anlegen";
 
         JLabel titleLabel = new JLabel(headerText);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         header.add(titleLabel);
-
-        if (isEditable && employee != null) {
-            JLabel badge = new JLabel(" [ADMIN/HR MODUS] ");
-            badge.setForeground(Color.RED);
-            header.add(badge);
-        }
 
         add(header, BorderLayout.NORTH);
 
@@ -95,28 +93,26 @@ public class EmployeeDetailView extends JPanel implements View {
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5,5,5,5);
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
 
         int row = 0;
 
-        // Felder
+        // Felder initialisieren
         txtUsername = new JTextField(20);
         txtFirstName = new JTextField(20);
         txtLastName = new JTextField(20);
         txtEmail = new JTextField(20);
         txtPhone = new JTextField(20);
         txtAddress = new JTextField(20);
-
         cbTeam = new JComboBox<>();
         cbRole = new JComboBox<>();
 
+        // Felder befüllen und Listener hinzufügen
         loadComboBoxData();
-        fillFields(); // Füllt die Felder basierend auf dem 'employee' Objekt
-
-        enableFields(isEditable);
-        txtUsername.setEditable(false); // Username bleibt fix
+        fillFields();
+        addChangeListeners();
 
         // Layout
         addFormRow(formPanel, gbc, row++, "Benutzername:", txtUsername);
@@ -126,17 +122,16 @@ public class EmployeeDetailView extends JPanel implements View {
         addFormRow(formPanel, gbc, row++, "Telefon:", txtPhone);
         addFormRow(formPanel, gbc, row++, "Adresse:", txtAddress);
 
-        gbc.gridx=0; gbc.gridy=row++; gbc.gridwidth=2;
-        formPanel.add(new JSeparator(), gbc); gbc.gridwidth=1;
+        gbc.gridx = 0; gbc.gridy = row++; gbc.gridwidth = 2;
+        formPanel.add(new JSeparator(), gbc);
+        gbc.gridwidth = 1;
 
         addFormRow(formPanel, gbc, row++, "Abteilung / Team:", cbTeam);
         addFormRow(formPanel, gbc, row++, "Aktuelle Rolle:", cbRole);
 
-        // --- NEUER TEIL: Button für Rollenhistorie ---
         if (employee != null) {
-            btnShowRoleHistory = new JButton("Rollenhistorie anzeigen / bearbeiten");
+            btnShowRoleHistory = new JButton("Rollenhistorie...");
             btnShowRoleHistory.addActionListener(_ -> showRoleHistoryDialog());
-            // Füge den Button dem Layout hinzu
             gbc.gridx = 1;
             gbc.gridy = row++;
             gbc.anchor = GridBagConstraints.EAST;
@@ -146,108 +141,136 @@ public class EmployeeDetailView extends JPanel implements View {
 
         add(new JScrollPane(formPanel), BorderLayout.CENTER);
 
-        // Footer
-        if (isEditable) {
+        // --- Footer mit dynamischen Buttons ---
+        if (canEdit || employee == null) {
             JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            btnSave = new JButton("Änderungen speichern");
-            btnSave.setBackground(new Color(100, 200, 100));
-            btnSave.addActionListener(e -> saveChanges());
-            footer.add(btnSave);
+
+            lblUnsavedChanges = new JLabel("* Ungespeicherte Änderungen");
+            lblUnsavedChanges.setForeground(Color.BLUE.darker());
+
+            btnDiscard = new JButton("Änderungen verwerfen");
+            btnDiscard.addActionListener(_ -> discardChanges());
+
+            btnPrimaryAction = new JButton(); // Text wird dynamisch gesetzt
+            btnPrimaryAction.setBackground(new Color(100, 200, 100));
+            btnPrimaryAction.addActionListener(_ -> handlePrimaryAction());
+
+            footer.add(lblUnsavedChanges);
+            footer.add(btnDiscard);
+            footer.add(btnPrimaryAction);
             add(footer, BorderLayout.SOUTH);
         }
+
+        // Initialen UI-Zustand setzen
+        updateUiForCurrentState();
     }
 
-    // NEUE METHODE
-    private void showRoleHistoryDialog() {
-        // Erstelle einen Dialog, der die App blockiert, solange er offen ist (modal)
-        JDialog historyDialog = new JDialog(
-                (Frame) SwingUtilities.getWindowAncestor(this),
-                "Rollenhistorie",
-                Dialog.ModalityType.APPLICATION_MODAL
-        );
+    /**
+     * Zentrale Methode zur Steuerung der UI-Sichtbarkeit und -Aktivierung.
+     */
+    private void updateUiForCurrentState() {
+        // Felder (de)aktivieren
+        enableFields(isInEditMode);
+        txtUsername.setEditable(false); // Username ist immer schreibgeschützt
 
-        // Erstelle das Panel mit dem Mitarbeiter und der Berechtigung aus diesem View
-        RoleHistoryPanel panel = new RoleHistoryPanel(this.employee, this.isEditable);
+        if (btnPrimaryAction == null) return; // Footer existiert nicht (keine Rechte)
 
-        historyDialog.setContentPane(panel);
-        historyDialog.setSize(600, 400);
-        historyDialog.setLocationRelativeTo(this); // Zentriert über dem Hauptfenster
-        historyDialog.setVisible(true);
+        if (isInEditMode) {
+            // --- KORREKTUR HIER ---
+            // Die Sichtbarkeit von Label UND Button hängt jetzt vom selben Status ab.
+            lblUnsavedChanges.setVisible(hasUnsavedChanges);
+            btnDiscard.setVisible(hasUnsavedChanges);
 
-        // Nachdem der Dialog geschlossen wurde, lade die Felder neu.
-        // Die aktive Rolle könnte sich geändert haben!
-        fillFields();
-    }
-
-    private void addFormRow(JPanel p, GridBagConstraints gbc, int row, String label, JComponent comp) {
-        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.0;
-        p.add(new JLabel(label), gbc);
-        gbc.gridx = 1; gbc.weightx = 1.0;
-        p.add(comp, gbc);
-    }
-
-    private void loadComboBoxData() {
-        cbTeam.addItem(new TeamItem(null));
-        for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
-            cbTeam.addItem(new TeamItem(t));
-        }
-        for (Role r : ServiceLocator.getRoleContainer().getRoles()) {
-            cbRole.addItem(new RoleItem(r));
-        }
-    }
-
-    private void fillFields() {
-        if (employee == null) return;
-
-        txtUsername.setText(employee.getUsername());
-        txtFirstName.setText(employee.getFirstName());
-        txtLastName.setText(employee.getLastName());
-        txtEmail.setText(employee.getEMail());
-        txtPhone.setText(employee.getPhoneNumber());
-        txtAddress.setText(employee.getAddress());
-
-        // Team selection
-        int currentTeamId = employee.getTeamId();
-        for (int i = 0; i < cbTeam.getItemCount(); i++) {
-            TeamItem item = cbTeam.getItemAt(i);
-            if (item.team != null && item.team.getId() == currentTeamId) {
-                cbTeam.setSelectedIndex(i);
-                break;
+            if (hasUnsavedChanges) {
+                btnPrimaryAction.setText("Änderungen speichern");
+            } else {
+                // Für neue Mitarbeiter ist der Button immer "Speichern"
+                btnPrimaryAction.setText(employee != null ? "Bearbeitungsmodus verlassen" : "Mitarbeiter speichern");
             }
-        }
-
-        // Role selection
-        Role currentRole = null;
-        try {
-            if (employee.getRoleManager() != null) currentRole = employee.getRoleManager().getActiveRole();
-        } catch (Exception e) { /* ignore */ }
-
-        if (currentRole != null) {
-            for (int i = 0; i < cbRole.getItemCount(); i++) {
-                RoleItem item = cbRole.getItemAt(i);
-                if (item.role.getId() == currentRole.getId()) {
-                    cbRole.setSelectedIndex(i);
-                    break;
-                }
-            }
+        } else {
+            // Ansichtsmodus
+            btnPrimaryAction.setText("Profil bearbeiten");
+            btnDiscard.setVisible(false);
+            lblUnsavedChanges.setVisible(false);
         }
     }
 
-    private void enableFields(boolean enable) {
-        txtFirstName.setEditable(enable);
-        txtLastName.setEditable(enable);
-        txtEmail.setEditable(enable);
-        txtPhone.setEditable(enable);
-        txtAddress.setEditable(enable);
-        cbTeam.setEnabled(enable);
-        cbRole.setEnabled(enable);
+    /**
+     * Definiert das Verhalten des Hauptbuttons je nach Kontext.
+     */
+    private void handlePrimaryAction() {
+        if (isInEditMode) {
+            if (hasUnsavedChanges || employee == null) {
+                saveChanges();
+            } else {
+                // Bearbeitungsmodus ohne Änderungen verlassen
+                isInEditMode = false;
+                updateUiForCurrentState();
+            }
+        } else {
+            // Bearbeitungsmodus starten
+            isInEditMode = true;
+            hasUnsavedChanges = false; // Zurücksetzen für die neue Bearbeitungssession
+            updateUiForCurrentState();
+        }
+    }
+
+    private void discardChanges() {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Möchten Sie wirklich alle ungespeicherten Änderungen verwerfen?",
+                "Änderungen verwerfen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            isInEditMode = false;
+            hasUnsavedChanges = false;
+            fillFields(); // Felder mit den ursprünglichen Daten neu befüllen
+            updateUiForCurrentState();
+        }
+    }
+
+    /**
+     * Fügt Listener zu allen Eingabefeldern hinzu, um Änderungen zu erkennen.
+     */
+    private void addChangeListeners() {
+        DocumentListener dl = new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) { markAsChanged(); }
+            @Override public void removeUpdate(DocumentEvent e) { markAsChanged(); }
+            @Override public void changedUpdate(DocumentEvent e) { markAsChanged(); }
+        };
+
+        txtFirstName.getDocument().addDocumentListener(dl);
+        txtLastName.getDocument().addDocumentListener(dl);
+        txtEmail.getDocument().addDocumentListener(dl);
+        txtPhone.getDocument().addDocumentListener(dl);
+        txtAddress.getDocument().addDocumentListener(dl);
+
+        cbTeam.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) markAsChanged();
+        });
+        cbRole.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) markAsChanged();
+        });
+    }
+
+    /**
+     * Wird aufgerufen, wenn ein Feld geändert wird.
+     */
+    private void markAsChanged() {
+        // Nur reagieren, wenn wir im Bearbeitungsmodus sind
+        if (isInEditMode && !hasUnsavedChanges) {
+            hasUnsavedChanges = true;
+            updateUiForCurrentState(); // UI aktualisieren, um "Speichern"-Button etc. anzuzeigen
+        }
     }
 
     private void saveChanges() {
-        if (employee == null) return;
-
-        int confirm = JOptionPane.showConfirmDialog(this, "Änderungen speichern?", "Bestätigung", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) return;
+        // Für neue Mitarbeiter muss ein Objekt erst erstellt werden.
+        // Diese Logik ist für dieses Beispiel vereinfacht.
+        if (employee == null) {
+            // Hier müsste die Logik zum Erstellen eines neuen Mitarbeiters stehen.
+            JOptionPane.showMessageDialog(this, "Logik zum Erstellen neuer Mitarbeiter nicht implementiert.");
+            return;
+        }
 
         try {
             // Daten im Objekt aktualisieren
@@ -271,28 +294,98 @@ public class EmployeeDetailView extends JPanel implements View {
                 }
             }
 
+            // --- WICHTIG: Hier käme der Datenbank-Speicheraufruf ---
+            // ServiceLocator.getDatabaseManager().saveEmployee(employee);
+
             JOptionPane.showMessageDialog(this, "Erfolgreich gespeichert!");
 
-            // Tab Titel Update (optional, erfordert komplexeres Re-Rendering)
-            this.tabTitle = "Profil: " + employee.getFirstName();
+            // Bearbeitungsmodus verlassen
+            isInEditMode = false;
+            hasUnsavedChanges = false;
+            tabTitle = "Profil: " + employee.getFirstName(); // Tab-Titel aktualisieren
+            updateUiForCurrentState();
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Fehler beim Speichern: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // Helper Klassen
-    static class TeamItem {
-        Team team;
-        public TeamItem(Team t) { this.team = t; }
-        @Override public String toString() { return (team == null) ? "- Kein Team -" : team.getName(); }
-    }
-    static class RoleItem {
-        Role role;
-        public RoleItem(Role r) { this.role = r; }
-        @Override public String toString() { return role.getName(); }
+    private void showRoleHistoryDialog() {
+        JDialog historyDialog = new JDialog(
+                (Frame) SwingUtilities.getWindowAncestor(this), "Rollenhistorie", Dialog.ModalityType.APPLICATION_MODAL);
+
+        // Die Berechtigung wird jetzt davon abhängig gemacht, ob der User generell bearbeiten darf UND ob er gerade im Edit-Modus ist.
+        RoleHistoryPanel panel = new RoleHistoryPanel(this.employee, this.canEdit && this.isInEditMode);
+
+        historyDialog.setContentPane(panel);
+        historyDialog.setSize(600, 400);
+        historyDialog.setLocationRelativeTo(this);
+        historyDialog.setVisible(true);
+
+        fillFields();
     }
 
+    // Unveränderte Methoden von vorher
+    private void enableFields(boolean enable) {
+        txtFirstName.setEditable(enable);
+        txtLastName.setEditable(enable);
+        txtEmail.setEditable(enable);
+        txtPhone.setEditable(enable);
+        txtAddress.setEditable(enable);
+        cbTeam.setEnabled(enable);
+        cbRole.setEnabled(enable);
+    }
+
+    private void addFormRow(JPanel p, GridBagConstraints gbc, int row, String label, JComponent comp) {
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.0;
+        p.add(new JLabel(label), gbc);
+        gbc.gridx = 1; gbc.weightx = 1.0;
+        p.add(comp, gbc);
+    }
+
+    private void loadComboBoxData() {
+        cbTeam.removeAllItems();
+        cbRole.removeAllItems();
+        cbTeam.addItem(new TeamItem(null));
+        for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
+            cbTeam.addItem(new TeamItem(t));
+        }
+        for (Role r : ServiceLocator.getRoleContainer().getRoles()) {
+            cbRole.addItem(new RoleItem(r));
+        }
+    }
+
+    private void fillFields() {
+        if (employee == null) return;
+        txtUsername.setText(employee.getUsername());
+        txtFirstName.setText(employee.getFirstName());
+        txtLastName.setText(employee.getLastName());
+        txtEmail.setText(employee.getEMail());
+        txtPhone.setText(employee.getPhoneNumber());
+        txtAddress.setText(employee.getAddress());
+        int currentTeamId = employee.getTeamId();
+        for (int i = 0; i < cbTeam.getItemCount(); i++) {
+            TeamItem item = cbTeam.getItemAt(i);
+            if (item.team != null && item.team.getId() == currentTeamId) {
+                cbTeam.setSelectedIndex(i);
+                break;
+            }
+        }
+        Role currentRole = employee.getRoleManager() != null ? employee.getRoleManager().getActiveRole() : null;
+        if (currentRole != null) {
+            for (int i = 0; i < cbRole.getItemCount(); i++) {
+                RoleItem item = cbRole.getItemAt(i);
+                if (item.role.getId() == currentRole.getId()) {
+                    cbRole.setSelectedIndex(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    // Unveränderte Helper-Klassen und Interface-Methoden
+    static class TeamItem { Team team; public TeamItem(Team t) { this.team = t; } @Override public String toString() { return (team == null) ? "- Kein Team -" : team.getName(); } }
+    static class RoleItem { Role role; public RoleItem(Role r) { this.role = r; } @Override public String toString() { return role.getName(); } }
     @Override public String getViewId() { return viewId; }
     @Override public String getViewTabTitle() { return tabTitle; }
     @Override public JPanel getContent() { return this; }

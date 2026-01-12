@@ -1,63 +1,64 @@
 package gui.views;
 
+import core.ServiceLocator;
 import gui.components.RoleHistoryPanel;
 import model.Employee;
-import core.ServiceLocator;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class MyProfileView extends JPanel implements View {
 
     private Employee currentUser;
 
-    // Eingabefelder
+    // --- NEUE ZUSTANDS-VARIABLEN ---
+    private boolean isInEditMode = false;
+    private boolean hasUnsavedChanges = false;
+
+    // Eingabefelder (die editierbar werden können)
     private JTextField txtFirstName;
     private JTextField txtLastName;
     private JTextField txtEmail;
     private JTextField txtPhone;
     private JTextField txtAddress;
-    private JPasswordField txtPassword; // Passwort maskiert
+    private JPasswordField txtPassword;
 
-    // Read-only Felder
+    // Permanent schreibgeschützte Felder
     private JTextField txtId;
     private JTextField txtUsername;
     private JTextField txtRole;
     private JTextField txtTeam;
 
+    // Footer Komponenten
+    private JButton btnPrimaryAction;
+    private JButton btnDiscard;
+    private JLabel lblUnsavedChanges;
+
     public MyProfileView() {
         setLayout(new BorderLayout());
-
-        // 1. User laden
         this.currentUser = ServiceLocator.getSessionManager().getCurrentUser();
-
-        // 2. UI aufbauen
         initUI();
-
-        // 3. Daten füllen
-        loadData();
     }
-
 
     private void initUI() {
         // --- Header ---
         JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel title = new JLabel("Mein Profil bearbeiten");
+        // Neutralerer Titel
+        JLabel title = new JLabel("Mein Profil");
         title.setFont(new Font("Arial", Font.BOLD, 18));
         header.add(title);
-        header.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(header, BorderLayout.NORTH);
 
         // --- Formular Bereich ---
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // -- Zeile 0: Titel --
-        // (Optional, überspringen wir für sauberes Grid)
 
         // -- Felder initialisieren --
         txtId = createReadOnlyField();
@@ -72,32 +73,26 @@ public class MyProfileView extends JPanel implements View {
         txtAddress = new JTextField(20);
         txtPassword = new JPasswordField(20);
 
-        // -- Layout aufbauen (Label links, Feld rechts) --
+        // -- Layout aufbauen --
         int row = 0;
-
-        // Read-Only Block
         addFormRow(formPanel, gbc, row++, "Mitarbeiter-ID:", txtId);
         addFormRow(formPanel, gbc, row++, "Benutzername:", txtUsername);
 
-        // --- NEUER TEIL: Button neben der Rolle ---
-        // Wir erstellen ein kleines Panel, um Textfeld und Button nebeneinander zu legen
-        JPanel rolePanel = new JPanel(new BorderLayout(5,0));
+        JPanel rolePanel = new JPanel(new BorderLayout(5, 0));
         rolePanel.add(txtRole, BorderLayout.CENTER);
         JButton btnHistory = new JButton("Historie");
-        btnHistory.setMargin(new Insets(2, 5, 2, 5)); // kleinerer Button
+        btnHistory.setMargin(new Insets(2, 5, 2, 5));
         btnHistory.addActionListener(_ -> showRoleHistoryDialog());
         rolePanel.add(btnHistory, BorderLayout.EAST);
         addFormRow(formPanel, gbc, row++, "Rolle:", rolePanel);
 
         addFormRow(formPanel, gbc, row++, "Team / Abteilung:", txtTeam);
 
-        // Separator
         JSeparator sep = new JSeparator();
         gbc.gridx = 0; gbc.gridy = row++; gbc.gridwidth = 2;
         formPanel.add(sep, gbc);
         gbc.gridwidth = 1;
 
-        // Editierbarer Block
         addFormRow(formPanel, gbc, row++, "Vorname:", txtFirstName);
         addFormRow(formPanel, gbc, row++, "Nachname:", txtLastName);
         addFormRow(formPanel, gbc, row++, "E-Mail:", txtEmail);
@@ -105,77 +100,165 @@ public class MyProfileView extends JPanel implements View {
         addFormRow(formPanel, gbc, row++, "Adresse:", txtAddress);
         addFormRow(formPanel, gbc, row++, "Passwort:", txtPassword);
 
-        // ScrollPane falls Fenster klein
         add(new JScrollPane(formPanel), BorderLayout.CENTER);
 
-        // --- Footer mit Button ---
+        // --- DYNAMISCHER FOOTER ---
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnSave = new JButton("Änderungen speichern");
-        btnSave.setFont(new Font("Arial", Font.BOLD, 12));
-        btnSave.setBackground(new Color(100, 200, 100)); // Leicht grünlich
+        lblUnsavedChanges = new JLabel("* Ungespeicherte Änderungen");
+        lblUnsavedChanges.setForeground(Color.BLUE.darker());
 
-        btnSave.addActionListener(e -> saveChanges());
+        btnDiscard = new JButton("Änderungen verwerfen");
+        btnDiscard.addActionListener(_ -> discardChanges());
 
-        footer.add(btnSave);
-        footer.setBorder(BorderFactory.createEmptyBorder(10,10,10,20));
+        btnPrimaryAction = new JButton();
+        btnPrimaryAction.setBackground(new Color(100, 200, 100));
+        btnPrimaryAction.addActionListener(_ -> handlePrimaryAction());
+
+        footer.add(lblUnsavedChanges);
+        footer.add(btnDiscard);
+        footer.add(btnPrimaryAction);
+        footer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
         add(footer, BorderLayout.SOUTH);
+
+        // Daten laden, Listener hinzufügen und initialen UI-Zustand setzen
+        loadData();
+        addChangeListeners();
+        updateUiForCurrentState();
     }
 
-    private void showRoleHistoryDialog() {
-        JDialog historyDialog = new JDialog(
-                (Frame) SwingUtilities.getWindowAncestor(this),
-                "Meine Rollenhistorie",
-                Dialog.ModalityType.APPLICATION_MODAL
-        );
+    /**
+     * Zentrale Methode zur Steuerung der UI-Sichtbarkeit und -Aktivierung.
+     */
+    private void updateUiForCurrentState() {
+        // Nur die editierbaren Felder umschalten
+        enableEditableFields(isInEditMode);
 
-        // Erstelle das Panel. isEditable ist hier IMMER false!
-        RoleHistoryPanel panel = new RoleHistoryPanel(this.currentUser, false);
+        if (isInEditMode) {
+            lblUnsavedChanges.setVisible(hasUnsavedChanges);
+            btnDiscard.setVisible(hasUnsavedChanges);
 
-        historyDialog.setContentPane(panel);
-        historyDialog.setSize(600, 400);
-        historyDialog.setLocationRelativeTo(this);
-        historyDialog.setVisible(true);
-        // Kein Neuladen nötig, da keine Änderungen möglich sind.
+            btnPrimaryAction.setText(hasUnsavedChanges ? "Änderungen speichern" : "Bearbeitungsmodus verlassen");
+        } else {
+            // Ansichtsmodus
+            btnPrimaryAction.setText("Profil bearbeiten");
+            btnDiscard.setVisible(false);
+            lblUnsavedChanges.setVisible(false);
+        }
     }
 
-    private JTextField createReadOnlyField() {
-        JTextField tf = new JTextField(20);
-        tf.setEditable(false);
-        tf.setBackground(new Color(240, 240, 240)); // Grau hinterlegt
-        return tf;
+    /**
+     * Schaltet nur die Felder (de)aktiv, die der Benutzer ändern darf.
+     */
+    private void enableEditableFields(boolean enable) {
+        txtFirstName.setEditable(enable);
+        txtLastName.setEditable(enable);
+        txtEmail.setEditable(enable);
+        txtPhone.setEditable(enable);
+        txtAddress.setEditable(enable);
+        txtPassword.setEditable(enable);
+
+        // Visuelles Feedback für nicht-editierbare Felder
+        Color bgColor = enable ? Color.WHITE : new Color(240, 240, 240);
+        txtFirstName.setBackground(bgColor);
+        txtLastName.setBackground(bgColor);
+        txtEmail.setBackground(bgColor);
+        txtPhone.setBackground(bgColor);
+        txtAddress.setBackground(bgColor);
+        txtPassword.setBackground(bgColor);
     }
 
-    private void addFormRow(JPanel panel, GridBagConstraints gbc, int row, String labelText, JComponent field) {
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.weightx = 0.0;
-        panel.add(new JLabel(labelText), gbc);
+    /**
+     * Fügt Listener zu allen editierbaren Feldern hinzu.
+     */
+    private void addChangeListeners() {
+        DocumentListener dl = new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) { markAsChanged(); }
+            @Override public void removeUpdate(DocumentEvent e) { markAsChanged(); }
+            @Override public void changedUpdate(DocumentEvent e) { markAsChanged(); }
+        };
 
-        gbc.gridx = 1;
-        gbc.weightx = 1.0;
-        panel.add(field, gbc);
+        txtFirstName.getDocument().addDocumentListener(dl);
+        txtLastName.getDocument().addDocumentListener(dl);
+        txtEmail.getDocument().addDocumentListener(dl);
+        txtPhone.getDocument().addDocumentListener(dl);
+        txtAddress.getDocument().addDocumentListener(dl);
+        txtPassword.getDocument().addDocumentListener(dl);
+    }
+
+    private void markAsChanged() {
+        if (isInEditMode && !hasUnsavedChanges) {
+            hasUnsavedChanges = true;
+            updateUiForCurrentState();
+        }
+    }
+
+    /**
+     * Definiert das Verhalten des Hauptbuttons je nach Kontext.
+     */
+    private void handlePrimaryAction() {
+        if (isInEditMode) {
+            if (hasUnsavedChanges) {
+                saveChanges();
+            } else {
+                isInEditMode = false;
+                updateUiForCurrentState();
+            }
+        } else {
+            isInEditMode = true;
+            hasUnsavedChanges = false;
+            updateUiForCurrentState();
+        }
+    }
+
+    private void discardChanges() {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Möchten Sie wirklich alle ungespeicherten Änderungen verwerfen?",
+                "Änderungen verwerfen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            isInEditMode = false;
+            hasUnsavedChanges = false;
+            loadData(); // Felder mit den ursprünglichen Daten neu befüllen
+            updateUiForCurrentState();
+        }
+    }
+
+    private void saveChanges() {
+        if (currentUser == null) return;
+
+        if (txtFirstName.getText().trim().isEmpty() || txtLastName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vor- und Nachname dürfen nicht leer sein.", "Fehler", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        currentUser.setFirstName(txtFirstName.getText().trim());
+        currentUser.setLastName(txtLastName.getText().trim());
+        currentUser.setEMail(txtEmail.getText().trim());
+        currentUser.setPhoneNumber(txtPhone.getText().trim());
+        currentUser.setAddress(txtAddress.getText().trim());
+        currentUser.setPassword(new String(txtPassword.getPassword()));
+
+        // Hier käme der DB-Aufruf
+        // ServiceLocator.getDatabaseManager().saveEmployee(currentUser);
+
+        JOptionPane.showMessageDialog(this, "Profil erfolgreich aktualisiert!");
+
+        // Zustand zurücksetzen und UI aktualisieren
+        isInEditMode = false;
+        hasUnsavedChanges = false;
+        updateUiForCurrentState();
     }
 
     private void loadData() {
         if (currentUser == null) return;
-
-        // Read-Only
         txtId.setText(String.valueOf(currentUser.getId()));
         txtUsername.setText(currentUser.getUsername());
-
-        // Rolle ermitteln
         String roleName = "-";
-        try {
-            if (currentUser.getRoleManager() != null && currentUser.getRoleManager().getActiveRole() != null) {
-                roleName = currentUser.getRoleManager().getActiveRole().getName();
-            }
-        } catch (Exception e) { /* ignore */ }
+        if (currentUser.getRoleManager() != null && currentUser.getRoleManager().getActiveRole() != null) {
+            roleName = currentUser.getRoleManager().getActiveRole().getName();
+        }
         txtRole.setText(roleName);
-
-        // Team ID (Name auflösen wäre schöner, aber ID reicht für Demo)
         txtTeam.setText("Team-ID: " + currentUser.getTeamId());
-
-        // Editierbar
         txtFirstName.setText(currentUser.getFirstName());
         txtLastName.setText(currentUser.getLastName());
         txtEmail.setText(currentUser.getEMail());
@@ -184,40 +267,33 @@ public class MyProfileView extends JPanel implements View {
         txtPassword.setText(currentUser.getPassword());
     }
 
-    private void saveChanges() {
-        if (currentUser == null) return;
+    private void showRoleHistoryDialog() {
+        JDialog historyDialog = new JDialog(
+                (Frame) SwingUtilities.getWindowAncestor(this), "Meine Rollenhistorie", Dialog.ModalityType.APPLICATION_MODAL);
 
-        // Validierung (Basis)
-        if (txtFirstName.getText().trim().isEmpty() || txtLastName.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vor- und Nachname dürfen nicht leer sein.", "Fehler", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        // Die Rollenhistorie ist für den Benutzer selbst immer schreibgeschützt.
+        RoleHistoryPanel panel = new RoleHistoryPanel(this.currentUser, false);
 
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Möchten Sie die Änderungen an Ihrem Profil speichern?",
-                "Bestätigung", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            // 1. Daten ins Objekt schreiben (RAM)
-            currentUser.setFirstName(txtFirstName.getText().trim());
-            currentUser.setLastName(txtLastName.getText().trim());
-            currentUser.setEMail(txtEmail.getText().trim());
-            currentUser.setPhoneNumber(txtPhone.getText().trim());
-            currentUser.setAddress(txtAddress.getText().trim());
-            currentUser.setPassword(new String(txtPassword.getPassword()));
-
-            // 2. Hinweis: Datenbank Update
-            // Da du sagtest "nur im Objekt ändern" (wie bei Zuweisung), belassen wir es dabei.
-            // Falls DB gewünscht: DatabaseManager.getInstance().updateEmployee(currentUser);
-
-            JOptionPane.showMessageDialog(this, "Profil erfolgreich aktualisiert!");
-
-            // UI neu laden, falls Formatierungen nötig sind
-            loadData();
-        }
+        historyDialog.setContentPane(panel);
+        historyDialog.setSize(600, 400);
+        historyDialog.setLocationRelativeTo(this);
+        historyDialog.setVisible(true);
     }
 
-    // --- View Interface ---
+    private JTextField createReadOnlyField() {
+        JTextField tf = new JTextField(20);
+        tf.setEditable(false);
+        tf.setBackground(new Color(240, 240, 240));
+        return tf;
+    }
+
+    private void addFormRow(JPanel panel, GridBagConstraints gbc, int row, String labelText, JComponent field) {
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.0;
+        panel.add(new JLabel(labelText), gbc);
+        gbc.gridx = 1; gbc.weightx = 1.0;
+        panel.add(field, gbc);
+    }
+
     @Override public String getViewId() { return "my-profile-view"; }
     @Override public String getViewTabTitle() { return "Mein Profil"; }
     @Override public JPanel getContent() { return this; }
