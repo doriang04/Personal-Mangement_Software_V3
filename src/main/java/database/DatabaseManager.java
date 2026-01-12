@@ -817,13 +817,55 @@ public class DatabaseManager {
     }
 
     public void deleteEmployee(int id) {
-        String sql = "DELETE FROM employees WHERE id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-            System.out.println("✅ Mitarbeiter " + id + " aus DB gelöscht.");
+
+        String sqlDeleteRoles = "DELETE FROM role_history WHERE employee_id = ?";
+        String sqlDeleteSkills = "DELETE FROM skill_history WHERE employee_id = ?";
+        String sqlDeleteTrainings = "DELETE FROM training_history WHERE employee_id = ?";
+        String sqlUnlinkManager = "UPDATE employees SET manager_id = NULL WHERE manager_id = ?";
+
+
+        String sqlDeleteEmployee = "DELETE FROM employees WHERE id = ?";
+
+        try {
+
+            try (PreparedStatement stmt = connection.prepareStatement(sqlDeleteRoles)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+            }
+
+
+            try (PreparedStatement stmt = connection.prepareStatement(sqlDeleteSkills)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+            }
+
+
+            try (PreparedStatement stmt = connection.prepareStatement(sqlDeleteTrainings)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+            }
+
+
+            try (PreparedStatement stmt = connection.prepareStatement(sqlUnlinkManager)) {
+                stmt.setInt(1, id);
+                stmt.executeUpdate();
+            }
+
+
+            try (PreparedStatement stmt = connection.prepareStatement(sqlDeleteEmployee)) {
+                stmt.setInt(1, id);
+                int rows = stmt.executeUpdate();
+
+                if (rows > 0) {
+                    System.out.println("✅ Mitarbeiter " + id + " und alle Abhängigkeiten erfolgreich gelöscht.");
+                } else {
+                    System.out.println("⚠️ Mitarbeiter " + id + " konnte nicht gefunden werden.");
+                }
+            }
+
         } catch (SQLException e) {
-            System.err.println("❌ Fehler beim Löschen: " + e.getMessage());
+            System.err.println("❌ Fehler beim Löschen (Referentielle Integrität): " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
