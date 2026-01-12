@@ -42,5 +42,12 @@ public class Team {
     public void setName(String name) {
         this.name = name;
     }
+
+    public boolean hasReferences() {
+        for (Employee employee: ServiceLocator.getEmployeeContainer().getEmployees()) {
+            if (employee.getTeamId() == getId()) return true;
+        }
+        return false;
+    }
 }
 

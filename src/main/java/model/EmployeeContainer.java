@@ -20,7 +20,8 @@ public class EmployeeContainer {
         this.employees.add(employee);
     }
 
-    public void removeEmployee(Employee employee) {
+    public void removeEmployee(Employee employee) throws Exception {
+        if (employee.hasReferences()) throw new Exception("Not allowed to delete employee, as it is referenced.");
         this.employees.remove(employee);
     }
 

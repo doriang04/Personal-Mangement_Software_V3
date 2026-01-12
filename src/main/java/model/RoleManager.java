@@ -183,4 +183,9 @@ public class RoleManager {
         }
     }
 
+    public boolean hasReferences() {
+        // TODO write out this method
+        return false;
+    }
+
 }

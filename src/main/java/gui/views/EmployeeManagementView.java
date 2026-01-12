@@ -1,76 +1,238 @@
 package gui.views;
 
-import model.Employee;
-import model.EmployeeContainer;
+import core.ServiceLocator;
+import model.*;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import database.DatabaseManager;
 
 public class EmployeeManagementView extends JPanel implements View {
 
     private JList<String> employeeList;
     private DefaultListModel<String> listModel;
-    private ArrayList<Employee> currentListCache; // Hilft uns, das Objekt zur Zeile zu finden
+    private ArrayList<Employee> currentListCache;
 
-    // Eingabefelder für neuen Mitarbeiter
-    private JTextField txtFirstName, txtLastName, txtUsername, txtPassword;
+    // --- ERWEITERTE EINGABEFELDER ---
+    private JTextField txtFirstName, txtLastName, txtUsername, txtEmail, txtPhone, txtAddress;
+    private JPasswordField txtPassword; // Sicherer für Passwörter
+    private JComboBox<String> cbGender;
+    private JComboBox<TeamItem> cbTeam;
+    private JComboBox<RoleItem> cbRole;
+
+    // Hinweis: Für Datumsfelder wären JDatePicker-Bibliotheken ideal.
+    // Zur Vereinfachung verwenden wir Textfelder mit Platzhaltern.
+    private JTextField txtDateOfBirth, txtHireDate;
 
     public EmployeeManagementView() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // --- LINKES PANEL: Liste & Löschen ---
+        // --- LINKES PANEL: Liste & Löschen (unverändert) ---
         JPanel leftPanel = new JPanel(new BorderLayout(5, 5));
         leftPanel.setBorder(new TitledBorder("Mitarbeiter verwalten"));
-
         listModel = new DefaultListModel<>();
         employeeList = new JList<>(listModel);
         leftPanel.add(new JScrollPane(employeeList), BorderLayout.CENTER);
-
         JButton btnDelete = new JButton("Ausgewählten Mitarbeiter löschen");
-        btnDelete.setBackground(new Color(255, 100, 100)); // Rötlich
-        btnDelete.setForeground(Color.WHITE);
-        btnDelete.addActionListener(e -> deleteSelectedEmployee());
+        btnDelete.addActionListener(_ -> deleteSelectedEmployee());
         leftPanel.add(btnDelete, BorderLayout.SOUTH);
 
-        // --- RECHTES PANEL: Hinzufügen ---
+        // --- RECHTES PANEL: Hinzufügen (komplett überarbeitet) ---
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setBorder(new TitledBorder("Neuen Mitarbeiter anlegen"));
 
-        JPanel formPanel = new JPanel(new GridLayout(0, 2, 5, 5));
+        // Formular mit flexiblem GridBagLayout
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(4, 4, 4, 4);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
 
-        txtFirstName = new JTextField();
-        txtLastName = new JTextField();
-        txtUsername = new JTextField();
-        txtPassword = new JTextField(); // Einfachheitshalber als Textfeld, besser JPasswordField
+        // Felder initialisieren
+        txtFirstName = new JTextField(20);
+        txtLastName = new JTextField(20);
+        txtUsername = new JTextField(20);
+        txtPassword = new JPasswordField(20);
+        txtEmail = new JTextField(20);
+        txtPhone = new JTextField(20);
+        txtAddress = new JTextField(20);
+        txtDateOfBirth = new JTextField("YYYY-MM-DD");
+        txtHireDate = new JTextField(LocalDate.now().toString()); // Standard heute
+        cbGender = new JComboBox<>(new String[]{"Männlich", "Weiblich", "Divers"});
+        cbTeam = new JComboBox<>();
+        cbRole = new JComboBox<>();
+        loadComboBoxData();
 
-        formPanel.add(new JLabel("Vorname:")); formPanel.add(txtFirstName);
-        formPanel.add(new JLabel("Nachname:")); formPanel.add(txtLastName);
-        formPanel.add(new JLabel("Benutzername:")); formPanel.add(txtUsername);
-        formPanel.add(new JLabel("Passwort:")); formPanel.add(txtPassword);
+        // Felder dem Layout hinzufügen
+        int row = 0;
+        addFormRow(formPanel, gbc, row++, "Vorname*:", txtFirstName);
+        addFormRow(formPanel, gbc, row++, "Nachname*:", txtLastName);
+        addFormRow(formPanel, gbc, row++, "Benutzername*:", txtUsername);
+        addFormRow(formPanel, gbc, row++, "Passwort*:", txtPassword);
+        addFormRow(formPanel, gbc, row++, "Team*:", cbTeam);
+        addFormRow(formPanel, gbc, row++, "Rolle*:", cbRole);
 
+        gbc.gridx=0; gbc.gridy=row++; gbc.gridwidth=2; formPanel.add(new JSeparator(), gbc); gbc.gridwidth=1;
+
+        addFormRow(formPanel, gbc, row++, "E-Mail:", txtEmail);
+        addFormRow(formPanel, gbc, row++, "Telefon:", txtPhone);
+        addFormRow(formPanel, gbc, row++, "Adresse:", txtAddress);
+        addFormRow(formPanel, gbc, row++, "Geburtsdatum:", txtDateOfBirth);
+        addFormRow(formPanel, gbc, row++, "Einstellungsdatum:", txtHireDate);
+        addFormRow(formPanel, gbc, row++, "Geschlecht:", cbGender);
+
+        // Button zum Hinzufügen
         JButton btnAdd = new JButton("Mitarbeiter hinzufügen");
         btnAdd.addActionListener(e -> createEmployee());
 
-        rightPanel.add(formPanel, BorderLayout.CENTER);
+        // Das Formular scrollbar machen, falls es zu groß wird
+        rightPanel.add(new JScrollPane(formPanel), BorderLayout.CENTER);
         rightPanel.add(btnAdd, BorderLayout.SOUTH);
 
         // Split Pane für Layout
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
-        splitPane.setDividerLocation(300);
+        splitPane.setDividerLocation(350);
         add(splitPane, BorderLayout.CENTER);
 
-        // Daten initial laden
         refreshList();
     }
+
+    // Hilfsmethode für das GridBagLayout
+    private void addFormRow(JPanel p, GridBagConstraints gbc, int row, String label, JComponent comp) {
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.1;
+        p.add(new JLabel(label), gbc);
+        gbc.gridx = 1; gbc.weightx = 0.9;
+        p.add(comp, gbc);
+    }
+
+    // Befüllt die Dropdown-Menüs mit Daten
+    private void loadComboBoxData() {
+        cbTeam.addItem(new TeamItem(null)); // "Kein Team" Option
+        for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
+            cbTeam.addItem(new TeamItem(t));
+        }
+
+        for (Role r : ServiceLocator.getRoleContainer().getRoles()) {
+            cbRole.addItem(new RoleItem(r));
+        }
+    }
+
+    private void createEmployee() {
+        // --- 1. Validierung der Pflichtfelder ---
+        List<String> missingFields = new ArrayList<>();
+        if (txtFirstName.getText().trim().isEmpty()) missingFields.add("Vorname");
+        if (txtLastName.getText().trim().isEmpty()) missingFields.add("Nachname");
+        if (txtUsername.getText().trim().isEmpty()) missingFields.add("Benutzername");
+        if (new String(txtPassword.getPassword()).trim().isEmpty()) missingFields.add("Passwort");
+        if (cbTeam.getSelectedItem() == null || ((TeamItem) cbTeam.getSelectedItem()).team == null) missingFields.add("Team");
+        if (cbRole.getSelectedItem() == null) missingFields.add("Rolle");
+
+        if (!missingFields.isEmpty()) {
+            String message = "Folgende Pflichtfelder müssen ausgefüllt werden:\n" + String.join(", ", missingFields);
+            JOptionPane.showMessageDialog(this, message, "Fehlende Eingaben", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // --- 2. Daten sammeln und Standardwerte für optionale Felder setzen ---
+            String firstName = txtFirstName.getText().trim();
+            String lastName = txtLastName.getText().trim();
+            String username = txtUsername.getText().trim();
+            String password = new String(txtPassword.getPassword());
+
+            TeamItem selectedTeamItem = (TeamItem) cbTeam.getSelectedItem();
+            int teamId = selectedTeamItem.team.getId();
+
+            RoleItem selectedRoleItem = (RoleItem) cbRole.getSelectedItem();
+            Role selectedRole = selectedRoleItem.role;
+
+            String email = txtEmail.getText().trim().isEmpty() ? "n/a" : txtEmail.getText().trim();
+            String phone = txtPhone.getText().trim().isEmpty() ? "n/a" : txtPhone.getText().trim();
+            String address = txtAddress.getText().trim().isEmpty() ? "n/a" : txtAddress.getText().trim();
+
+            char gender = ((String)cbGender.getSelectedItem()).charAt(0);
+
+            LocalDate hireDate;
+            try {
+                hireDate = LocalDate.parse(txtHireDate.getText());
+            } catch (Exception e) {
+                hireDate = LocalDate.now(); // Fallback auf heute
+            }
+
+            // Für das alte 'Date' Objekt konvertieren, falls das Model es noch benötigt
+            java.util.Date hireDateAsDate = java.sql.Date.valueOf(hireDate);
+
+            // --- 3. Neues Employee-Objekt erstellen ---
+            int newId = EmployeeContainer.getInstance().getEmployees().stream()
+                    .mapToInt(Employee::getId).max().orElse(0) + 1;
+
+            // Annahme: Es gibt einen Employee-Konstruktor, der die wichtigsten Felder setzt
+            // und intern einen RoleManager und SkillManager initialisiert.
+            Employee newEmp = new Employee(
+                    newId,
+                    teamId,
+                    username,
+                    password,
+                    firstName,
+                    lastName,
+                    email,
+                    null, // dateOfBirth, für Demo null
+                    address,
+                    gender,
+                    hireDateAsDate,
+                    0, // managerId, für Demo 0
+                    true, // employmentStatus
+                    phone,
+                    null, // SkillManager
+                    null  // TrainingManager
+            );
+
+            // WICHTIG: Die Rolle über den RoleManager zuweisen
+            if(newEmp.getRoleManager() != null) {
+                newEmp.getRoleManager().assignRole(selectedRole.getId(), hireDate);
+            }
+
+            // --- 4. Speichern und UI aktualisieren ---
+            EmployeeContainer.getInstance().addEmployee(newEmp);
+            DatabaseManager.getInstance().addEmployee(newEmp);
+
+            refreshList();
+            clearForm();
+
+            JOptionPane.showMessageDialog(this, "Mitarbeiter '" + firstName + " " + lastName + "' (ID: " + newId + ") erfolgreich angelegt.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Ein unerwarteter Fehler ist aufgetreten:\n" + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+
+    // Leert alle Felder im Formular
+    private void clearForm() {
+        txtFirstName.setText("");
+        txtLastName.setText("");
+        txtUsername.setText("");
+        txtPassword.setText("");
+        txtEmail.setText("");
+        txtPhone.setText("");
+        txtAddress.setText("");
+        txtDateOfBirth.setText("YYYY-MM-DD");
+        txtHireDate.setText(LocalDate.now().toString());
+        cbTeam.setSelectedIndex(0);
+        cbRole.setSelectedIndex(0);
+        cbGender.setSelectedIndex(0);
+    }
+
+    // --- Unveränderte Methoden und Helper-Klassen ---
 
     private void refreshList() {
         listModel.clear();
         currentListCache = EmployeeContainer.getInstance().getEmployees();
-
         for (Employee e : currentListCache) {
             listModel.addElement(e.getId() + " | " + e.getFirstName() + " " + e.getLastName() + " (" + e.getUsername() + ")");
         }
@@ -84,83 +246,36 @@ public class EmployeeManagementView extends JPanel implements View {
         }
 
         Employee toDelete = currentListCache.get(index);
-
         int confirm = JOptionPane.showConfirmDialog(this,
                 "Sollen " + toDelete.getFirstName() + " " + toDelete.getLastName() + " wirklich gelöscht werden?",
                 "Löschen bestätigen", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            EmployeeContainer.getInstance().removeEmployee(toDelete);
-            DatabaseManager.getInstance().deleteEmployee(toDelete.getId());
-            refreshList();
-            JOptionPane.showMessageDialog(this, "Mitarbeiter gelöscht!");
+            try {
+                EmployeeContainer.getInstance().removeEmployee(toDelete);
+                DatabaseManager.getInstance().deleteEmployee(toDelete.getId());
+                refreshList();
+                JOptionPane.showMessageDialog(this, "Mitarbeiter gelöscht!");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Fehler beim Löschen: " + ex.getMessage());
+            }
         }
     }
 
-    private void createEmployee() {
-        // Validierung
-        if (txtUsername.getText().isEmpty() || txtPassword.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Benutzername und Passwort sind Pflicht!");
-            return;
-        }
-
-        // 1. Neue ID generieren (Max ID + 1)
-        int newId = 1;
-        for (Employee e : EmployeeContainer.getInstance().getEmployees()) {
-            if (e.getId() >= newId) newId = e.getId() + 1;
-        }
-
-        // 2. Dummy-Daten für Felder, die wir im Schnell-Formular nicht abfragen
-        // (Damit der riesige Employee Konstruktor zufrieden ist)
-        try {
-            Employee newEmp = new Employee(
-                    newId,
-                    0, // No Team yet
-                    txtUsername.getText(),
-                    txtPassword.getText(),
-                    txtFirstName.getText(),
-                    txtLastName.getText(),
-                    "email@placeholder.com", // Dummy Email
-                    new Date(), // Dummy Geburtsdatum
-                    "Unbekannt", // Dummy Adresse
-                    'X', // Dummy Geschlecht
-                    new Date(), // Hire Date heute
-                    1, // Manager ID default
-                    true, // Active
-                    "0000", // Phone
-                    null, // SkillManager
-                    null  // TrainingManager
-            );
-
-            // 3. Hinzufügen
-            EmployeeContainer.getInstance().addEmployee(newEmp);
-            DatabaseManager.getInstance().addEmployee(newEmp);
-            refreshList();
-
-            // Felder leeren
-            txtFirstName.setText("");
-            txtLastName.setText("");
-            txtUsername.setText("");
-            txtPassword.setText("");
-
-            JOptionPane.showMessageDialog(this, "Mitarbeiter angelegt (ID: " + newId + ")");
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Fehler beim Erstellen: " + ex.getMessage());
-        }
+    // Helper-Klassen für die Dropdowns
+    static class TeamItem {
+        Team team;
+        public TeamItem(Team t) { this.team = t; }
+        @Override public String toString() { return (team == null) ? "- Kein Team -" : team.getName(); }
+    }
+    static class RoleItem {
+        Role role;
+        public RoleItem(Role r) { this.role = r; }
+        @Override public String toString() { return role.getName(); }
     }
 
-    @Override
-    public String getViewId() { return "admin-employee-management"; }
-
-    @Override
-    public String getViewTabTitle() { return "Personalverwaltung"; }
-
-    @Override
-    public JPanel getContent() { return this; }
-
-    @Override
-    public boolean equals(View view) {
-        return view != null && view.getViewId().equals(getViewId());
-    }
+    @Override public String getViewId() { return "admin-employee-management"; }
+    @Override public String getViewTabTitle() { return "Personalverwaltung"; }
+    @Override public JPanel getContent() { return this; }
+    @Override public boolean equals(View view) { return view != null && view.getViewId().equals(getViewId()); }
 }

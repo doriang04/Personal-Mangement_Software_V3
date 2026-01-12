@@ -18,7 +18,8 @@ public class TrainingContainer {
         trainings.add(training);
     }
 
-    public void removeTraining(Training training) {
+    public void removeTraining(Training training) throws Exception {
+        if (training.hasReferences()) throw new Exception("Not allowed to delete training, as it is referenced.");
         trainings.remove(training);
     }
 

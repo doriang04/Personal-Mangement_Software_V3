@@ -16,7 +16,8 @@ public class CompanyContainer {
 
     public void addCompany(Company company) { companies.add(company); }
 
-    public void removeCompany(Company company) {
+    public void removeCompany(Company company) throws Exception {
+        if (company.hasReferences()) throw new Exception("Not allowed to delete company, as it is referenced.");
         companies.remove(company);
     }
 

@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 public class Company {
 
     private int id;
@@ -32,6 +34,13 @@ public class Company {
 
     public String toString() {
         return getId() + "_(" + getName() + ")";
+    }
+
+    public boolean hasReferences() {
+        for (Department department: ServiceLocator.getDepartmentContainer().getDepartments()) {
+            if (department.getCompanyId() == getId()) return true;
+        }
+        return false;
     }
 }
 

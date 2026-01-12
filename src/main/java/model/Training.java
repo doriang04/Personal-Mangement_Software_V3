@@ -78,5 +78,14 @@ public class Training {
     public TrainingSkillManager getSkillList() {
         return skillList;
     }
+
+    public boolean hasReferences() {
+        for (TrainingManager tm: ServiceLocator.getTrainingManagerContainer().getTrainingManagers()) {
+            for (TrainingManager.TrainingHistoryEntry the: tm.getTrainingHistory()) {
+                if (the.getTrainingId() == getId()) return true;
+            }
+        }
+        return false;
+    }
 }
 

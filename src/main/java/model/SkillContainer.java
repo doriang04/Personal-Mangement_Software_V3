@@ -16,7 +16,8 @@ public class SkillContainer {
 
     public void addSkill(Skill skill) { skills.add(skill); }
 
-    public void removeSkill(Skill skill) {
+    public void removeSkill(Skill skill) throws Exception {
+        if (skill.hasReferences()) throw new Exception("Not allowed to delete skill, as it is referenced.");
         skills.remove(skill);
     }
 

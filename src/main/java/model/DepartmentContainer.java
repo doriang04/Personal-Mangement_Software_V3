@@ -18,7 +18,8 @@ public class DepartmentContainer {
         departments.add(department);
     }
 
-    public void removeDepartment(Department department) {
+    public void removeDepartment(Department department) throws Exception {
+        if (department.hasReferences()) throw new Exception("Not allowed to delete department, as it is referenced.");
         departments.remove(department);
     }
 

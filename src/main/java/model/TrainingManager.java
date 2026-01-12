@@ -134,4 +134,9 @@ public class TrainingManager {
             trainingHistory.addAll(entries);
         }
     }
+
+    public boolean hasReferences() {
+        // TODO write out this method
+        return false;
+    }
 }

@@ -45,4 +45,11 @@ public class Department {
     public String toString() {
         return getId() + "_(" + getName() + ", compId:" + getCompanyId() + ")";
     }
+
+    public boolean hasReferences() {
+        for (Team team: ServiceLocator.getTeamContainer().getTeams()) {
+            if (team.getDepartmentId() == getId()) return true;
+        }
+        return false;
+    }
 }

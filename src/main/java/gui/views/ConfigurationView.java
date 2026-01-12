@@ -69,7 +69,13 @@ public class ConfigurationView extends JPanel implements View {
             listPanel.setBorder(new TitledBorder("Vorhandene Abteilungen"));
             listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
             JButton btnDelete = new JButton("Ausgewählte löschen");
-            btnDelete.addActionListener(e -> deleteSelected());
+            btnDelete.addActionListener(_ -> {
+                try {
+                    deleteSelected();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
             listPanel.add(btnDelete, BorderLayout.SOUTH);
 
             // Rechte Seite: Erstellen
@@ -128,7 +134,7 @@ public class ConfigurationView extends JPanel implements View {
             loadData();
         }
 
-        private void deleteSelected() {
+        private void deleteSelected() throws Exception {
             Department selected = list.getSelectedValue();
             if (selected == null) return;
 
@@ -170,7 +176,13 @@ public class ConfigurationView extends JPanel implements View {
             listPanel.setBorder(new TitledBorder("Vorhandene Teams"));
             listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
             JButton btnDelete = new JButton("Team löschen");
-            btnDelete.addActionListener(e -> deleteSelected());
+            btnDelete.addActionListener(_ -> {
+                try {
+                    deleteSelected();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
             listPanel.add(btnDelete, BorderLayout.SOUTH);
 
             // Formular
@@ -212,7 +224,7 @@ public class ConfigurationView extends JPanel implements View {
             loadData();
         }
 
-        private void deleteSelected() {
+        private void deleteSelected() throws Exception {
             Team selected = list.getSelectedValue();
             if (selected == null) return;
 
@@ -256,7 +268,13 @@ public class ConfigurationView extends JPanel implements View {
             listPanel.setBorder(new TitledBorder("Rollen"));
             listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
             JButton btnDel = new JButton("Rolle löschen");
-            btnDel.addActionListener(_ -> deleteSelected());
+            btnDel.addActionListener(_ -> {
+                try {
+                    deleteSelected();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
             listPanel.add(btnDel, BorderLayout.SOUTH);
 
             // Formular
@@ -297,7 +315,7 @@ public class ConfigurationView extends JPanel implements View {
             loadData();
         }
 
-        private void deleteSelected() {
+        private void deleteSelected() throws Exception {
             Role selected = list.getSelectedValue();
             if (selected == null) return;
 
@@ -345,7 +363,13 @@ public class ConfigurationView extends JPanel implements View {
             listPanel.setBorder(new TitledBorder("Skills"));
             listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
             JButton btnDel = new JButton("Skill löschen");
-            btnDel.addActionListener(_ -> deleteSelected());
+            btnDel.addActionListener(_ -> {
+                try {
+                    deleteSelected();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
             listPanel.add(btnDel, BorderLayout.SOUTH);
 
             // Formular
@@ -386,7 +410,7 @@ public class ConfigurationView extends JPanel implements View {
             loadData();
         }
 
-        private void deleteSelected() {
+        private void deleteSelected() throws Exception {
             Skill selected = list.getSelectedValue();
             if(selected == null) return;
 
