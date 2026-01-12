@@ -52,4 +52,7 @@ public class ServiceLocator {
         return TrainingContainer.getInstance();
     }
 
+    public static TrainingSkillManagerContainer getTrainingSkillManagerContainer() {
+        return TrainingSkillManagerContainer.getInstance();
+    }
 }

@@ -3,6 +3,7 @@ package gui.views;
 import core.ServiceLocator;
 import core.SessionManager;
 import gui.components.AssignTrainingDialog;
+import gui.components.CreateTrainingDialog;
 import model.*;
 import model.TrainingManager.TrainingHistoryEntry;
 
@@ -37,6 +38,13 @@ public class TrainingManagementView extends JPanel implements View {
 
         setLayout(new BorderLayout());
         initUI();
+    }
+
+    // NEUE HELPER-METHODE für klarere Berechtigungsprüfung
+    private boolean isPrivilegedAdminOrHR() {
+        if (currentUserRole == null) return false;
+        String r = currentUserRole.toUpperCase();
+        return r.contains("ADMIN") || r.contains("HR");
     }
 
     private Employee findCurrentUserHack() {
@@ -78,16 +86,39 @@ public class TrainingManagementView extends JPanel implements View {
         return r.contains("ADMIN") || r.contains("HR") || r.contains("CEO") || r.contains("LEAD") || r.contains("MANAGER");
     }
 
+    private void openCreateTrainingDialog() {
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        // Wir übergeben eine "Callback"-Funktion (hier als Methodenreferenz),
+        // die der Dialog nach erfolgreichem Speichern aufrufen kann,
+        // um die Tabelle zu aktualisieren.
+        CreateTrainingDialog dialog = new CreateTrainingDialog(parentWindow, this::loadCatalogData);
+        dialog.setVisible(true);
+    }
+
     // --- PANELS ---
 
     private JPanel createCatalogPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout(0, 10)); // Abstand zwischen Tabelle und Buttons
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
         String[] columns = {"ID", "Titel", "Beschreibung", "Dauer (h)"};
         trainingCatalogModel = new DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int row, int col) { return false; }
         };
         trainingCatalogTable = new JTable(trainingCatalogModel);
         panel.add(new JScrollPane(trainingCatalogTable), BorderLayout.CENTER);
+
+        // --- NEUER TEIL: Button-Leiste nur für HR/Admin ---
+        if (isPrivilegedAdminOrHR()) {
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            JButton btnCreate = new JButton("Neues Training erstellen");
+            btnCreate.addActionListener(_ -> openCreateTrainingDialog());
+            buttonPanel.add(btnCreate);
+
+            // TODO: Hier könnten auch "Bearbeiten" und "Löschen" Buttons hin
+
+            panel.add(buttonPanel, BorderLayout.SOUTH);
+        }
 
         loadCatalogData();
         return panel;

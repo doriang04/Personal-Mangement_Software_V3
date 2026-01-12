@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 public class Training {
 
     private int id;
@@ -9,8 +11,8 @@ public class Training {
     private TrainingSkillManager skillList;
     private Employee assigningManager;
 
-    public Training(int id, String title, String description, int length, TrainingSkillManager skillList) {
-        this.id = id;
+    public Training(String title, String description, int length, TrainingSkillManager skillList) {
+        this.id = ServiceLocator.getTrainingContainer().getNextFreeId();
         this.title = title;
         this.description = description;
         this.length = length;

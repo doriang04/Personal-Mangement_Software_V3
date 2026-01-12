@@ -42,6 +42,10 @@ public class TrainingSkillManager {
         return trainingId;
     }
 
+    public void setTrainingId(int trainingId) {
+        this.trainingId = trainingId;
+    }
+
     public ArrayList<TrainingSkillEntry> getSkills() {
         return new ArrayList<>(skills);
     }

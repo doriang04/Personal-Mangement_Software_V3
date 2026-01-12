@@ -433,13 +433,15 @@ public class DatabaseManager {
              ResultSet rs = stmt.executeQuery("SELECT * FROM trainings")) {
             var container = ServiceLocator.getTrainingContainer();
             while (rs.next()) {
-                Training t = new Training();
-                t.setId(rs.getInt("id"));
-                t.setTitle(rs.getString("title"));
-                t.setDescription(rs.getString("description"));
-                t.setLength(rs.getInt("duration_hours"));
+                Training t = new Training(
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getInt("duration_hours"),
+                    new TrainingSkillManager()
+                );
 
-                t.setSkills(new TrainingSkillManager(t));
+                t.getSkills().setTrainingId(t.getId());
+                // TODO hier die skills auch wirklich eintragen
 
                 container.addTraining(t);
             }
@@ -601,6 +603,8 @@ public class DatabaseManager {
             reinsertRoles();
             reinsertDepartments();
             reinsertTeams();
+            reinsertTrainings();
+            reinsertTrainingSkills();
 
             // 4. Mitarbeiter und deren History einfügen
             for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
@@ -645,6 +649,8 @@ public class DatabaseManager {
         // 3. Unabhängige Kataloge
         stmt.executeUpdate("DELETE FROM skills");
         stmt.executeUpdate("DELETE FROM roles");
+        stmt.executeUpdate("DELETE FROM trainings");
+        stmt.executeUpdate("DELETE FROM training_skills");
         stmt.close();
         System.out.println("🧹 Datenbank bereinigt für neuen Schreibvorgang.");
     }
@@ -694,6 +700,32 @@ public class DatabaseManager {
                 stmt.setInt(1, t.getId());
                 stmt.setString(2, t.getName());
                 stmt.setInt(3, t.getDepartmentId());
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    private void reinsertTrainingSkills() throws SQLException{
+        String sql = "INSERT INTO training_skills (training_id, skill_id) VALUES (?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (TrainingSkillManager tsm : ServiceLocator.getTrainingSkillManagerContainer().getTrainingSkillManagers()) {
+                for (TrainingSkillManager.TrainingSkillEntry tse: tsm.getSkills()) {
+                    stmt.setInt(1, tse.getTrainingId());
+                    stmt.setInt(2, tse.getSkillId());
+                    stmt.executeUpdate();
+                }
+            }
+        }
+    }
+
+    private void reinsertTrainings() throws SQLException{
+        String sql = "INSERT INTO trainings (id, title, description, duration_hours) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
+                stmt.setInt(1, t.getId());
+                stmt.setString(2, t.getTitle());
+                stmt.setString(3, t.getDescription());
+                stmt.setInt(4, t.getLength());
                 stmt.executeUpdate();
             }
         }

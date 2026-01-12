@@ -35,4 +35,11 @@ public class TrainingContainer {
         return null;
     }
 
+    public int getNextFreeId() {
+        int i = 0;
+        while (true) {
+            if (getTrainingById(i) == null) return i;
+            i++;
+        }
+    }
 }
