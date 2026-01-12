@@ -53,7 +53,6 @@ public class AdminControlPanelView extends JPanel implements View {
 
         add(controlPanel, BorderLayout.NORTH);
 
-        // --- UNTERER BEREICH: Log ---
         JPanel logPanel = new JPanel(new BorderLayout(5, 5));
         logPanel.setBorder(new TitledBorder("System-Ereignisprotokoll"));
 
@@ -66,7 +65,6 @@ public class AdminControlPanelView extends JPanel implements View {
 
         add(logPanel, BorderLayout.CENTER);
 
-        // Initialer Log-Eintrag
         log("Admin-Panel geöffnet.");
     }
 
