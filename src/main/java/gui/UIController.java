@@ -108,6 +108,8 @@ public class UIController {
             mainWindow.addNavigationSection("Administration");
             mainWindow.addNavigationEntry("Daten Konfiguration",
                     () -> openTabOrFocus(new ConfigurationView(), true));
+            mainWindow.addNavigationEntry("Systemsteuerung ⚙️",
+                    () -> openTabOrFocus(new gui.views.AdminControlPanelView(), true));
             // mainWindow.addNavigationEntry("Einstellungen", ...);
         }
 
