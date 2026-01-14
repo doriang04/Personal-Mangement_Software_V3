@@ -132,15 +132,9 @@ public class EmployeeManagementView extends JPanel implements View {
             int newId = EmployeeContainer.getInstance().getEmployees().stream()
                     .mapToInt(Employee::getId).max().orElse(0) + 1;
 
-            // Explizite Manager-Initialisierung aus Version 2 übernommen
-            SkillManager newSkillManager = new SkillManager();
-            TrainingManager newTrainingManager = new TrainingManager();
-
             Employee newEmp = new Employee(
                     newId, teamId, username, password, firstName, lastName, email,
-                    null, address, gender, hireDateAsDate, 0, true, phone,
-                    newSkillManager, // Übergeben der erstellten Manager
-                    newTrainingManager
+                    null, address, gender, hireDateAsDate, 0, true, phone
             );
 
             // Rollenzuweisung über den Manager (aus Version 1)
@@ -176,6 +170,7 @@ public class EmployeeManagementView extends JPanel implements View {
         for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
             cbTeam.addItem(new TeamItem(t));
         }
+        cbRole.addItem(new RoleItem(null));
         for (Role r : ServiceLocator.getRoleContainer().getRoles()) {
             cbRole.addItem(new RoleItem(r));
         }
@@ -235,7 +230,7 @@ public class EmployeeManagementView extends JPanel implements View {
     static class RoleItem {
         Role role;
         public RoleItem(Role r) { this.role = r; }
-        @Override public String toString() { return role.getName(); }
+        @Override public String toString() { return (role == null) ? "- Keine Rolle -" : role.getName(); }
     }
 
     @Override public String getViewId() { return "admin-employee-management"; }

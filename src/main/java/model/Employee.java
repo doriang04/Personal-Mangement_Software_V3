@@ -27,7 +27,7 @@ public class Employee {
 
     public Employee(int id, int teamId, String username, String password,
                     String firstName, String lastName, String email, Date dateOfBirth, String adress, char gender, Date hireDate,
-                    int managerId, boolean employmentStatus, String phoneNumber, SkillManager skillManager, TrainingManager trainingManager) {
+                    int managerId, boolean employmentStatus, String phoneNumber) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -42,20 +42,8 @@ public class Employee {
         this.managerId = managerId;
         this.employmentStatus = employmentStatus;
         this.phoneNumber = phoneNumber;
-        // --- ÄNDERUNG: Manager zuweisen UND ID setzen ---
-        this.skillManager = skillManager;
-        if (this.skillManager != null) {
-            this.skillManager.setEmployeeId(this.id);
-        } else {
-            this.skillManager = new SkillManager(this);
-        }
-
-        this.trainingManager = trainingManager;
-        if (this.trainingManager != null) {
-            this.trainingManager.setEmployeeId(this.id);
-        } else {
-            this.trainingManager = new TrainingManager(this);
-        }
+        this.skillManager = new SkillManager(this);
+        this.trainingManager = new TrainingManager(this);
         this.roleManager = new RoleManager(this);
     }
 

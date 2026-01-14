@@ -15,10 +15,10 @@ public class EmployeeDetailView extends JPanel implements View {
 
     private final String viewId;
     private String tabTitle;
-    private Employee employee;
+    private final Employee employee; // Nun final, da nur im Konstruktor gesetzt
     private final boolean canEdit; // Finale Berechtigung, ändert sich nicht
 
-    // --- NEUE ZUSTANDS-VARIABLEN ---
+    // --- ZUSTANDS-VARIABLEN ---
     private boolean isInEditMode = false;
     private boolean hasUnsavedChanges = false;
 
@@ -33,6 +33,11 @@ public class EmployeeDetailView extends JPanel implements View {
     private JButton btnDiscard;       // "Änderungen verwerfen"
     private JLabel lblUnsavedChanges; // "* Ungespeicherte Änderungen"
 
+    /**
+     * Konstruktor zur Anzeige eines bestehenden Mitarbeiters.
+     * Dies ist nun der einzige Konstruktor.
+     * @param employeeId Die ID des anzuzeigenden Mitarbeiters.
+     */
     public EmployeeDetailView(int employeeId) {
         this.employee = findEmployeeById(employeeId);
         this.canEdit = checkPermissions();
@@ -47,14 +52,7 @@ public class EmployeeDetailView extends JPanel implements View {
         initUI();
     }
 
-    public EmployeeDetailView() {
-        this.tabTitle = "Neuer Mitarbeiter";
-        this.viewId = "employee-detail-new";
-        this.employee = null;
-        this.canEdit = true; // Neue Mitarbeiter können immer bearbeitet werden
-        this.isInEditMode = true; // Startet direkt im Bearbeitungsmodus
-        initUI();
-    }
+    // --- DER KONSTRUKTOR ZUM ERSTELLEN NEUER MITARBEITER WURDE ENTFERNT ---
 
     private boolean checkPermissions() {
         String role = ServiceLocator.getSessionManager().getUserPermission();
@@ -78,18 +76,25 @@ public class EmployeeDetailView extends JPanel implements View {
 
         // --- Header ---
         JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        // Der Titel ist jetzt neutraler
+        // Der Titel hängt davon ab, ob der Mitarbeiter gefunden wurde.
         String headerText = (employee != null)
                 ? "Profil von: " + employee.getFirstName() + " " + employee.getLastName()
-                : "Neuer Mitarbeiter anlegen";
+                : "Mitarbeiter nicht gefunden";
 
         JLabel titleLabel = new JLabel(headerText);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         header.add(titleLabel);
-
         add(header, BorderLayout.NORTH);
 
-        // --- Formular ---
+        // Wenn kein Mitarbeiter gefunden wurde, eine Fehlermeldung anzeigen und den UI-Aufbau abbrechen.
+        if (employee == null) {
+            JPanel errorPanel = new JPanel(new GridBagLayout());
+            errorPanel.add(new JLabel("Der angeforderte Mitarbeiter konnte nicht gefunden werden."));
+            add(errorPanel, BorderLayout.CENTER);
+            return; // Wichtig: Bricht den weiteren Aufbau ab.
+        }
+
+        // --- Formular (wird nur erstellt, wenn Mitarbeiter existiert) ---
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -129,20 +134,19 @@ public class EmployeeDetailView extends JPanel implements View {
         addFormRow(formPanel, gbc, row++, "Abteilung / Team:", cbTeam);
         addFormRow(formPanel, gbc, row++, "Aktuelle Rolle:", cbRole);
 
-        if (employee != null) {
-            btnShowRoleHistory = new JButton("Rollenhistorie...");
-            btnShowRoleHistory.addActionListener(_ -> showRoleHistoryDialog());
-            gbc.gridx = 1;
-            gbc.gridy = row++;
-            gbc.anchor = GridBagConstraints.EAST;
-            gbc.fill = GridBagConstraints.NONE;
-            formPanel.add(btnShowRoleHistory, gbc);
-        }
+        // Der Button wird nur angezeigt, wenn ein Mitarbeiter existiert (was hier immer der Fall ist)
+        btnShowRoleHistory = new JButton("Rollenhistorie...");
+        btnShowRoleHistory.addActionListener(_ -> showRoleHistoryDialog());
+        gbc.gridx = 1;
+        gbc.gridy = row++;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.fill = GridBagConstraints.NONE;
+        formPanel.add(btnShowRoleHistory, gbc);
 
         add(new JScrollPane(formPanel), BorderLayout.CENTER);
 
-        // --- Footer mit dynamischen Buttons ---
-        if (canEdit || employee == null) {
+        // --- Footer mit dynamischen Buttons (nur für berechtigte Benutzer) ---
+        if (canEdit) {
             JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
             lblUnsavedChanges = new JLabel("* Ungespeicherte Änderungen");
@@ -165,9 +169,6 @@ public class EmployeeDetailView extends JPanel implements View {
         updateUiForCurrentState();
     }
 
-    /**
-     * Zentrale Methode zur Steuerung der UI-Sichtbarkeit und -Aktivierung.
-     */
     private void updateUiForCurrentState() {
         // Felder (de)aktivieren
         enableFields(isInEditMode);
@@ -176,16 +177,14 @@ public class EmployeeDetailView extends JPanel implements View {
         if (btnPrimaryAction == null) return; // Footer existiert nicht (keine Rechte)
 
         if (isInEditMode) {
-            // --- KORREKTUR HIER ---
-            // Die Sichtbarkeit von Label UND Button hängt jetzt vom selben Status ab.
             lblUnsavedChanges.setVisible(hasUnsavedChanges);
             btnDiscard.setVisible(hasUnsavedChanges);
 
             if (hasUnsavedChanges) {
                 btnPrimaryAction.setText("Änderungen speichern");
             } else {
-                // Für neue Mitarbeiter ist der Button immer "Speichern"
-                btnPrimaryAction.setText(employee != null ? "Bearbeitungsmodus verlassen" : "Mitarbeiter speichern");
+                // Der Fall "Neuer Mitarbeiter" existiert nicht mehr.
+                btnPrimaryAction.setText("Bearbeitungsmodus verlassen");
             }
         } else {
             // Ansichtsmodus
@@ -195,12 +194,10 @@ public class EmployeeDetailView extends JPanel implements View {
         }
     }
 
-    /**
-     * Definiert das Verhalten des Hauptbuttons je nach Kontext.
-     */
     private void handlePrimaryAction() {
         if (isInEditMode) {
-            if (hasUnsavedChanges || employee == null) {
+            // Die Bedingung für das Erstellen eines neuen Mitarbeiters wurde entfernt.
+            if (hasUnsavedChanges) {
                 saveChanges();
             } else {
                 // Bearbeitungsmodus ohne Änderungen verlassen
@@ -228,9 +225,6 @@ public class EmployeeDetailView extends JPanel implements View {
         }
     }
 
-    /**
-     * Fügt Listener zu allen Eingabefeldern hinzu, um Änderungen zu erkennen.
-     */
     private void addChangeListeners() {
         DocumentListener dl = new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) { markAsChanged(); }
@@ -252,26 +246,16 @@ public class EmployeeDetailView extends JPanel implements View {
         });
     }
 
-    /**
-     * Wird aufgerufen, wenn ein Feld geändert wird.
-     */
     private void markAsChanged() {
-        // Nur reagieren, wenn wir im Bearbeitungsmodus sind
         if (isInEditMode && !hasUnsavedChanges) {
             hasUnsavedChanges = true;
-            updateUiForCurrentState(); // UI aktualisieren, um "Speichern"-Button etc. anzuzeigen
+            updateUiForCurrentState();
         }
     }
 
     private void saveChanges() {
-        // Für neue Mitarbeiter muss ein Objekt erst erstellt werden.
-        // Diese Logik ist für dieses Beispiel vereinfacht.
-        if (employee == null) {
-            // Hier müsste die Logik zum Erstellen eines neuen Mitarbeiters stehen.
-            JOptionPane.showMessageDialog(this, "Logik zum Erstellen neuer Mitarbeiter nicht implementiert.");
-            return;
-        }
-
+        // Der Block zum Erstellen eines neuen Mitarbeiters wurde entfernt.
+        // Die Methode geht davon aus, dass 'employee' immer existiert.
         try {
             // Daten im Objekt aktualisieren
             employee.setFirstName(txtFirstName.getText());
@@ -314,7 +298,6 @@ public class EmployeeDetailView extends JPanel implements View {
         JDialog historyDialog = new JDialog(
                 (Frame) SwingUtilities.getWindowAncestor(this), "Rollenhistorie", Dialog.ModalityType.APPLICATION_MODAL);
 
-        // Die Berechtigung wird jetzt davon abhängig gemacht, ob der User generell bearbeiten darf UND ob er gerade im Edit-Modus ist.
         RoleHistoryPanel panel = new RoleHistoryPanel(this.employee, this.canEdit && this.isInEditMode);
 
         historyDialog.setContentPane(panel);
@@ -325,7 +308,6 @@ public class EmployeeDetailView extends JPanel implements View {
         fillFields();
     }
 
-    // Unveränderte Methoden von vorher
     private void enableFields(boolean enable) {
         txtFirstName.setEditable(enable);
         txtLastName.setEditable(enable);
@@ -356,7 +338,7 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void fillFields() {
-        if (employee == null) return;
+        // Die Methode wird dank der Logik in initUI nur aufgerufen, wenn employee existiert.
         txtUsername.setText(employee.getUsername());
         txtFirstName.setText(employee.getFirstName());
         txtLastName.setText(employee.getLastName());

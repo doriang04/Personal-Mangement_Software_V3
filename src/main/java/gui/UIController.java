@@ -93,8 +93,6 @@ public class UIController {
         // --- Rollenspezifisch ---
         if ("HR".equals(role)) {
             mainWindow.addNavigationSection("HR Management");
-            mainWindow.addNavigationEntry("Neuen Mitarbeiter anlegen",
-                    () -> openTabOrFocus(new EmployeeDetailView(), true));
         }
 
         if ("TEAM_LEAD".equals(role)) {
