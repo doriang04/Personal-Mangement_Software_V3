@@ -12,11 +12,11 @@ public class Main {
     private static DatabaseManager dbManager;
     private static UIController uiController;
 
-    public static void main(String[] args) throws SQLException, IOException {
+    public static void main(String[] args) {
+        System.out.println("🚀 Personal Management System - Startup");
+
         dbManager = DatabaseManager.getInstance();
         uiController = UIController.getInstance();
-
-        System.out.println("🚀 Personal Management System - Startup");
 
         try {
             // 1. Versuch: Bestehende Daten aus der Datenbank laden
