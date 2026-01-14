@@ -1,4 +1,4 @@
-package core; // TODO move this to core package?
+package core;
 
 import model.*;
 
@@ -10,10 +10,6 @@ public class ServiceLocator {
 
     public static EmployeeContainer getEmployeeContainer() {
         return EmployeeContainer.getInstance();
-    }
-
-    public static TeamContainer getTeamManagerContainer() {
-        return TeamContainer.getInstance();
     }
 
     public static CompanyContainer getCompanyContainer() {

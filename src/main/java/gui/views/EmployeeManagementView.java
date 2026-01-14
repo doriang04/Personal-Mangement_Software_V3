@@ -150,7 +150,6 @@ public class EmployeeManagementView extends JPanel implements View {
 
             // --- 4. Speichern und UI aktualisieren ---
             EmployeeContainer.getInstance().addEmployee(newEmp);
-            DatabaseManager.getInstance().addEmployee(newEmp);
 
             refreshList();
             clearForm(); // Formular zurücksetzen (aus Version 1)
@@ -220,7 +219,6 @@ public class EmployeeManagementView extends JPanel implements View {
         if (confirm == JOptionPane.YES_OPTION) {
             try {
                 EmployeeContainer.getInstance().removeEmployee(toDelete);
-                DatabaseManager.getInstance().deleteEmployee(toDelete.getId());
                 refreshList();
                 JOptionPane.showMessageDialog(this, "Mitarbeiter gelöscht!");
             } catch (Exception ex) {

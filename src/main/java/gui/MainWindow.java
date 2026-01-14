@@ -1,5 +1,6 @@
 package gui;
 
+import core.ServiceLocator;
 import gui.views.View;
 
 import javax.swing.*;
@@ -15,6 +16,8 @@ public class MainWindow extends JFrame {
 
     private final JPanel contentWrapper;
     private JTabbedPane tabbedPane;
+    private JPanel northPanel;
+    private JLabel systemStatusLabel;
 
     private JPanel navigationPanel;
 
@@ -55,7 +58,8 @@ public class MainWindow extends JFrame {
         contentWrapper.removeAll();
         contentWrapper.setLayout(new BorderLayout(5, 5));
 
-        contentWrapper.add(createNorthPanel(userName, role, logoutAction), BorderLayout.NORTH);
+        northPanel = createNorthPanel(userName, role, logoutAction);
+        contentWrapper.add(northPanel, BorderLayout.NORTH);
 
         contentWrapper.add(createWestPanelContainer(), BorderLayout.WEST);
 
@@ -79,6 +83,12 @@ public class MainWindow extends JFrame {
         JLabel userLabel = new JLabel("Angemeldet als: " + name + " (" + role + ")");
         userLabel.setFont(userLabel.getFont().deriveFont(Font.BOLD));
         northPanel.add(userLabel, BorderLayout.WEST);
+
+        systemStatusLabel = new JLabel();
+        systemStatusLabel.setForeground(new Color(217, 56, 56));
+        systemStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        updateSystemStatusLabel(); // Initial setzen
+        northPanel.add(systemStatusLabel, BorderLayout.CENTER);
 
         JButton btnLogout = new JButton("Logout");
         btnLogout.setFocusPainted(false);
@@ -192,4 +202,28 @@ public class MainWindow extends JFrame {
         System.out.println("selectTabIfExists false");
         return false;
     }
+
+    private void updateSystemStatusLabel() {
+        if (systemStatusLabel == null) return;
+
+        boolean maintenance =
+                ServiceLocator.getSessionManager().isMaintenanceModeActive();
+
+        systemStatusLabel.setText(
+                maintenance ? "SYSTEM IST IM WARTUNGSMODUS" : ""
+        );
+    }
+
+    public void updateSelf() {
+        updateSystemStatusLabel();
+
+        if (northPanel != null) {
+            northPanel.revalidate();
+            northPanel.repaint();
+        }
+
+        revalidate();
+        repaint();
+    }
+
 }

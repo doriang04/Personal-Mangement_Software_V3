@@ -147,9 +147,7 @@ public class UIController {
         mainWindow.openTab(view, true);
     }
 
-    // Falls du komplexere Anforderungen hast (wie im originalen requestTabCreation): TODO is this needed?
-    public void requestSpecificView(String viewIdentifier, Object payload) {
-        // Hier könnte Logik stehen, die z.B. Daten lädt, bevor der Tab geöffnet wird
-        // ...
+    public void updateMainWindow() {
+        mainWindow.updateSelf();
     }
 }

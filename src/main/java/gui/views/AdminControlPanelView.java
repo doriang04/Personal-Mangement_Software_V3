@@ -2,6 +2,7 @@ package gui.views;
 
 import core.SessionManager;
 import core.ServiceLocator;
+import gui.UIController;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -107,6 +108,8 @@ public class AdminControlPanelView extends JPanel implements View {
             lblSystemStatus.setForeground(Color.BLACK);
             btnToggleMaintenance.setText("Wartungsmodus aktivieren (Sperren)");
         }
+
+        UIController.getInstance().updateMainWindow();
     }
 
     private void log(String message) {
