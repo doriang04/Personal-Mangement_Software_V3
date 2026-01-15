@@ -114,4 +114,9 @@ public class LoginView extends JPanel implements View {
     public boolean equals(View view) {
         return view.getViewId().equals(this.getViewId());
     }
+
+    @Override
+    public void updateSelf() {
+        System.out.println("How did we get here...");
+    }
 }

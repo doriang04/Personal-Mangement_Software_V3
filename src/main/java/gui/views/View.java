@@ -7,4 +7,5 @@ public interface View {
     String getViewTabTitle();
     JPanel getContent();
     boolean equals(View view);
+    void updateSelf();
 }

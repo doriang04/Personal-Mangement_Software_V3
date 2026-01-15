@@ -23,11 +23,11 @@ public class AdminControlPanelView extends JPanel implements View {
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         initUI();
-        updateStatusDisplay(); // Initialen Status laden
+        updateStatusDisplay(); // Load initial status
     }
 
     private void initUI() {
-        // --- OBERER BEREICH: Status & Steuerung ---
+        // --- UPPER AREA: Status & Control ---
         JPanel controlPanel = new JPanel(new GridBagLayout());
         controlPanel.setBorder(new TitledBorder("Systemzustand"));
 
@@ -54,6 +54,7 @@ public class AdminControlPanelView extends JPanel implements View {
 
         add(controlPanel, BorderLayout.NORTH);
 
+        // --- LOWER AREA: Log ---
         JPanel logPanel = new JPanel(new BorderLayout(5, 5));
         logPanel.setBorder(new TitledBorder("System-Ereignisprotokoll"));
 
@@ -73,13 +74,13 @@ public class AdminControlPanelView extends JPanel implements View {
         boolean currentState = sessionManager.isMaintenanceModeActive();
         boolean newState = !currentState;
 
-        // 1. Status im SessionManager ändern (speichert auch in system.properties)
+        // 1. Change status in SessionManager (also saves to system.properties)
         sessionManager.setMaintenanceModeActive(newState);
 
-        // 2. GUI aktualisieren
+        // 2. Update GUI
         updateStatusDisplay();
 
-        // 3. Loggen & Warnen
+        // 3. Log & Warn
         if (newState) {
             log("ACHTUNG: Wartungsmodus wurde AKTIVIERT.");
             log("Neue Anmeldungen für Nicht-Admins sind jetzt gesperrt.");
@@ -99,23 +100,25 @@ public class AdminControlPanelView extends JPanel implements View {
 
         if (active) {
             lblSystemStatus.setText("SYSTEMSTATUS: WARTUNGSMODUS");
-            lblSystemStatus.setBackground(new Color(255, 100, 100)); // Rot
+            lblSystemStatus.setBackground(new Color(255, 100, 100)); // Red
             lblSystemStatus.setForeground(Color.WHITE);
             btnToggleMaintenance.setText("Wartungsmodus deaktivieren (Online gehen)");
         } else {
             lblSystemStatus.setText("SYSTEMSTATUS: ONLINE");
-            lblSystemStatus.setBackground(new Color(100, 200, 100)); // Grün
+            lblSystemStatus.setBackground(new Color(100, 200, 100)); // Green
             lblSystemStatus.setForeground(Color.BLACK);
             btnToggleMaintenance.setText("Wartungsmodus aktivieren (Sperren)");
         }
 
+        // This call might be needed to update other parts of the application,
+        // e.g., a global status bar in the main window.
         UIController.getInstance().updateMainWindow();
     }
 
     private void log(String message) {
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         logArea.append("[" + time + "] " + message + "\n");
-        // Auto-Scroll nach unten
+        // Auto-scroll to the bottom
         logArea.setCaretPosition(logArea.getDocument().getLength());
     }
 
@@ -131,5 +134,16 @@ public class AdminControlPanelView extends JPanel implements View {
     @Override
     public boolean equals(View view) {
         return view != null && view.getViewId().equals(getViewId());
+    }
+
+    /**
+     * Refreshes the view's components by re-fetching data from the core services.
+     * This is typically called when the view becomes visible (e.g., tab is selected)
+     * to ensure it displays the most current system state.
+     */
+    @Override
+    public void updateSelf() {
+        log("Ansicht wird aktualisiert...");
+        updateStatusDisplay();
     }
 }

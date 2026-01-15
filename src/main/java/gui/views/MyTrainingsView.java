@@ -22,6 +22,7 @@ public class MyTrainingsView extends JPanel implements View {
     private DefaultTableModel openModel;
     private JTable historyTable;
     private DefaultTableModel historyModel;
+    private SkillHistoryPanel mySkillsPanel; // Reference to the skills panel
 
     public MyTrainingsView() {
         setLayout(new BorderLayout());
@@ -41,23 +42,24 @@ public class MyTrainingsView extends JPanel implements View {
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Offene Schulungen", createOpenTrainingsPanel());
         tabbedPane.addTab("Historie (Erledigt)", createHistoryPanel());
-        // NEU: Tab für die Skill-Übersicht hinzufügen
         tabbedPane.addTab("Meine Skills", createMySkillsPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
     }
 
     private JPanel createMySkillsPanel() {
-        // Die SkillHistoryPanel ist eine eigenständige Komponente.
-        // Für die Ansicht des eigenen Profils ist sie immer schreibgeschützt.
-        SkillHistoryPanel panel = new SkillHistoryPanel(this.currentUser, false);
-        return panel;
+        // The SkillHistoryPanel is a self-contained component.
+        // For viewing one's own profile, it's always read-only.
+        // We store the instance to be able to refresh it later.
+        this.mySkillsPanel = new SkillHistoryPanel(this.currentUser, false);
+        return this.mySkillsPanel;
     }
 
     private JPanel createOpenTrainingsPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        String[] columns = {"Schulung", "Beschreibung", "Zugewiesen am"};
+        // FIX: Add ID as the first column to the model
+        String[] columns = {"ID", "Schulung", "Beschreibung", "Zugewiesen am"};
         openModel = new DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int row, int col) { return false; }
         };
@@ -65,6 +67,8 @@ public class MyTrainingsView extends JPanel implements View {
         openTable = new JTable(openModel);
         openTable.setRowHeight(25);
         openTable.getTableHeader().setReorderingAllowed(false);
+        // FIX: Hide the ID column from the user
+        openTable.removeColumn(openTable.getColumnModel().getColumn(0));
 
         panel.add(new JScrollPane(openTable), BorderLayout.CENTER);
 
@@ -105,45 +109,53 @@ public class MyTrainingsView extends JPanel implements View {
         if (tm == null) return;
 
         ArrayList<TrainingHistoryEntry> history = tm.getTrainingHistory();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         for (TrainingHistoryEntry entry : history) {
-            String title = "Unbekannt";
+            String title = "Unbekannt (ID: " + entry.getTrainingId() + ")";
             String description = "-";
 
             Training t = ServiceLocator.getTrainingContainer().getTrainingById(entry.getTrainingId());
-            if (t != null) title = t.getTitle();
-            if (t != null) description = t.getDescription();
+            if (t != null) {
+                title = t.getTitle();
+                description = t.getDescription();
+            }
 
             if (entry.getStatus() == null || entry.getStatus() == Status.OPEN) {
+                // Now correctly adds 4 items to the 4-column model
                 openModel.addRow(new Object[]{
                         entry.getTrainingId(),
                         title,
                         description,
-                        entry.getAssignedAt()
+                        entry.getAssignedAt().format(formatter)
                 });
             } else if (entry.getStatus() == Status.DONE) {
                 String completedStr = (entry.getCompletedAt() != null)
-                        ? entry.getCompletedAt().format(DateTimeFormatter.ISO_DATE)
+                        ? entry.getCompletedAt().format(formatter)
                         : "-";
 
                 historyModel.addRow(new Object[]{
                         title,
                         completedStr,
-                        "Anzeigen" // Platzhalter Button TODO später noch austauschen gegen was wirklich gebrauchtes (maybe)
+                        "Anzeigen" // Placeholder
                 });
             }
         }
     }
 
     private void completeSelectedTraining() {
-        int selectedRow = openTable.getSelectedRow();
-        if (selectedRow == -1) {
+        int selectedViewRow = openTable.getSelectedRow();
+        if (selectedViewRow == -1) {
             JOptionPane.showMessageDialog(this, "Bitte eine Schulung auswählen.");
             return;
         }
 
-        int trainingId = (int) openModel.getValueAt(selectedRow, 0);
-        String trainingTitle = (String) openModel.getValueAt(selectedRow, 1);
+        // Convert view index to model index to be safe
+        int modelRow = openTable.convertRowIndexToModel(selectedViewRow);
+
+        // FIX: Get ID from column 0, Title from column 1
+        int trainingId = (int) openModel.getValueAt(modelRow, 0);
+        String trainingTitle = (String) openModel.getValueAt(modelRow, 1);
 
         int confirm = JOptionPane.showConfirmDialog(this,
                 "Haben Sie '" + trainingTitle + "' wirklich abgeschlossen?",
@@ -155,7 +167,7 @@ public class MyTrainingsView extends JPanel implements View {
                 tm.completeTraining(trainingId, LocalDate.now());
 
                 JOptionPane.showMessageDialog(this, "Erledigt! In Historie verschoben.");
-                loadData();
+                loadData(); // Refresh the tables
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
@@ -167,4 +179,27 @@ public class MyTrainingsView extends JPanel implements View {
     @Override public String getViewTabTitle() { return "Meine Schulungen"; }
     @Override public JPanel getContent() { return this; }
     @Override public boolean equals(View view) { return view != null && view.getViewId().equals(getViewId()); }
+
+    /**
+     * Refreshes all data displayed in this view.
+     * This reloads the list of open and completed trainings, and also
+     * triggers an update of the "My Skills" panel.
+     */
+    @Override
+    public void updateSelf() {
+        // 1. Re-fetch the current user from the session to ensure data is fresh.
+        this.currentUser = ServiceLocator.getSessionManager().getCurrentUser();
+
+        // 2. Reload data for the training tables.
+        loadData();
+
+        // 3. Trigger a refresh of the contained skills panel.
+        //    (This assumes SkillHistoryPanel has a public loadData() method).
+        if (this.mySkillsPanel != null) {
+            // The panel might need the latest user object reference if it has changed.
+            // A more robust implementation of SkillHistoryPanel might have a `setUser(e)` method.
+            // For now, we assume calling its own loadData is sufficient.
+            this.mySkillsPanel.loadData();
+        }
+    }
 }

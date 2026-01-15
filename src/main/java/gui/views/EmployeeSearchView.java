@@ -28,26 +28,26 @@ public class EmployeeSearchView extends JPanel implements View {
     public EmployeeSearchView() {
         setLayout(new BorderLayout());
 
-        // 1. Berechtigung prüfen
+        // 1. Check permissions
         String role = ServiceLocator.getSessionManager().getUserPermission();
         if (role == null) role = "GUEST";
         role = role.toUpperCase();
 
         this.isPrivileged = role.contains("HR") || role.contains("ADMIN") || role.contains("LEAD");
 
-        // 2. UI aufbauen
+        // 2. Build UI
         initUI();
 
-        // 3. Daten laden (Initial alle anzeigen)
+        // 3. Load initial data
         searchEmployees();
     }
 
     private void initUI() {
-        // --- HEADER: Filterleiste ---
+        // --- HEADER: Filter Panel ---
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        // Suche Name (Live-Suche)
+        // Name Search (Live Search)
         filterPanel.add(new JLabel("Name:"));
         txtSearchEmployee = new JTextField(15);
         txtSearchEmployee.getDocument().addDocumentListener(new DocumentListener() {
@@ -57,36 +57,45 @@ public class EmployeeSearchView extends JPanel implements View {
         });
         filterPanel.add(txtSearchEmployee);
 
-        // Filter Abteilung
+        // Department Filter
         filterPanel.add(new JLabel("Abteilung:"));
         comboFilterDepartment = new JComboBox<>();
-        initDepartmentCombo();
+        refreshDepartmentCombo(); // Use the new refresh method
         comboFilterDepartment.addActionListener(e -> searchEmployees());
         filterPanel.add(comboFilterDepartment);
 
-        // Button (Optional durch Live-Suche)
+        // Search Button (optional due to live search)
         btnSearch = new JButton("Suchen");
         btnSearch.addActionListener(e -> searchEmployees());
         filterPanel.add(btnSearch);
 
         add(filterPanel, BorderLayout.NORTH);
 
-        // --- CENTER: Tabelle ---
+        // --- CENTER: Table ---
         initTable();
         JScrollPane scrollPane = new JScrollPane(employeeResultTable);
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    private void initDepartmentCombo() {
+    private void refreshDepartmentCombo() {
+        // --- Preserve current selection ---
+        Object selectedItem = comboFilterDepartment.getSelectedItem();
+
+        // --- Repopulate the combo box ---
+        comboFilterDepartment.removeAllItems();
         comboFilterDepartment.addItem(new DepartmentItem(null)); // "Alle Abteilungen"
         for (Department dept : ServiceLocator.getDepartmentContainer().getDepartments()) {
             comboFilterDepartment.addItem(new DepartmentItem(dept));
         }
+
+        // --- Restore selection if it still exists ---
+        if (selectedItem != null) {
+            comboFilterDepartment.setSelectedItem(selectedItem);
+        }
     }
 
     private void initTable() {
-        // Spalten definieren
-        // WICHTIG: "ID" muss dabei sein, damit wir wissen, wen wir öffnen sollen.
+        // Define columns
         ArrayList<String> columns = new ArrayList<>();
         columns.add("ID");
         columns.add("Nachname");
@@ -102,7 +111,7 @@ public class EmployeeSearchView extends JPanel implements View {
         tableModel = new DefaultTableModel(columns.toArray(), 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Tabelle nicht editierbar
+                return false; // Table not editable
             }
         };
 
@@ -110,7 +119,10 @@ public class EmployeeSearchView extends JPanel implements View {
         employeeResultTable.setRowHeight(25);
         employeeResultTable.getTableHeader().setReorderingAllowed(false);
 
-        // --- DOPPELKLICK LOGIK (Hier lag wahrscheinlich der Fehler) ---
+        // Hide the ID column from the user, but keep it in the model
+        employeeResultTable.removeColumn(employeeResultTable.getColumnModel().getColumn(0));
+
+        // Double-click logic
         employeeResultTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -138,7 +150,7 @@ public class EmployeeSearchView extends JPanel implements View {
                     emp.getFirstName().toLowerCase().contains(searchText) ||
                     emp.getUsername().toLowerCase().contains(searchText);
 
-            // Filter: Abteilung
+            // Filter: Department
             boolean deptMatch = true;
             String deptName = "Keine Abteilung";
 
@@ -153,10 +165,10 @@ public class EmployeeSearchView extends JPanel implements View {
                 deptMatch = false;
             }
 
+            // Don't show the currently logged-in user in the search results
             if (nameMatch && deptMatch && emp.getId() != ServiceLocator.getSessionManager().getCurrentUser().getId()) {
                 ArrayList<Object> rowData = new ArrayList<>();
                 rowData.add(emp.getId());
-
                 rowData.add(emp.getLastName());
                 rowData.add(emp.getFirstName());
                 rowData.add(deptName);
@@ -179,14 +191,16 @@ public class EmployeeSearchView extends JPanel implements View {
     }
 
     private void openSelectedProfile() {
-        int row = employeeResultTable.getSelectedRow();
-        if (row == -1) return;
+        int selectedViewRow = employeeResultTable.getSelectedRow();
+        if (selectedViewRow == -1) return;
 
-        // WICHTIG: Wir holen die ID aus Spalte 0
-        Object idObj = tableModel.getValueAt(row, 0);
+        // Convert view index to model index in case columns are sorted/moved
+        int modelRow = employeeResultTable.convertRowIndexToModel(selectedViewRow);
+
+        // Get the ID from column 0 of the model
+        Object idObj = tableModel.getValueAt(modelRow, 0);
         int empId = Integer.parseInt(idObj.toString());
 
-        // Aufruf des Controllers mit ID (int)
         UIController.getInstance().openEmployeeDetailTab(empId);
     }
 
@@ -194,15 +208,47 @@ public class EmployeeSearchView extends JPanel implements View {
         Department dept;
         public DepartmentItem(Department d) { this.dept = d; }
         @Override public String toString() { return (dept == null) ? "Alle Abteilungen" : dept.getName(); }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            DepartmentItem that = (DepartmentItem) o;
+            if (dept == null) return that.dept == null;
+            if (that.dept == null) return false;
+            return dept.getId() == that.dept.getId();
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(dept != null ? dept.getId() : -1);
+        }
     }
 
     @Override public String getViewId() { return "employee-search-view"; }
     @Override public String getViewTabTitle() { return "Mitarbeitersuche"; }
     @Override public JPanel getContent() { return this; }
+
+    // The equals method can be simplified as its complexity is not needed for simple view management.
     @Override public boolean equals(View view) {
         if (view == null) return false;
         if (!view.getViewId().equals(getViewId())) return false;
         if (!((EmployeeSearchView) view).txtSearchEmployee.getText().equals(this.txtSearchEmployee.getText())) return false;
         return Objects.equals(Objects.requireNonNull(((EmployeeSearchView) view).comboFilterDepartment.getSelectedItem()).toString(), Objects.requireNonNull(this.comboFilterDepartment.getSelectedItem()).toString());
+    }
+
+    /**
+     * Refreshes the view by reloading data from core services.
+     * This updates the department filter dropdown and re-runs the search
+     * to update the results table, while preserving the user's filter criteria.
+     */
+    @Override
+    public void updateSelf() {
+        // 1. Refresh the department filter dropdown, preserving the current selection.
+        refreshDepartmentCombo();
+
+        // 2. Re-run the search. This will use the current search text and the
+        //    (potentially newly selected or restored) department filter to refresh the table.
+        searchEmployees();
     }
 }

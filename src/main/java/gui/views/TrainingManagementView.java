@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TrainingManagementView extends JPanel implements View {
 
@@ -28,34 +29,19 @@ public class TrainingManagementView extends JPanel implements View {
     public TrainingManagementView() {
         this.sessionManager = ServiceLocator.getSessionManager();
 
-        // Rolle sicher abrufen
+        // Safely get the role
         String role = sessionManager.getUserPermission();
-        this.currentUserRole = (role != null) ? role : "GUEST";
+        this.currentUserRole = (role != null) ? role.toUpperCase() : "GUEST";
 
-        // User Hack (wie besprochen)
-        this.currentUser = findCurrentUserHack();
+        // Get the current user
+        this.currentUser = sessionManager.getCurrentUser();
 
         setLayout(new BorderLayout());
         initUI();
     }
 
-    // NEUE HELPER-METHODE für klarere Berechtigungsprüfung
     private boolean isPrivilegedAdminOrHR() {
-        if (currentUserRole == null) return false;
-        String r = currentUserRole.toUpperCase();
-        return r.contains("ADMIN") || r.contains("HR");
-    }
-
-    private Employee findCurrentUserHack() {
-        String fullName = sessionManager.getUserFirstNameAndLastName();
-        if (fullName == null) return null;
-        // Einfache Suche (Vorsicht bei gleichen Namen)
-        for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
-            if ((e.getFirstName() + e.getLastName()).equalsIgnoreCase(fullName.replace(" ", ""))) {
-                return e;
-            }
-        }
-        return null; // Fallback
+        return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR");
     }
 
     private void initUI() {
@@ -65,37 +51,30 @@ public class TrainingManagementView extends JPanel implements View {
 
         innerTabbedPane = new JTabbedPane();
 
-        // 1. Tab: Schulungskatalog (Immer sichtbar)
+        // Tab 1: Training Catalog (always visible)
         innerTabbedPane.addTab("Schulungskatalog", createCatalogPanel());
 
-        // 2. Tab: Team-Fortschritt
-        // Logik: Jeder mit Personalverantwortung darf das sehen
-        boolean isManager = isPrivilegedUser();
-
-        if (isManager) {
+        // Tab 2: Team Progress (visible to managers)
+        if (isPrivilegedManager()) {
             innerTabbedPane.addTab("Team-Fortschritt", createTeamProgressPanel());
         }
 
         add(innerTabbedPane, BorderLayout.CENTER);
     }
 
-    private boolean isPrivilegedUser() {
-        if (currentUserRole == null) return false;
-        String r = currentUserRole.toUpperCase();
-        return r.contains("ADMIN") || r.contains("HR") || r.contains("CEO") || r.contains("LEAD") || r.contains("MANAGER");
+    private boolean isPrivilegedManager() {
+        return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR") || currentUserRole.contains("CEO") || currentUserRole.contains("LEAD") || currentUserRole.contains("MANAGER");
     }
 
     private void openCreateTrainingDialog() {
         Window parentWindow = SwingUtilities.getWindowAncestor(this);
-        // Wir übergeben eine "Callback"-Funktion (hier als Methodenreferenz),
-        // die der Dialog nach erfolgreichem Speichern aufrufen kann,
-        // um die Tabelle zu aktualisieren.
+        // Pass a method reference as a callback to refresh the table after success.
         CreateTrainingDialog dialog = new CreateTrainingDialog(parentWindow, this::loadCatalogData);
         dialog.setVisible(true);
     }
 
     private JPanel createCatalogPanel() {
-        JPanel panel = new JPanel(new BorderLayout(0, 10)); // Abstand zwischen Tabelle und Buttons
+        JPanel panel = new JPanel(new BorderLayout(0, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         String[] columns = {"ID", "Titel", "Beschreibung", "Dauer (h)", "Skills"};
@@ -105,15 +84,12 @@ public class TrainingManagementView extends JPanel implements View {
         trainingCatalogTable = new JTable(trainingCatalogModel);
         panel.add(new JScrollPane(trainingCatalogTable), BorderLayout.CENTER);
 
-        // --- NEUER TEIL: Button-Leiste nur für HR/Admin ---
+        // Button panel only for HR/Admin
         if (isPrivilegedAdminOrHR()) {
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             JButton btnCreate = new JButton("Neues Training erstellen");
             btnCreate.addActionListener(_ -> openCreateTrainingDialog());
             buttonPanel.add(btnCreate);
-
-            // TODO: Hier könnten auch "Bearbeiten" und "Löschen" Buttons hin
-
             panel.add(buttonPanel, BorderLayout.SOUTH);
         }
 
@@ -124,7 +100,6 @@ public class TrainingManagementView extends JPanel implements View {
     private JPanel createTeamProgressPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        // Tabelle
         String[] columns = {"Mitarbeiter", "Schulung", "Status", "Datum / Info"};
         teamProgressModel = new DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int row, int col) { return false; }
@@ -132,13 +107,11 @@ public class TrainingManagementView extends JPanel implements View {
         teamProgressTable = new JTable(teamProgressModel);
         panel.add(new JScrollPane(teamProgressTable), BorderLayout.CENTER);
 
-        // Button Leiste
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnAssign = new JButton("Schulung zuweisen");
-
         btnAssign.addActionListener(e -> {
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
-            // Öffnet den Dialog und lädt danach die Tabelle neu
+            // Open the dialog and refresh the table on completion.
             new AssignTrainingDialog(parentWindow, this::loadTeamProgressData).setVisible(true);
         });
 
@@ -150,22 +123,17 @@ public class TrainingManagementView extends JPanel implements View {
     }
 
     private void loadCatalogData() {
+        if (trainingCatalogModel == null) return;
         trainingCatalogModel.setRowCount(0);
 
         for (Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
-
-            String skillsText = "-";
-
-            if (t.getSkillManager() != null && !t.getSkillManager().getSkills().isEmpty()) {
-                skillsText = t.getSkillManager().getSkills().stream()
-                        .map(entry ->
-                                ServiceLocator.getSkillContainer()
-                                        .getSkillById(entry.getSkillId())
-                        )
-                        .filter(skill -> skill != null)
-                        .map(Skill::getName)
-                        .reduce((a, b) -> a + ", " + b)
-                        .orElse("-");
+            String skillsText = t.getSkillManager().getSkills().stream()
+                    .map(entry -> ServiceLocator.getSkillContainer().getSkillById(entry.getSkillId()))
+                    .filter(skill -> skill != null)
+                    .map(Skill::getName)
+                    .collect(Collectors.joining(", "));
+            if (skillsText.isEmpty()) {
+                skillsText = "-";
             }
 
             trainingCatalogModel.addRow(new Object[]{
@@ -179,55 +147,33 @@ public class TrainingManagementView extends JPanel implements View {
     }
 
     public void loadTeamProgressData() {
+        if (teamProgressModel == null) return;
         teamProgressModel.setRowCount(0);
-        List<Employee> allEmployees = ServiceLocator.getEmployeeContainer().getEmployees();
 
-        String myRole = currentUserRole.toUpperCase();
-        boolean seeAll = myRole.contains("HR") || myRole.contains("ADMIN") || myRole.contains("CEO");
+        List<Employee> allEmployees = ServiceLocator.getEmployeeContainer().getEmployees();
+        boolean seeAll = currentUserRole.contains("HR") || currentUserRole.contains("ADMIN") || currentUserRole.contains("CEO");
 
         for (Employee emp : allEmployees) {
             boolean show = false;
-
             if (seeAll) {
                 show = true;
             } else if (currentUser != null && emp.getTeamId() == currentUser.getTeamId()) {
-                show = true; // Teamleiter sieht sein Team
+                show = true; // Team lead sees their team
             }
 
             if (show) {
-                // Wir holen die Historie
                 TrainingManager tm = emp.getTrainingManager();
                 List<TrainingHistoryEntry> history = (tm != null) ? tm.getTrainingHistory() : null;
 
-                // FALL 1: Mitarbeiter hat KEINE Schulungen
                 if (history == null || history.isEmpty()) {
-                    teamProgressModel.addRow(new Object[]{
-                            emp.getFirstName() + " " + emp.getLastName(),
-                            "-",
-                            "Keine Zuweisung",
-                            "-"
-                    });
-                }
-                // FALL 2: Mitarbeiter HAT Schulungen
-                else {
+                    teamProgressModel.addRow(new Object[]{(emp.getFirstName() + " " + emp.getLastName()), "-", "Keine Zuweisung", "-"});
+                } else {
                     for (TrainingHistoryEntry entry : history) {
-                        String title = "ID: " + entry.getTrainingId();
-                        // Titel auflösen
-                        for(Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
-                            if(t.getId() == entry.getTrainingId()) {
-                                title = t.getTitle(); break;
-                            }
-                        }
-
-                        // Status sicher abrufen (Falls Enum)
+                        Training training = ServiceLocator.getTrainingContainer().getTrainingById(entry.getTrainingId());
+                        String title = (training != null) ? training.getTitle() : "Unbekannt (ID: " + entry.getTrainingId() + ")";
                         String status = (entry.getStatus() != null) ? entry.getStatus().toString() : "OPEN";
 
-                        teamProgressModel.addRow(new Object[]{
-                                emp.getFirstName() + " " + emp.getLastName(),
-                                title,
-                                status,
-                                entry.getAssignedAt()
-                        });
+                        teamProgressModel.addRow(new Object[]{(emp.getFirstName() + " " + emp.getLastName()), title, status, entry.getAssignedAt()});
                     }
                 }
             }
@@ -238,4 +184,20 @@ public class TrainingManagementView extends JPanel implements View {
     @Override public String getViewTabTitle() { return "Schulungsverwaltung"; }
     @Override public JPanel getContent() { return this; }
     @Override public boolean equals(View view) { return view != null && view.getViewId().equals(this.getViewId()); }
+
+    /**
+     * Refreshes all data displayed in this view.
+     * This reloads the training catalog and, if visible, the team progress table.
+     */
+    @Override
+    public void updateSelf() {
+        // 1. Refresh the training catalog, which is always visible.
+        loadCatalogData();
+
+        // 2. Refresh the team progress table, but only if the user has
+        //    permissions to see it (and thus the model is not null).
+        if (teamProgressModel != null) {
+            loadTeamProgressData();
+        }
+    }
 }

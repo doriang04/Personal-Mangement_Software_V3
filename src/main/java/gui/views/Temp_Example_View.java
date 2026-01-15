@@ -32,4 +32,9 @@ public class Temp_Example_View extends JPanel implements View {
         return view.getViewId().equals(this.getViewId());
     }
 
+    @Override
+    public void updateSelf() {
+
+    }
+
 }

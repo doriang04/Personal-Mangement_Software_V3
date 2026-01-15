@@ -13,6 +13,9 @@ public class RoleHistoryView extends JPanel implements View {
     private final String tabTitle;
     private final Employee employee;
 
+    // 1. Store a reference to the child panel.
+    private RoleHistoryPanel historyPanel;
+
     public RoleHistoryView(int employeeId) {
         this.employee = findEmployeeById(employeeId);
 
@@ -30,16 +33,16 @@ public class RoleHistoryView extends JPanel implements View {
     private void initUI() {
         setLayout(new BorderLayout());
 
-        // Berechtigungen prüfen, um zu entscheiden, ob die Ansicht bearbeitbar ist
+        // Check permissions to decide if the view is editable
         boolean canEdit = checkPermissions();
 
-        RoleHistoryPanel historyPanel = new RoleHistoryPanel(employee, canEdit);
-        add(historyPanel, BorderLayout.CENTER);
+        // 2. Create and assign the panel to the class field.
+        this.historyPanel = new RoleHistoryPanel(employee, canEdit);
+        add(this.historyPanel, BorderLayout.CENTER);
     }
 
     private Employee findEmployeeById(int id) {
-        // Diese Logik ist redundant, sollte in einen Service ausgelagert werden
-        return ServiceLocator.getEmployeeContainer().getEmployeeById(id); // Annahme: Es gibt so eine Methode
+        return ServiceLocator.getEmployeeContainer().getEmployeeById(id);
     }
 
     private boolean checkPermissions() {
@@ -67,5 +70,19 @@ public class RoleHistoryView extends JPanel implements View {
     @Override
     public boolean equals(View view) {
         return view != null && view.getViewId().equals(this.getViewId());
+    }
+
+    /**
+     * Refreshes the view by delegating the update call to the contained
+     * RoleHistoryPanel. This ensures the table and form within the panel
+     * are reloaded with the latest data.
+     */
+    @Override
+    public void updateSelf() {
+        // 3. If the panel exists, tell it to reload its own data.
+        if (this.historyPanel != null) {
+            // This assumes RoleHistoryPanel has a public `loadData()` method.
+            this.historyPanel.loadData();
+        }
     }
 }

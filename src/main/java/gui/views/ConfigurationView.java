@@ -12,17 +12,29 @@ public class ConfigurationView extends JPanel implements View {
     private final String viewId = "configuration-view";
     private final String tabTitle = "Verwaltung";
 
+    // 1. Store references to the sub-panels
+    private DepartmentManagementPanel departmentPanel;
+    private TeamManagementPanel teamPanel;
+    private RoleManagementPanel rolePanel;
+    private SkillManagementPanel skillPanel;
+
     public ConfigurationView() {
         setLayout(new BorderLayout());
 
         // Haupt-Tab-Container
         JTabbedPane tabbedPane = new JTabbedPane();
 
+        // 2. Instantiate panels and assign them to the fields
+        departmentPanel = new DepartmentManagementPanel();
+        teamPanel = new TeamManagementPanel();
+        rolePanel = new RoleManagementPanel();
+        skillPanel = new SkillManagementPanel();
+
         // Tabs hinzufügen
-        tabbedPane.addTab("Abteilungen", new DepartmentManagementPanel());
-        tabbedPane.addTab("Teams", new TeamManagementPanel());
-        tabbedPane.addTab("Rollen", new RoleManagementPanel());
-        tabbedPane.addTab("Skills", new SkillManagementPanel());
+        tabbedPane.addTab("Abteilungen", departmentPanel);
+        tabbedPane.addTab("Teams", teamPanel);
+        tabbedPane.addTab("Rollen", rolePanel);
+        tabbedPane.addTab("Skills", skillPanel);
 
         add(tabbedPane, BorderLayout.CENTER);
     }
@@ -38,8 +50,24 @@ public class ConfigurationView extends JPanel implements View {
 
     @Override
     public boolean equals(View view) {
-        return view.getViewId().equals(this.getViewId());
+        return view != null && view.getViewId().equals(this.getViewId());
     }
+
+    /**
+     * Refreshes the view by telling all its child tabs to reload their data
+     * from the ServiceLocator. This ensures that all lists and dropdowns
+     * are up-to-date.
+     */
+    @Override
+    public void updateSelf() {
+        // 3. Call the loadData() method on each sub-panel
+        departmentPanel.loadData();
+        teamPanel.loadData();
+        rolePanel.loadData();
+        skillPanel.loadData();
+    }
+
+    // --- Inner classes remain unchanged ---
 
     /**
      * Tab 1: Abteilungen (Departments)
@@ -101,35 +129,27 @@ public class ConfigurationView extends JPanel implements View {
             loadData();
         }
 
-        private void loadData() {
+        public void loadData() {
             listModel.clear();
-            for (Department d : ServiceLocator.getDepartmentContainer().getDepartments()) {
-                listModel.addElement(d);
-            }
+            ServiceLocator.getDepartmentContainer().getDepartments().forEach(listModel::addElement);
+
             // Fülle ComboBox für Companies
             cbCompany.removeAllItems();
-            for (Company c : ServiceLocator.getCompanyContainer().getCompanies()) {
-                cbCompany.addItem(c);
-            }
+            ServiceLocator.getCompanyContainer().getCompanies().forEach(cbCompany::addItem);
         }
 
         private void addNew() {
             String name = txtName.getText().trim();
             Company selectedCompany = (Company) cbCompany.getSelectedItem();
 
-            // Validierung
             if (name.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Name darf nicht leer sein.");
                 return;
             }
 
             int companyId = (selectedCompany != null) ? selectedCompany.getId() : 0;
-
-            // Modell erstellen
             Department newDept = new Department(name, companyId);
-
             ServiceLocator.getDepartmentContainer().addDepartment(newDept);
-
             txtName.setText("");
             loadData();
         }
@@ -138,7 +158,9 @@ public class ConfigurationView extends JPanel implements View {
             Department selected = list.getSelectedValue();
             if (selected == null) return;
 
-            boolean isReferenced = ServiceLocator.getTeamContainer().getTeamById(selected.getId()) == null;
+            // Check if department is referenced by any team.
+            boolean isReferenced = ServiceLocator.getTeamContainer().getTeams().stream()
+                    .anyMatch(team -> team.getDepartmentId() == selected.getId());
 
             if (isReferenced) {
                 JOptionPane.showMessageDialog(this, "Kann nicht gelöscht werden!\nEs existieren noch Teams in dieser Abteilung.", "Fehler", JOptionPane.ERROR_MESSAGE);
@@ -206,12 +228,12 @@ public class ConfigurationView extends JPanel implements View {
             loadData();
         }
 
-        private void loadData() {
+        public void loadData() {
             listModel.clear();
-            for (Team t : ServiceLocator.getTeamContainer().getTeams()) listModel.addElement(t);
+            ServiceLocator.getTeamContainer().getTeams().forEach(listModel::addElement);
 
             cbDepartment.removeAllItems();
-            for (Department d : ServiceLocator.getDepartmentContainer().getDepartments()) cbDepartment.addItem(d);
+            ServiceLocator.getDepartmentContainer().getDepartments().forEach(cbDepartment::addItem);
         }
 
         private void addNew() {
@@ -228,12 +250,8 @@ public class ConfigurationView extends JPanel implements View {
             Team selected = list.getSelectedValue();
             if (selected == null) return;
 
-            boolean used = false;
-            for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
-                if (e.getTeamId() == selected.getId()) {
-                    used = true; break;
-                }
-            }
+            boolean used = ServiceLocator.getEmployeeContainer().getEmployees().stream()
+                    .anyMatch(e -> e.getTeamId() == selected.getId());
 
             if (used) {
                 JOptionPane.showMessageDialog(this, "Team kann nicht gelöscht werden, da Mitarbeiter zugewiesen sind.", "Fehler", JOptionPane.ERROR_MESSAGE);
@@ -301,9 +319,9 @@ public class ConfigurationView extends JPanel implements View {
             loadData();
         }
 
-        private void loadData() {
+        public void loadData() {
             listModel.clear();
-            for(Role r : ServiceLocator.getRoleContainer().getRoles()) listModel.addElement(r);
+            ServiceLocator.getRoleContainer().getRoles().forEach(listModel::addElement);
         }
 
         private void addNew() {
@@ -319,15 +337,15 @@ public class ConfigurationView extends JPanel implements View {
             Role selected = list.getSelectedValue();
             if (selected == null) return;
 
-            boolean used = false;
-            for(Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
-                try {
-                    if (e.getRoleManager().getActiveRole() != null &&
-                            e.getRoleManager().getActiveRole().getId() == selected.getId()) {
-                        used = true; break;
-                    }
-                } catch (Exception _) { }
-            }
+            boolean used = ServiceLocator.getEmployeeContainer().getEmployees().stream()
+                    .anyMatch(e -> {
+                        try {
+                            Role activeRole = e.getRoleManager().getActiveRole();
+                            return activeRole != null && activeRole.getId() == selected.getId();
+                        } catch (Exception ex) {
+                            return false;
+                        }
+                    });
 
             if(used) {
                 JOptionPane.showMessageDialog(this, "Rolle wird noch von Mitarbeitern verwendet!", "Fehler", JOptionPane.ERROR_MESSAGE);
@@ -396,9 +414,9 @@ public class ConfigurationView extends JPanel implements View {
             loadData();
         }
 
-        private void loadData() {
+        public void loadData() {
             listModel.clear();
-            for(Skill s : ServiceLocator.getSkillContainer().getSkills()) listModel.addElement(s);
+            ServiceLocator.getSkillContainer().getSkills().forEach(listModel::addElement);
         }
 
         private void addNew() {
@@ -414,14 +432,14 @@ public class ConfigurationView extends JPanel implements View {
             Skill selected = list.getSelectedValue();
             if(selected == null) return;
 
-            boolean used = false;
-            for(Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
-                if(e.getSkillManager().getSkillById(selected.getId()) != null) { used = true; break; }
-            }
+            boolean used = ServiceLocator.getEmployeeContainer().getEmployees().stream()
+                    .anyMatch(e -> e.getSkillManager().getSkillById(selected.getId()) != null);
+
             if(used) {
                 JOptionPane.showMessageDialog(this, "Kann nicht gelöscht werden!\nEs existieren noch Mitarbeiter mit diesem Skill.", "Fehler", JOptionPane.ERROR_MESSAGE);
             } else {
                 ServiceLocator.getSkillContainer().removeSkill(selected);
+                loadData(); // Added this line to refresh the list after successful deletion
             }
         }
     }
