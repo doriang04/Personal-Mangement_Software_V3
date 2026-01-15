@@ -1,6 +1,7 @@
 package gui.views;
 
 import core.ServiceLocator;
+import gui.components.SkillHistoryPanel;
 import model.*;
 import model.TrainingManager.TrainingHistoryEntry;
 import model.TrainingManager.Status;
@@ -40,8 +41,17 @@ public class MyTrainingsView extends JPanel implements View {
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Offene Schulungen", createOpenTrainingsPanel());
         tabbedPane.addTab("Historie (Erledigt)", createHistoryPanel());
+        // NEU: Tab für die Skill-Übersicht hinzufügen
+        tabbedPane.addTab("Meine Skills", createMySkillsPanel());
 
         add(tabbedPane, BorderLayout.CENTER);
+    }
+
+    private JPanel createMySkillsPanel() {
+        // Die SkillHistoryPanel ist eine eigenständige Komponente.
+        // Für die Ansicht des eigenen Profils ist sie immer schreibgeschützt.
+        SkillHistoryPanel panel = new SkillHistoryPanel(this.currentUser, false);
+        return panel;
     }
 
     private JPanel createOpenTrainingsPanel() {

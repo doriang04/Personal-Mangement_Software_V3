@@ -2,6 +2,7 @@ package gui.views;
 
 import core.ServiceLocator;
 import gui.components.RoleHistoryPanel;
+import gui.components.SkillHistoryPanel;
 import model.Employee;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class MyProfileView extends JPanel implements View {
     private JTextField txtUsername;
     private JTextField txtRole;
     private JTextField txtTeam;
+    private JTextField txtSkills; // NEU: Feld für Skill-Informationen
 
     // Footer Komponenten
     private JButton btnPrimaryAction;
@@ -65,6 +67,7 @@ public class MyProfileView extends JPanel implements View {
         txtUsername = createReadOnlyField();
         txtRole = createReadOnlyField();
         txtTeam = createReadOnlyField();
+        txtSkills = createReadOnlyField(); // NEU: Initialisierung des Skill-Feldes
 
         txtFirstName = new JTextField(20);
         txtLastName = new JTextField(20);
@@ -86,6 +89,17 @@ public class MyProfileView extends JPanel implements View {
         rolePanel.add(btnHistory, BorderLayout.EAST);
         addFormRow(formPanel, gbc, row++, "Rolle:", rolePanel);
 
+        // --- NEUER ABSCHNITT FÜR SKILLS ---
+        JPanel skillPanel = new JPanel(new BorderLayout(5, 0));
+        skillPanel.add(txtSkills, BorderLayout.CENTER);
+        JButton btnSkillHistory = new JButton("Historie");
+        btnSkillHistory.setMargin(new Insets(2, 5, 2, 5));
+        // Für das eigene Profil ist die Ansicht immer schreibgeschützt.
+        btnSkillHistory.addActionListener(_ -> showSkillHistoryDialog(false));
+        skillPanel.add(btnSkillHistory, BorderLayout.EAST);
+        addFormRow(formPanel, gbc, row++, "Skills:", skillPanel);
+        // --- ENDE NEUER ABSCHNITT ---
+
         addFormRow(formPanel, gbc, row++, "Team / Abteilung:", txtTeam);
 
         JSeparator sep = new JSeparator();
@@ -102,7 +116,7 @@ public class MyProfileView extends JPanel implements View {
 
         add(new JScrollPane(formPanel), BorderLayout.CENTER);
 
-        // --- DYNAMISCHER FOOTER ---
+        // ... (rest of the method is unchanged)
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         lblUnsavedChanges = new JLabel("* Ungespeicherte Änderungen");
         lblUnsavedChanges.setForeground(Color.BLUE.darker());
@@ -258,6 +272,16 @@ public class MyProfileView extends JPanel implements View {
             roleName = currentUser.getRoleManager().getActiveRole().getName();
         }
         txtRole.setText(roleName);
+
+        // --- NEUE ZEILEN FÜR SKILLS ---
+        String skillsInfo = "-";
+        if (currentUser.getSkillManager() != null) {
+            int activeSkillsCount = currentUser.getSkillManager().getActiveSkills().size();
+            skillsInfo = activeSkillsCount + (activeSkillsCount == 1 ? " aktiver Skill" : " aktive Skills");
+        }
+        txtSkills.setText(skillsInfo);
+        // --- ENDE NEUE ZEILEN ---
+
         txtTeam.setText("Team-ID: " + currentUser.getTeamId());
         txtFirstName.setText(currentUser.getFirstName());
         txtLastName.setText(currentUser.getLastName());
@@ -277,6 +301,31 @@ public class MyProfileView extends JPanel implements View {
         historyDialog.setContentPane(panel);
         historyDialog.setSize(600, 400);
         historyDialog.setLocationRelativeTo(this);
+        historyDialog.setVisible(true);
+    }
+
+    /**
+     * Opens a dialog to show the skill history for the current user.
+     * @param isEditable Determines if the user can add, edit, or delete entries.
+     *                   Should be 'true' for HR/admins and 'false' for regular employees.
+     */
+    private void showSkillHistoryDialog(boolean isEditable) {
+        // Assuming 'this.currentUser' is the currently logged-in Employee object
+        if (this.currentUser == null) {
+            JOptionPane.showMessageDialog(this, "Kein Benutzer ausgewählt.", "Fehler", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JDialog historyDialog = new JDialog(
+                (Frame) SwingUtilities.getWindowAncestor(this),
+                "Meine Skill-Historie",
+                Dialog.ModalityType.APPLICATION_MODAL);
+
+        SkillHistoryPanel panel = new SkillHistoryPanel(this.currentUser, isEditable);
+
+        historyDialog.setContentPane(panel);
+        historyDialog.setSize(700, 450); // A bit wider to accommodate the description
+        historyDialog.setLocationRelativeTo(this); // Center on the parent window
         historyDialog.setVisible(true);
     }
 

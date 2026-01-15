@@ -2,6 +2,7 @@ package gui.views;
 
 import core.ServiceLocator;
 import gui.components.RoleHistoryPanel;
+import gui.components.SkillHistoryPanel;
 import model.*;
 
 import javax.swing.*;
@@ -27,6 +28,7 @@ public class EmployeeDetailView extends JPanel implements View {
     private JComboBox<TeamItem> cbTeam;
     private JComboBox<RoleItem> cbRole;
     private JButton btnShowRoleHistory;
+    private JButton btnShowSkillHistory; // NEU: Button für Skill-Historie
 
     // Footer Komponenten
     private JButton btnPrimaryAction; // Wird zu "Bearbeiten", "Speichern", "Verlassen"
@@ -134,14 +136,24 @@ public class EmployeeDetailView extends JPanel implements View {
         addFormRow(formPanel, gbc, row++, "Abteilung / Team:", cbTeam);
         addFormRow(formPanel, gbc, row++, "Aktuelle Rolle:", cbRole);
 
-        // Der Button wird nur angezeigt, wenn ein Mitarbeiter existiert (was hier immer der Fall ist)
+        JPanel historyButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        historyButtonPanel.setOpaque(false); // Transparenter Hintergrund
+
         btnShowRoleHistory = new JButton("Rollenhistorie...");
         btnShowRoleHistory.addActionListener(_ -> showRoleHistoryDialog());
+        historyButtonPanel.add(btnShowRoleHistory);
+
+        // NEU: Button für Skill-Historie hinzufügen
+        btnShowSkillHistory = new JButton("Skill-Historie...");
+        btnShowSkillHistory.addActionListener(_ -> showSkillHistoryDialog());
+        historyButtonPanel.add(btnShowSkillHistory);
+
         gbc.gridx = 1;
         gbc.gridy = row++;
         gbc.anchor = GridBagConstraints.EAST;
         gbc.fill = GridBagConstraints.NONE;
-        formPanel.add(btnShowRoleHistory, gbc);
+        formPanel.add(historyButtonPanel, gbc);
+        // -- ENDE DES GEÄNDERTEN BLOCKS --
 
         add(new JScrollPane(formPanel), BorderLayout.CENTER);
 
@@ -363,6 +375,22 @@ public class EmployeeDetailView extends JPanel implements View {
                 }
             }
         }
+    }
+
+    private void showSkillHistoryDialog() {
+        JDialog historyDialog = new JDialog(
+                (Frame) SwingUtilities.getWindowAncestor(this), "Skill-Historie", Dialog.ModalityType.APPLICATION_MODAL);
+
+        // Das Panel ist nur editierbar, wenn der Benutzer die Rechte hat UND der Bearbeitungsmodus aktiv ist.
+        SkillHistoryPanel panel = new SkillHistoryPanel(this.employee, this.canEdit && this.isInEditMode);
+
+        historyDialog.setContentPane(panel);
+        historyDialog.setSize(700, 450);
+        historyDialog.setLocationRelativeTo(this);
+        historyDialog.setVisible(true);
+
+        // Nach dem Schließen des Dialogs ist hier keine Aktualisierung der Hauptfelder
+        // notwendig, im Gegensatz zur Rollenhistorie.
     }
 
     // Unveränderte Helper-Klassen und Interface-Methoden

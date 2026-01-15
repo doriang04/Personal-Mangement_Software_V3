@@ -178,6 +178,16 @@ public class SkillManager {
         }
     }
 
+    /**
+     * Removes a specific skill history entry from the employee's record.
+     * @param entryToRemove The entry to be removed.
+     */
+    public void removeSkillEntry(SkillHistoryEntry entryToRemove) {
+        if (entryToRemove != null) {
+            skillHistory.remove(entryToRemove);
+        }
+    }
+
     public boolean hasReferences() {
         // TODO write out this method
         return false;
