@@ -2,6 +2,7 @@ package gui.views;
 
 import core.ServiceLocator;
 import core.SessionManager;
+import gui.UIController; // Import the UIController
 import gui.components.AssignTrainingDialog;
 import gui.components.CreateTrainingDialog;
 import model.*;
@@ -68,8 +69,9 @@ public class TrainingManagementView extends JPanel implements View {
 
     private void openCreateTrainingDialog() {
         Window parentWindow = SwingUtilities.getWindowAncestor(this);
-        // Pass a method reference as a callback to refresh the table after success.
-        CreateTrainingDialog dialog = new CreateTrainingDialog(parentWindow, this::loadCatalogData);
+        // The dialog will modify the training data. The callback should trigger a global
+        // UI refresh to ensure all views are updated, not just this one.
+        CreateTrainingDialog dialog = new CreateTrainingDialog(parentWindow, () -> UIController.getInstance().updateMainWindow());
         dialog.setVisible(true);
     }
 
@@ -111,8 +113,9 @@ public class TrainingManagementView extends JPanel implements View {
         JButton btnAssign = new JButton("Schulung zuweisen");
         btnAssign.addActionListener(e -> {
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
-            // Open the dialog and refresh the table on completion.
-            new AssignTrainingDialog(parentWindow, this::loadTeamProgressData).setVisible(true);
+            // Assigning a training modifies employee data. Trigger a global UI refresh
+            // on success to update all views that might depend on this data.
+            new AssignTrainingDialog(parentWindow, () -> UIController.getInstance().updateMainWindow()).setVisible(true);
         });
 
         buttonPanel.add(btnAssign);

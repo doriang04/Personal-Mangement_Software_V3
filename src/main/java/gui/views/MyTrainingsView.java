@@ -1,6 +1,7 @@
 package gui.views;
 
 import core.ServiceLocator;
+import gui.UIController; // Import the UIController
 import gui.components.SkillHistoryPanel;
 import model.*;
 import model.TrainingManager.TrainingHistoryEntry;
@@ -51,7 +52,8 @@ public class MyTrainingsView extends JPanel implements View {
         // The SkillHistoryPanel is a self-contained component.
         // For viewing one's own profile, it's always read-only.
         // We store the instance to be able to refresh it later.
-        this.mySkillsPanel = new SkillHistoryPanel(this.currentUser, false);
+        // As it is read-only here, we don't need to pass a data-change callback.
+        this.mySkillsPanel = new SkillHistoryPanel(this.currentUser, false, null);
         return this.mySkillsPanel;
     }
 
@@ -166,8 +168,11 @@ public class MyTrainingsView extends JPanel implements View {
                 TrainingManager tm = currentUser.getTrainingManager();
                 tm.completeTraining(trainingId, LocalDate.now());
 
+                // After successfully changing the underlying data model,
+                // trigger a global UI refresh.
+                UIController.getInstance().updateMainWindow();
+
                 JOptionPane.showMessageDialog(this, "Erledigt! In Historie verschoben.");
-                loadData(); // Refresh the tables
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
@@ -196,9 +201,9 @@ public class MyTrainingsView extends JPanel implements View {
         // 3. Trigger a refresh of the contained skills panel.
         //    (This assumes SkillHistoryPanel has a public loadData() method).
         if (this.mySkillsPanel != null) {
-            // The panel might need the latest user object reference if it has changed.
-            // A more robust implementation of SkillHistoryPanel might have a `setUser(e)` method.
-            // For now, we assume calling its own loadData is sufficient.
+            // A more robust implementation of SkillHistoryPanel would have a `setUser(e)` and `loadData()` method.
+            // We need to ensure it's showing the most recent user data.
+            this.mySkillsPanel.updateEmployee(this.currentUser);
             this.mySkillsPanel.loadData();
         }
     }

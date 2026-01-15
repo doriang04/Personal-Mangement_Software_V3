@@ -1,6 +1,7 @@
 package gui.views;
 
 import core.ServiceLocator;
+import gui.UIController; // Import the UIController
 import gui.components.RoleHistoryPanel;
 import model.Employee;
 
@@ -36,8 +37,13 @@ public class RoleHistoryView extends JPanel implements View {
         // Check permissions to decide if the view is editable
         boolean canEdit = checkPermissions();
 
-        // 2. Create and assign the panel to the class field.
-        this.historyPanel = new RoleHistoryPanel(employee, canEdit);
+        // 2. Create the panel. The RoleHistoryPanel is responsible for modifying the data.
+        // We pass it a callback to execute after a successful modification. This callback
+        // triggers a global UI refresh, ensuring all views update consistently.
+        // This assumes the RoleHistoryPanel constructor accepts a Runnable callback.
+        Runnable onDataChangedCallback = () -> UIController.getInstance().updateMainWindow();
+        this.historyPanel = new RoleHistoryPanel(employee, canEdit, onDataChangedCallback);
+
         add(this.historyPanel, BorderLayout.CENTER);
     }
 

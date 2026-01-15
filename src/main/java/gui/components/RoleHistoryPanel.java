@@ -16,14 +16,23 @@ import java.util.List;
 
 public class RoleHistoryPanel extends JPanel {
 
-    private final Employee employee;
+    private Employee employee; // Changed to non-final to allow updates
     private final boolean isEditable;
+    private final Runnable onDataChangedCallback; // Callback for global refresh
+
     private JTable historyTable;
     private RoleHistoryTableModel tableModel;
 
-    public RoleHistoryPanel(Employee employee, boolean isEditable) {
+    /**
+     * Updated constructor to accept a callback.
+     * @param employee The employee whose role history is displayed.
+     * @param isEditable If true, editing controls are visible.
+     * @param onDataChangedCallback A callback to run after data is successfully modified. Can be null.
+     */
+    public RoleHistoryPanel(Employee employee, boolean isEditable, Runnable onDataChangedCallback) {
         this.employee = employee;
         this.isEditable = isEditable;
+        this.onDataChangedCallback = onDataChangedCallback;
         initUI();
         loadData();
     }
@@ -39,7 +48,7 @@ public class RoleHistoryPanel extends JPanel {
         add(titleLabel, BorderLayout.NORTH);
 
         // Tabelle
-        tableModel = new RoleHistoryTableModel(employee.getRoleManager().getRoleHistory());
+        tableModel = new RoleHistoryTableModel(new ArrayList<>());
         historyTable = new JTable(tableModel);
         historyTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         historyTable.setFillsViewportHeight(true);
@@ -64,16 +73,29 @@ public class RoleHistoryPanel extends JPanel {
         }
     }
 
+    /**
+     * Reloads and displays the role history data for the current employee.
+     */
     public void loadData() {
+        if (employee == null || employee.getRoleManager() == null) {
+            tableModel.setHistory(new ArrayList<>());
+            return;
+        }
         ArrayList<RoleHistoryEntry> history = employee.getRoleManager().getRoleHistory();
-        // Sortieren nach Startdatum (neueste zuerst) für bessere Übersicht
         history.sort(Comparator.comparing(RoleHistoryEntry::getAcquireDate).reversed());
         tableModel.setHistory(history);
     }
 
+    /**
+     * Updates the employee reference for this panel. This is useful when the parent view
+     * reloads its data and gets a new employee object instance.
+     * @param employee The new, fresh Employee object.
+     */
+    public void updateEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
     private void addEntry() {
-        // Für einen besseren UX wäre hier ein eigener JDialog ideal.
-        // Zur Vereinfachung nutzen wir Input-Dialoge.
         Role selectedRole = selectRoleDialog("Neue Rolle auswählen");
         if (selectedRole == null) return;
 
@@ -86,7 +108,6 @@ public class RoleHistoryPanel extends JPanel {
             LocalDate acquireDate = LocalDate.parse(acquireDateStr);
             LocalDate endDate = (endDateStr == null || endDateStr.trim().isEmpty()) ? null : LocalDate.parse(endDateStr);
 
-            // Logik zum Beenden der alten aktiven Rolle, falls nötig
             if (endDate == null) {
                 employee.getRoleManager().assignRole(selectedRole.getId(), acquireDate);
             } else {
@@ -94,11 +115,14 @@ public class RoleHistoryPanel extends JPanel {
                 employee.getRoleManager().addRoleHistoryEntry(newEntry);
             }
 
-            // WICHTIG: Die Änderungen müssen persistiert werden (z.B. in einer DB)
-            // ServiceLocator.getDatabaseManager().saveEmployeeRoleHistory(employee);
-
             JOptionPane.showMessageDialog(this, "Eintrag hinzugefügt.");
-            loadData(); // UI aktualisieren
+
+            // Trigger global refresh via the provided callback.
+            if (onDataChangedCallback != null) {
+                onDataChangedCallback.run();
+            } else {
+                loadData(); // Fallback to local refresh if no callback is given.
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
@@ -112,8 +136,6 @@ public class RoleHistoryPanel extends JPanel {
         }
 
         RoleHistoryEntry entryToEdit = tableModel.getEntryAt(selectedRow);
-
-        // Auch hier wäre ein JDialog besser.
         Role selectedRole = selectRoleDialog("Rolle ändern", entryToEdit.getRoleId());
         if (selectedRole == null) return;
 
@@ -132,9 +154,14 @@ public class RoleHistoryPanel extends JPanel {
             entryToEdit.setEndDate(endDate);
 
             employee.getRoleManager().updateRoleHistoryEntry(entryToEdit);
-
             JOptionPane.showMessageDialog(this, "Eintrag aktualisiert.");
-            loadData();
+
+            // Trigger global refresh via the provided callback.
+            if (onDataChangedCallback != null) {
+                onDataChangedCallback.run();
+            } else {
+                loadData();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
@@ -152,12 +179,14 @@ public class RoleHistoryPanel extends JPanel {
 
         if (confirm == JOptionPane.YES_OPTION) {
             employee.getRoleManager().removeRoleHistoryEntry(entryToDelete);
-
-            // WICHTIG: Die Änderungen müssen persistiert werden
-            // ServiceLocator.getDatabaseManager().saveEmployeeRoleHistory(employee);
-
             JOptionPane.showMessageDialog(this, "Eintrag gelöscht.");
-            loadData();
+
+            // Trigger global refresh via the provided callback.
+            if (onDataChangedCallback != null) {
+                onDataChangedCallback.run();
+            } else {
+                loadData();
+            }
         }
     }
 
@@ -218,7 +247,7 @@ public class RoleHistoryPanel extends JPanel {
 
         @Override
         public String getColumnName(int column) {
-            return columnNames[column];
+            return columnNames.length > column ? columnNames[column] : "";
         }
 
         @Override

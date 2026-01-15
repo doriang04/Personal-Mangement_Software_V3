@@ -1,6 +1,7 @@
 package gui.views;
 
 import core.ServiceLocator;
+import gui.UIController; // Import the UIController
 import gui.components.RoleHistoryPanel;
 import gui.components.SkillHistoryPanel;
 import model.*;
@@ -254,11 +255,14 @@ public class EmployeeDetailView extends JPanel implements View {
                 }
             }
 
+            // After successfully modifying core data, trigger a global UI refresh.
+            UIController.getInstance().updateMainWindow();
+
             JOptionPane.showMessageDialog(this, "Erfolgreich gespeichert!");
 
+            // Reset local state after saving.
             isInEditMode = false;
             hasUnsavedChanges = false;
-            tabTitle = "Profil: " + employee.getFirstName();
             updateUiForCurrentState();
 
         } catch (Exception ex) {
@@ -268,12 +272,16 @@ public class EmployeeDetailView extends JPanel implements View {
 
     private void showRoleHistoryDialog() {
         JDialog historyDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Rollenhistorie", Dialog.ModalityType.APPLICATION_MODAL);
-        RoleHistoryPanel panel = new RoleHistoryPanel(this.employee, this.canEdit && this.isInEditMode);
+
+        // Pass a callback to trigger a global refresh if data is changed inside the panel.
+        Runnable onDataChangedCallback = () -> UIController.getInstance().updateMainWindow();
+        RoleHistoryPanel panel = new RoleHistoryPanel(this.employee, this.canEdit && this.isInEditMode, onDataChangedCallback);
+
         historyDialog.setContentPane(panel);
         historyDialog.setSize(600, 400);
         historyDialog.setLocationRelativeTo(this);
         historyDialog.setVisible(true);
-        fillFields();
+        // The global refresh triggered by the panel makes a local refresh here obsolete.
     }
 
     private void enableFields(boolean enable) {
@@ -338,11 +346,16 @@ public class EmployeeDetailView extends JPanel implements View {
 
     private void showSkillHistoryDialog() {
         JDialog historyDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Skill-Historie", Dialog.ModalityType.APPLICATION_MODAL);
-        SkillHistoryPanel panel = new SkillHistoryPanel(this.employee, this.canEdit && this.isInEditMode);
+
+        // Pass a callback to trigger a global refresh if data is changed inside the panel.
+        Runnable onDataChangedCallback = () -> UIController.getInstance().updateMainWindow();
+        SkillHistoryPanel panel = new SkillHistoryPanel(this.employee, this.canEdit && this.isInEditMode, onDataChangedCallback);
+
         historyDialog.setContentPane(panel);
         historyDialog.setSize(700, 450);
         historyDialog.setLocationRelativeTo(this);
         historyDialog.setVisible(true);
+        // The global refresh triggered by the panel makes a local refresh here obsolete.
     }
 
     // Unchanged Helper-classes and Interface-Methods
@@ -360,22 +373,16 @@ public class EmployeeDetailView extends JPanel implements View {
      */
     @Override
     public void updateSelf() {
-        // If an employee couldn't be found, there is nothing to update.
         if (employee == null) {
             return;
         }
 
-        // Only refresh the view if the user is not in the middle of an edit.
-        // This prevents overwriting unsaved user input.
-        if (!isInEditMode) {
-            // 1. Reload the data sources for the combo boxes (e.g., if a new team/role was added).
-            loadComboBoxData();
+        // The global update calls this method. Update the tab title here.
+        this.tabTitle = "Profil: " + employee.getFirstName();
 
-            // 2. Re-populate all fields with the current data from the employee object.
-            // This also correctly re-selects the items in the now-refreshed combo boxes.
+        if (!isInEditMode) {
+            loadComboBoxData();
             fillFields();
         }
-        // If in edit mode, do nothing to protect the user's changes.
-        // Data will be synced when the user saves or discards their changes.
     }
 }

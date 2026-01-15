@@ -1,6 +1,7 @@
 package gui.views;
 
 import core.ServiceLocator;
+import gui.UIController; // Import the UIController
 import gui.components.RoleHistoryPanel;
 import gui.components.SkillHistoryPanel;
 import model.Employee;
@@ -237,13 +238,17 @@ public class MyProfileView extends JPanel implements View {
 
         // Here you would call the database persistence layer
         // ServiceLocator.getDatabaseManager().saveEmployee(currentUser);
-
         JOptionPane.showMessageDialog(this, "Profil erfolgreich aktualisiert!");
 
         isInEditMode = false;
         hasUnsavedChanges = false;
-        // Reload data to reflect saved changes and clear password field
-        loadData();
+
+        // The underlying employee data has changed. Trigger a global UI refresh
+        // to ensure all views (including this one) are updated consistently.
+        UIController.getInstance().updateMainWindow();
+
+        // The global refresh will call updateSelf() which handles reloading data.
+        // We still call this to immediately update the button state.
         updateUiForCurrentState();
     }
 
@@ -272,14 +277,14 @@ public class MyProfileView extends JPanel implements View {
         txtAddress.setText(currentUser.getAddress());
 
         // For security, don't display the actual password.
-        // The field can just be empty or show placeholder dots.
         txtPassword.setText("");
     }
 
     private void showRoleHistoryDialog() {
         JDialog historyDialog = new JDialog(
                 (Frame) SwingUtilities.getWindowAncestor(this), "Meine Rollenhistorie", Dialog.ModalityType.APPLICATION_MODAL);
-        RoleHistoryPanel panel = new RoleHistoryPanel(this.currentUser, false);
+        // This view is read-only, so no data-changed callback is needed.
+        RoleHistoryPanel panel = new RoleHistoryPanel(this.currentUser, false, null);
         historyDialog.setContentPane(panel);
         historyDialog.setSize(600, 400);
         historyDialog.setLocationRelativeTo(this);
@@ -293,13 +298,17 @@ public class MyProfileView extends JPanel implements View {
         }
         JDialog historyDialog = new JDialog(
                 (Frame) SwingUtilities.getWindowAncestor(this), "Meine Skill-Historie", Dialog.ModalityType.APPLICATION_MODAL);
-        SkillHistoryPanel panel = new SkillHistoryPanel(this.currentUser, isEditable);
+
+        // Pass a callback to the panel. If it modifies data (adds/removes a skill),
+        // it will execute this callback to trigger a global UI refresh.
+        Runnable onDataChangedCallback = () -> UIController.getInstance().updateMainWindow();
+        SkillHistoryPanel panel = new SkillHistoryPanel(this.currentUser, isEditable, onDataChangedCallback);
+
         historyDialog.setContentPane(panel);
         historyDialog.setSize(700, 450);
         historyDialog.setLocationRelativeTo(this);
         historyDialog.setVisible(true);
-        // After dialog closes, refresh the skill summary text field.
-        loadData();
+        // The previous local `loadData()` call is no longer needed, as the global refresh handles it.
     }
 
     private JTextField createReadOnlyField() {
@@ -328,20 +337,14 @@ public class MyProfileView extends JPanel implements View {
      */
     @Override
     public void updateSelf() {
-        // First, get the latest reference to the current user from the session.
         this.currentUser = ServiceLocator.getSessionManager().getCurrentUser();
-
-        // Safety check.
         if (this.currentUser == null) {
             return;
         }
 
-        // CRITICAL: Only refresh the displayed data if the user is NOT editing their profile.
-        // This prevents their input from being overwritten.
+        // CRITICAL: Only refresh if not in edit mode to prevent overwriting user input.
         if (!isInEditMode) {
-            // The loadData() method contains all the logic to re-populate the fields.
             loadData();
         }
-        // If in edit mode, do nothing. Data will be synced upon saving or discarding changes.
     }
 }

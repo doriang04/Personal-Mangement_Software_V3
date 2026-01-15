@@ -226,6 +226,11 @@ public class DashboardView extends JPanel implements View {
         skillsList.repaint();
     }
 
+    /**
+     * This method handles navigation. It does not modify any core data.
+     * Therefore, a call to UIController.updateMainWindow() is not needed here.
+     * The responsibility for data modification lies within the `MyTrainingsView` it opens.
+     */
     private void continueTraining(Training training) {
         UIController.getInstance().openTabOrFocus(new MyTrainingsView(), true);
     }
@@ -253,7 +258,7 @@ public class DashboardView extends JPanel implements View {
 
     /**
      * Refreshes all dynamic content on the dashboard.
-     * This reloads the user's name, their open trainings, and their inactive skills.
+     * This method is CALLED BY the global UI update mechanism; it should not trigger one itself.
      */
     @Override
     public void updateSelf() {

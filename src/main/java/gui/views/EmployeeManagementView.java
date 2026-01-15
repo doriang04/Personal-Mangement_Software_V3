@@ -1,6 +1,7 @@
 package gui.views;
 
 import core.ServiceLocator;
+import gui.UIController; // Import the UIController
 import model.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -125,7 +126,6 @@ public class EmployeeManagementView extends JPanel implements View {
             java.util.Date hireDateAsDate = java.sql.Date.valueOf(hireDate);
 
             // --- 3. Create new Employee object ---
-            // Note: In a real DB scenario, the ID would be auto-generated.
             int newId = ServiceLocator.getEmployeeContainer().getEmployees().stream()
                     .mapToInt(Employee::getId).max().orElse(0) + 1;
 
@@ -134,7 +134,6 @@ public class EmployeeManagementView extends JPanel implements View {
                     null, address, gender, hireDateAsDate, 0, true, phone
             );
 
-            // Assign role via RoleManager
             if(newEmp.getRoleManager() != null) {
                 newEmp.getRoleManager().assignRole(selectedRole.getId(), hireDate);
             }
@@ -142,8 +141,11 @@ public class EmployeeManagementView extends JPanel implements View {
             // --- 4. Save and update UI ---
             ServiceLocator.getEmployeeContainer().addEmployee(newEmp);
 
-            refreshList();
-            clearForm();
+            // Since we modified core data, trigger a global UI refresh.
+            // This will update all views, including this one's list.
+            UIController.getInstance().updateMainWindow();
+
+            clearForm(); // Clear the form fields locally.
 
             JOptionPane.showMessageDialog(this, "Mitarbeiter '" + firstName + " " + lastName + "' (ID: " + newId + ") erfolgreich angelegt.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
 
@@ -161,14 +163,13 @@ public class EmployeeManagementView extends JPanel implements View {
     }
 
     private void loadComboBoxData() {
-        // --- FIX: Clear combo boxes before adding new items ---
         cbTeam.removeAllItems();
         cbRole.removeAllItems();
 
-        cbTeam.addItem(new TeamItem(null)); // "No team" option
+        cbTeam.addItem(new TeamItem(null));
         ServiceLocator.getTeamContainer().getTeams().forEach(t -> cbTeam.addItem(new TeamItem(t)));
 
-        cbRole.addItem(new RoleItem(null)); // "No role" option
+        cbRole.addItem(new RoleItem(null));
         ServiceLocator.getRoleContainer().getRoles().forEach(r -> cbRole.addItem(new RoleItem(r)));
     }
 
@@ -210,7 +211,10 @@ public class EmployeeManagementView extends JPanel implements View {
         if (confirm == JOptionPane.YES_OPTION) {
             try {
                 ServiceLocator.getEmployeeContainer().removeEmployee(toDelete);
-                refreshList();
+
+                // Since we modified core data, trigger a global UI refresh.
+                UIController.getInstance().updateMainWindow();
+
                 JOptionPane.showMessageDialog(this, "Mitarbeiter gelöscht!");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Fehler beim Löschen: " + ex.getMessage());
@@ -236,17 +240,9 @@ public class EmployeeManagementView extends JPanel implements View {
     @Override public JPanel getContent() { return this; }
     @Override public boolean equals(View view) { return view != null && view.getViewId().equals(getViewId()); }
 
-    /**
-     * Refreshes the view by reloading the employee list and the data for the
-     * dropdown menus (Teams, Roles) from the core services. This ensures the
-     * view reflects the current state of the application data.
-     */
     @Override
     public void updateSelf() {
-        // 1. Refresh the list of employees on the left side.
         refreshList();
-
-        // 2. Refresh the data in the "add new employee" form's dropdowns.
         loadComboBoxData();
     }
 }

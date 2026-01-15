@@ -192,14 +192,11 @@ public class MainWindow extends JFrame {
     public boolean selectTabIfExists(View view) {
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
             View tab_component = (View) tabbedPane.getComponentAt(i);
-            System.out.println("name: " + tab_component.getViewTabTitle());
             if (view.equals(tab_component)) {
                 tabbedPane.setSelectedIndex(i);
-                System.out.println("selectTabIfExists true");
                 return true;
             }
         }
-        System.out.println("selectTabIfExists false");
         return false;
     }
 
@@ -220,6 +217,11 @@ public class MainWindow extends JFrame {
         if (northPanel != null) {
             northPanel.revalidate();
             northPanel.repaint();
+        }
+
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            View tab_component = (View) tabbedPane.getComponentAt(i);
+            tab_component.updateSelf();
         }
 
         revalidate();

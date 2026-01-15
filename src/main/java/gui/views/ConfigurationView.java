@@ -1,6 +1,7 @@
 package gui.views;
 
 import core.ServiceLocator;
+import gui.UIController; // Import the UIController
 import model.*;
 
 import javax.swing.*;
@@ -67,7 +68,7 @@ public class ConfigurationView extends JPanel implements View {
         skillPanel.loadData();
     }
 
-    // --- Inner classes remain unchanged ---
+    // --- Inner classes are now updated ---
 
     /**
      * Tab 1: Abteilungen (Departments)
@@ -76,7 +77,7 @@ public class ConfigurationView extends JPanel implements View {
         private DefaultListModel<Department> listModel;
         private JList<Department> list;
         private JTextField txtName;
-        private JComboBox<Company> cbCompany; // Angenommen es gibt ein Company Modell
+        private JComboBox<Company> cbCompany;
 
         public DepartmentManagementPanel() {
             setLayout(new GridLayout(1, 2, 10, 10));
@@ -85,7 +86,6 @@ public class ConfigurationView extends JPanel implements View {
             // Linke Seite: Liste
             listModel = new DefaultListModel<>();
             list = new JList<>(listModel);
-            // Custom Renderer damit nur der Name angezeigt wird
             list.setCellRenderer((ctx, value, index, isSelected, cellHasFocus) -> {
                 JLabel lbl = new JLabel(value.getName());
                 lbl.setOpaque(true);
@@ -101,7 +101,7 @@ public class ConfigurationView extends JPanel implements View {
                 try {
                     deleteSelected();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
                 }
             });
             listPanel.add(btnDelete, BorderLayout.SOUTH);
@@ -114,7 +114,7 @@ public class ConfigurationView extends JPanel implements View {
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
             txtName = new JTextField(15);
-            cbCompany = new JComboBox<>(); // Muss mit Companies gefüllt werden
+            cbCompany = new JComboBox<>();
             JButton btnAdd = new JButton("Hinzufügen");
             btnAdd.addActionListener(e -> addNew());
 
@@ -132,8 +132,6 @@ public class ConfigurationView extends JPanel implements View {
         public void loadData() {
             listModel.clear();
             ServiceLocator.getDepartmentContainer().getDepartments().forEach(listModel::addElement);
-
-            // Fülle ComboBox für Companies
             cbCompany.removeAllItems();
             ServiceLocator.getCompanyContainer().getCompanies().forEach(cbCompany::addItem);
         }
@@ -151,14 +149,15 @@ public class ConfigurationView extends JPanel implements View {
             Department newDept = new Department(name, companyId);
             ServiceLocator.getDepartmentContainer().addDepartment(newDept);
             txtName.setText("");
-            loadData();
+
+            // Trigger a global UI refresh as core data has changed.
+            UIController.getInstance().updateMainWindow();
         }
 
         private void deleteSelected() throws Exception {
             Department selected = list.getSelectedValue();
             if (selected == null) return;
 
-            // Check if department is referenced by any team.
             boolean isReferenced = ServiceLocator.getTeamContainer().getTeams().stream()
                     .anyMatch(team -> team.getDepartmentId() == selected.getId());
 
@@ -168,7 +167,9 @@ public class ConfigurationView extends JPanel implements View {
             }
 
             ServiceLocator.getDepartmentContainer().removeDepartment(selected);
-            loadData();
+
+            // Trigger a global UI refresh as core data has changed.
+            UIController.getInstance().updateMainWindow();
         }
     }
 
@@ -202,7 +203,7 @@ public class ConfigurationView extends JPanel implements View {
                 try {
                     deleteSelected();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
                 }
             });
             listPanel.add(btnDelete, BorderLayout.SOUTH);
@@ -243,7 +244,9 @@ public class ConfigurationView extends JPanel implements View {
 
             ServiceLocator.getTeamContainer().addTeam(t);
             txtName.setText("");
-            loadData();
+
+            // Trigger a global UI refresh as core data has changed.
+            UIController.getInstance().updateMainWindow();
         }
 
         private void deleteSelected() throws Exception {
@@ -257,7 +260,9 @@ public class ConfigurationView extends JPanel implements View {
                 JOptionPane.showMessageDialog(this, "Team kann nicht gelöscht werden, da Mitarbeiter zugewiesen sind.", "Fehler", JOptionPane.ERROR_MESSAGE);
             } else {
                 ServiceLocator.getTeamContainer().removeTeam(selected);
-                loadData();
+
+                // Trigger a global UI refresh as core data has changed.
+                UIController.getInstance().updateMainWindow();
             }
         }
     }
@@ -290,7 +295,7 @@ public class ConfigurationView extends JPanel implements View {
                 try {
                     deleteSelected();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
                 }
             });
             listPanel.add(btnDel, BorderLayout.SOUTH);
@@ -330,7 +335,9 @@ public class ConfigurationView extends JPanel implements View {
 
             ServiceLocator.getRoleContainer().addRole(r);
             txtName.setText(""); txtDesc.setText(""); txtPermission.setText("");
-            loadData();
+
+            // Trigger a global UI refresh as core data has changed.
+            UIController.getInstance().updateMainWindow();
         }
 
         private void deleteSelected() throws Exception {
@@ -351,7 +358,9 @@ public class ConfigurationView extends JPanel implements View {
                 JOptionPane.showMessageDialog(this, "Rolle wird noch von Mitarbeitern verwendet!", "Fehler", JOptionPane.ERROR_MESSAGE);
             } else {
                 ServiceLocator.getRoleContainer().removeRole(selected);
-                loadData();
+
+                // Trigger a global UI refresh as core data has changed.
+                UIController.getInstance().updateMainWindow();
             }
         }
     }
@@ -385,7 +394,7 @@ public class ConfigurationView extends JPanel implements View {
                 try {
                     deleteSelected();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
                 }
             });
             listPanel.add(btnDel, BorderLayout.SOUTH);
@@ -425,7 +434,9 @@ public class ConfigurationView extends JPanel implements View {
 
             ServiceLocator.getSkillContainer().addSkill(s);
             txtName.setText(""); txtDesc.setText("");
-            loadData();
+
+            // Trigger a global UI refresh as core data has changed.
+            UIController.getInstance().updateMainWindow();
         }
 
         private void deleteSelected() throws Exception {
@@ -439,7 +450,9 @@ public class ConfigurationView extends JPanel implements View {
                 JOptionPane.showMessageDialog(this, "Kann nicht gelöscht werden!\nEs existieren noch Mitarbeiter mit diesem Skill.", "Fehler", JOptionPane.ERROR_MESSAGE);
             } else {
                 ServiceLocator.getSkillContainer().removeSkill(selected);
-                loadData(); // Added this line to refresh the list after successful deletion
+
+                // Trigger a global UI refresh as core data has changed.
+                UIController.getInstance().updateMainWindow();
             }
         }
     }

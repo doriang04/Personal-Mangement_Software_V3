@@ -16,14 +16,23 @@ import java.util.List;
 
 public class SkillHistoryPanel extends JPanel {
 
-    private final Employee employee;
+    private Employee employee; // Changed to non-final to allow updates
     private final boolean isEditable;
+    private final Runnable onDataChangedCallback; // Callback for global refresh
+
     private JTable historyTable;
     private SkillHistoryTableModel tableModel;
 
-    public SkillHistoryPanel(Employee employee, boolean isEditable) {
+    /**
+     * Updated constructor to accept a callback.
+     * @param employee The employee whose skill history is displayed.
+     * @param isEditable If true, editing controls are visible.
+     * @param onDataChangedCallback A callback to run after data is successfully modified. Can be null.
+     */
+    public SkillHistoryPanel(Employee employee, boolean isEditable, Runnable onDataChangedCallback) {
         this.employee = employee;
         this.isEditable = isEditable;
+        this.onDataChangedCallback = onDataChangedCallback;
         initUI();
         loadData();
     }
@@ -59,9 +68,9 @@ public class SkillHistoryPanel extends JPanel {
             JButton btnEdit = new JButton("Bearbeiten");
             JButton btnDelete = new JButton("Löschen");
 
-            btnAdd.addActionListener(e -> addEntry()); // TODO should this be editable?? (or is this admin stuff)
-            btnEdit.addActionListener(e -> editEntry()); // TODO should this be editable?? (or is this admin stuff)
-            btnDelete.addActionListener(e -> deleteEntry()); // TODO should this be editable?? (or is this admin stuff)
+            btnAdd.addActionListener(e -> addEntry());
+            btnEdit.addActionListener(e -> editEntry());
+            btnDelete.addActionListener(e -> deleteEntry());
 
             buttonPanel.add(btnAdd);
             buttonPanel.add(btnEdit);
@@ -70,16 +79,29 @@ public class SkillHistoryPanel extends JPanel {
         }
     }
 
+    /**
+     * Reloads and displays the skill history data for the current employee.
+     */
     public void loadData() {
+        if (employee == null || employee.getSkillManager() == null) {
+            tableModel.setHistory(new ArrayList<>());
+            return;
+        }
         ArrayList<SkillHistoryEntry> history = employee.getSkillManager().getSkillHistory();
-        // Sort by acquisition date (newest first) for better overview
         history.sort(Comparator.comparing(SkillHistoryEntry::getAcquireDate).reversed());
         tableModel.setHistory(history);
     }
 
+    /**
+     * Updates the employee reference for this panel. This is useful when the parent view
+     * reloads its data and gets a new employee object instance.
+     * @param employee The new, fresh Employee object.
+     */
+    public void updateEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
     private void addEntry() {
-        // A custom JDialog would be ideal for better UX.
-        // For simplicity, we use input dialogs.
         Skill selectedSkill = selectSkillDialog("Neuen Skill auswählen");
         if (selectedSkill == null) return;
 
@@ -88,15 +110,16 @@ public class SkillHistoryPanel extends JPanel {
 
         try {
             LocalDate acquireDate = LocalDate.parse(acquireDateStr);
-
-            // Add the new skill to the employee's skill manager
             employee.getSkillManager().addSkill(selectedSkill, acquireDate);
 
-            // IMPORTANT: The changes must be persisted (e.g., in a DB)
-            // ServiceLocator.getDatabaseManager().saveEmployeeSkillHistory(employee);
-
             JOptionPane.showMessageDialog(this, "Eintrag hinzugefügt.");
-            loadData(); // Refresh UI
+
+            // Trigger global refresh via the provided callback.
+            if (onDataChangedCallback != null) {
+                onDataChangedCallback.run();
+            } else {
+                loadData(); // Fallback to local refresh if no callback is given.
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
@@ -110,24 +133,20 @@ public class SkillHistoryPanel extends JPanel {
         }
 
         SkillHistoryEntry entryToEdit = tableModel.getEntryAt(selectedRow);
-
-        // A JDialog would be better here as well.
         String acquireDateStr = JOptionPane.showInputDialog(this, "Erwerbsdatum (YYYY-MM-DD):", entryToEdit.getAcquireDate().toString());
         if (acquireDateStr == null || acquireDateStr.trim().isEmpty()) return;
 
         try {
             LocalDate acquireDate = LocalDate.parse(acquireDateStr);
-
-            // Update the existing entry object
             entryToEdit.setAcquireDate(acquireDate);
-            // NOTE: You could also allow changing the skill itself, but that's less common.
-            // For this example, we only edit the acquisition date.
-
-            // IMPORTANT: Persist changes
-            // ServiceLocator.getDatabaseManager().updateSkillHistoryEntry(entryToEdit);
-
             JOptionPane.showMessageDialog(this, "Eintrag aktualisiert.");
-            loadData();
+
+            // Trigger global refresh via the provided callback.
+            if (onDataChangedCallback != null) {
+                onDataChangedCallback.run();
+            } else {
+                loadData();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
         }
@@ -144,23 +163,20 @@ public class SkillHistoryPanel extends JPanel {
         int confirm = JOptionPane.showConfirmDialog(this, "Soll dieser Eintrag wirklich gelöscht werden?", "Bestätigung", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            // This requires a new method in SkillManager, see step 2
             employee.getSkillManager().removeSkillEntry(entryToDelete);
-
-            // IMPORTANT: Persist changes
-            // ServiceLocator.getDatabaseManager().deleteSkillHistoryEntry(entryToDelete);
-
             JOptionPane.showMessageDialog(this, "Eintrag gelöscht.");
-            loadData();
+
+            // Trigger global refresh via the provided callback.
+            if (onDataChangedCallback != null) {
+                onDataChangedCallback.run();
+            } else {
+                loadData();
+            }
         }
     }
 
     private Skill selectSkillDialog(String title) {
         List<Skill> skills = ServiceLocator.getSkillContainer().getSkills();
-
-        // Note: JOptionPane uses the .toString() method of the objects.
-        // Your current Skill.toString() is "id_(name)". For a better display,
-        // you might want to change it to just return getName().
         Skill selected = (Skill) JOptionPane.showInputDialog(
                 this,
                 "Bitte einen Skill auswählen:",
