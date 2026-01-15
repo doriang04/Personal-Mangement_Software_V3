@@ -121,16 +121,15 @@ public class UIController {
         openTabOrFocus(new DashboardView(), false);
     }
 
-    private void openTabOrFocus(View view, boolean closable) {
+    public void openTabOrFocus(View view, boolean closable) {
         if (!mainWindow.selectTabIfExists(view)) mainWindow.openTab(view, closable);
     }
-
 
     /**
      * Öffnet das Profil eines Mitarbeiters in einem neuen Tab.
      * Wird von EmployeeSearchView per Doppelklick aufgerufen.
      */
-    public void openEmployeeDetailTab(int employeeId) {
+    public void openEmployeeDetailTab(int employeeId) { // TODO usage ändern, sodass es via openTabOrFocus läuft
         // 1. View erstellen (ID übergeben)
         gui.views.EmployeeDetailView view = new gui.views.EmployeeDetailView(employeeId);
 
