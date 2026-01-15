@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.h2.tools.RunScript;
 
@@ -25,6 +26,7 @@ public class DatabaseManager {
 
     private Connection connection;
     private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final AtomicBoolean alreadySaved = new AtomicBoolean(false);
 
     public static synchronized DatabaseManager getInstance() {
         if (instance == null) instance = new DatabaseManager();
@@ -39,6 +41,12 @@ public class DatabaseManager {
             System.err.println("❌ Database initialisation failed: " + e.getMessage());
         }
 
+    }
+
+    public void saveAllDataOnce() {
+        if (alreadySaved.compareAndSet(false, true)) {
+            saveAllData();
+        }
     }
 
     private void openConnection() throws SQLException {
@@ -315,16 +323,25 @@ public class DatabaseManager {
 
         String sql = "INSERT INTO training_skills (training_id, skill_id) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+
             for (JsonNode training : root) {
                 int trainingId = training.get("id").asInt();
-                JsonNode skills = training.path("skill").path("aktiveSkillHistory");
 
-                for (JsonNode s : skills) {
+                JsonNode skills = training
+                        .path("skillList")
+                        .path("skills");
+
+                if (!skills.isArray()) {
+                    continue; // defensive check
+                }
+
+                for (JsonNode skill : skills) {
                     stmt.setInt(1, trainingId);
-                    stmt.setInt(2, s.get("skillId").asInt());
+                    stmt.setInt(2, skill.get("skillId").asInt());
                     stmt.addBatch();
                 }
             }
+
             stmt.executeBatch();
         }
     }
@@ -429,6 +446,7 @@ public class DatabaseManager {
     }
 
     private void loadTrainings() throws SQLException {
+        TrainingSkillManagerContainer tsmc = ServiceLocator.getTrainingSkillManagerContainer();
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT * FROM trainings")) {
             var container = ServiceLocator.getTrainingContainer();
@@ -440,8 +458,8 @@ public class DatabaseManager {
                     new TrainingSkillManager()
                 );
 
-                t.getSkills().setTrainingId(t.getId());
-                // TODO hier die skills auch wirklich eintragen
+                t.getSkillManager().setTrainingId(t.getId());
+                tsmc.addTrainingSkillManager(t.getSkillManager());
 
                 container.addTraining(t);
             }
@@ -458,8 +476,11 @@ public class DatabaseManager {
                 Training training = ServiceLocator.getTrainingContainer().getTrainingById(tId);
                 Skill skill = ServiceLocator.getSkillContainer().getSkillById(sId);
 
+                if (training != null) System.out.println("erm, what the sigma - no training"); // TODO remove later on
+                if (skill != null) System.out.println("erm, what the sigma - no skill");
+
                 if (training != null && skill != null) {
-                    training.getSkills().addSkill(skill);
+                    training.getSkillManager().addSkill(skill);
                 }
             }
         }

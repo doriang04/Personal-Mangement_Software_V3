@@ -1,3 +1,7 @@
+# Important Notice
+
+Do not force-quitt this application on Mac via `Cmd + Q`, as this does not save your changes to the database.
+
 # How to run this programm via your CLI
 
 ## Before running it for the first time

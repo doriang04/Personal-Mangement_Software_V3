@@ -4,9 +4,7 @@ import database.DatabaseManager;
 import gui.UIController;
 import model.Employee;
 
-import java.io.IOException;
 import java.nio.file.Path;
-import java.sql.SQLException;
 
 public class Main {
     private static DatabaseManager dbManager;
@@ -51,11 +49,14 @@ public class Main {
             System.out.println(" - " + roleName + " | " + employee.getUsername() + " | " + employee.getPassword());
         }
 
-        // Shutdown Hook: Speichert Daten beim Beenden
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("\n🛑 Programm wird beendet...");
-            dbManager.saveAllData();
-            System.out.println("👋 Bye Bye!");
+            System.out.println("⚠️ ShutdownHook (Cmd+Q / OS Quit)");
+
+            try {
+                database.DatabaseManager.getInstance().saveAllDataOnce();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }));
 
         // GUI starten

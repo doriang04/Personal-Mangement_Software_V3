@@ -22,7 +22,6 @@ public class TrainingManagementView extends JPanel implements View {
     private JTable teamProgressTable;
     private DefaultTableModel teamProgressModel;
 
-    // Katalog Komponenten
     private JTable trainingCatalogTable;
     private DefaultTableModel trainingCatalogModel;
 
@@ -95,13 +94,11 @@ public class TrainingManagementView extends JPanel implements View {
         dialog.setVisible(true);
     }
 
-    // --- PANELS ---
-
     private JPanel createCatalogPanel() {
         JPanel panel = new JPanel(new BorderLayout(0, 10)); // Abstand zwischen Tabelle und Buttons
         panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        String[] columns = {"ID", "Titel", "Beschreibung", "Dauer (h)"};
+        String[] columns = {"ID", "Titel", "Beschreibung", "Dauer (h)", "Skills"};
         trainingCatalogModel = new DefaultTableModel(columns, 0) {
             @Override public boolean isCellEditable(int row, int col) { return false; }
         };
@@ -152,12 +149,32 @@ public class TrainingManagementView extends JPanel implements View {
         return panel;
     }
 
-    // --- DATEN LADEN ---
-
     private void loadCatalogData() {
         trainingCatalogModel.setRowCount(0);
+
         for (Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
-            trainingCatalogModel.addRow(new Object[]{t.getId(), t.getTitle(), t.getDescription(), t.getLength()});
+
+            String skillsText = "-";
+
+            if (t.getSkillManager() != null && !t.getSkillManager().getSkills().isEmpty()) {
+                skillsText = t.getSkillManager().getSkills().stream()
+                        .map(entry ->
+                                ServiceLocator.getSkillContainer()
+                                        .getSkillById(entry.getSkillId())
+                        )
+                        .filter(skill -> skill != null)
+                        .map(Skill::getName)
+                        .reduce((a, b) -> a + ", " + b)
+                        .orElse("-");
+            }
+
+            trainingCatalogModel.addRow(new Object[]{
+                    t.getId(),
+                    t.getTitle(),
+                    t.getDescription(),
+                    t.getLength(),
+                    skillsText
+            });
         }
     }
 
@@ -217,7 +234,6 @@ public class TrainingManagementView extends JPanel implements View {
         }
     }
 
-    // View Interface
     @Override public String getViewId() { return "training-management-view"; }
     @Override public String getViewTabTitle() { return "Schulungsverwaltung"; }
     @Override public JPanel getContent() { return this; }

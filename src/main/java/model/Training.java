@@ -55,7 +55,7 @@ public class Training {
         this.length = length;
     }
 
-    public TrainingSkillManager getSkills() {
+    public TrainingSkillManager getSkillManager() {
         return skillList;
     }
 
