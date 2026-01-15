@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.ArrayList;
@@ -126,6 +128,10 @@ public class TrainingManager {
         );
 
         entry.markDone(completionDate);
+        Employee employee = ServiceLocator.getEmployeeContainer().getEmployeeById(employeeId);
+        employee.getSkillManager().addSkillsFromTraining(
+                ServiceLocator.getTrainingContainer().getTrainingById(trainingId),
+                completionDate);
     }
 
     /**

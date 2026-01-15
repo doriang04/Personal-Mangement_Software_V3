@@ -31,6 +31,15 @@ public class SkillManager {
         this.employeeId = employeeId;
     }
 
+    public void addSkillsFromTraining(Training training, LocalDate completion_date) {
+        SkillContainer skillContainer = ServiceLocator.getSkillContainer();
+
+        for (TrainingSkillManager.TrainingSkillEntry tsk: training.getSkillManager().getSkills()) {
+            Skill skill = skillContainer.getSkillById(tsk.getSkillId());
+            addSkill(skill, completion_date);
+        }
+    }
+
     /**
      * Represents one row in skill_history.
      */
@@ -43,10 +52,6 @@ public class SkillManager {
             this.historyId = historyId;
             this.skillId = skillId;
             this.acquireDate = acquireDate;
-        }
-
-        public SkillHistoryEntry(int skillId, LocalDate acquireDate) {
-            this(0, skillId, acquireDate);
         }
 
         public SkillHistoryEntry() {
@@ -91,6 +96,21 @@ public class SkillManager {
                     ", skillId=" + skillId +
                     ", acquiredAt=" + acquireDate +
                     '}';
+        }
+    }
+
+    private SkillHistoryEntry getEntryById(int id) {
+        for (SkillHistoryEntry skillHistoryEntry: skillHistory) {
+            if (skillHistoryEntry.getHistoryId() == id) return skillHistoryEntry;
+        }
+        return null;
+    }
+
+    private int getNextFreeId() {
+        int i = 0;
+        while (true) {
+            if (getEntryById(i) == null) return i;
+            i++;
         }
     }
 
@@ -153,7 +173,7 @@ public class SkillManager {
      * Adds a new skill acquisition.
      */
     public SkillHistoryEntry addSkill(int skillId, LocalDate acquiredAt) {
-        SkillHistoryEntry entry = new SkillHistoryEntry(skillId, acquiredAt);
+        SkillHistoryEntry entry = new SkillHistoryEntry(getNextFreeId(), skillId, acquiredAt);
         skillHistory.add(entry);
         return entry;
     }

@@ -476,9 +476,6 @@ public class DatabaseManager {
                 Training training = ServiceLocator.getTrainingContainer().getTrainingById(tId);
                 Skill skill = ServiceLocator.getSkillContainer().getSkillById(sId);
 
-                if (training != null) System.out.println("erm, what the sigma - no training"); // TODO remove later on
-                if (skill != null) System.out.println("erm, what the sigma - no skill");
-
                 if (training != null && skill != null) {
                     training.getSkillManager().addSkill(skill);
                 }
@@ -611,67 +608,86 @@ public class DatabaseManager {
         System.out.println("💾 Speichere Daten (Full Rewrite mit Constraint-Pause)...");
         try {
             openConnection();
-            Statement stmt = connection.createStatement();
+            // **IMPROVEMENT**: Use a single transaction for the whole operation
+            connection.setAutoCommit(false);
 
-            // 1. Foreign Keys global deaktivieren
-            stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
+            try (Statement stmt = connection.createStatement()) {
 
-            // 2. Alle Tabellen leeren
-            clearDatabaseTables();
+                // 1. Foreign Keys global deaktivieren
+                stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
 
-            // 3. Kataloge & Struktur einfügen
-            reinsertSkills();
-            reinsertRoles();
-            reinsertDepartments();
-            reinsertTeams();
-            reinsertTrainings();
-            reinsertTrainingSkills();
+                // 2. Alle Tabellen leeren
+                clearDatabaseTables();
 
-            // 4. Mitarbeiter und deren History einfügen
-            for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
-                // WICHTIG: Stelle sicher, dass updateEmployeeBaseData ein INSERT nutzt!
-                reinsertEmployeeBaseData(e);
-                updateRoleHistory(e);
-                updateTrainingHistory(e);
-                // Falls vorhanden: updateSkillHistory(e);
+                // 3. Kataloge & Struktur einfügen (Consider batching these too, see notes below)
+                reinsertSkills();
+                reinsertRoles();
+                reinsertDepartments();
+                reinsertTeams();
+                reinsertTrainings();
+                reinsertTrainingSkills();
+
+                // 4. Mitarbeiter und deren History einfügen
+                for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
+                    reinsertEmployeeBaseData(e);
+                    updateRoleHistory(e);
+                    updateTrainingHistory(e);
+                    // **THE FIX**: Add the call to the new method
+                    updateSkillHistory(e);
+                }
+
+                // 5. Foreign Keys wieder aktivieren
+                stmt.execute("SET REFERENTIAL_INTEGRITY TRUE");
             }
 
-            // 5. Foreign Keys wieder aktivieren
-            stmt.execute("SET REFERENTIAL_INTEGRITY TRUE");
-            stmt.close();
-
+            // If all went well, commit the transaction
+            connection.commit();
             System.out.println("✅ Speichern erfolgreich!");
+
         } catch (SQLException e) {
             System.err.println("❌ Fehler beim Full-Rewrite: " + e.getMessage());
             e.printStackTrace();
 
-            // Versuch, die Integrität im Fehlerfall wieder einzuschalten
+            // **IMPROVEMENT**: Rollback on failure
             try {
-                connection.createStatement().execute("SET REFERENTIAL_INTEGRITY TRUE");
-            } catch (SQLException ignore) {}
+                if (connection != null) {
+                    System.err.println("... Transaktion wird zurückgerollt.");
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                System.err.println("... Fehler beim Zurückrollen der Transaktion: " + ex.getMessage());
+            }
 
         } finally {
-            closeConnection();
+            // **IMPROVEMENT**: Restore original auto-commit state and close connection
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true); // Restore default behavior
+                    closeConnection();
+                }
+            } catch (SQLException ex) {
+                System.err.println("... Fehler beim Wiederherstellen von Auto-Commit: " + ex.getMessage());
+            }
         }
     }
 
     private void clearDatabaseTables() throws SQLException {
         Statement stmt = connection.createStatement();
         // 1. Kind-Tabellen (Mitarbeiter-Daten)
-        stmt.executeUpdate("DELETE FROM training_history");
-        stmt.executeUpdate("DELETE FROM skill_history");
-        stmt.executeUpdate("DELETE FROM role_history");
-        stmt.executeUpdate("DELETE FROM employees");
+        stmt.executeUpdate("TRUNCATE TABLE training_history");
+        stmt.executeUpdate("TRUNCATE TABLE skill_history");
+        stmt.executeUpdate("TRUNCATE TABLE role_history");
+        stmt.executeUpdate("TRUNCATE TABLE employees");
 
         // 2. Struktur-Tabellen
-        stmt.executeUpdate("DELETE FROM teams");
-        stmt.executeUpdate("DELETE FROM departments");
+        stmt.executeUpdate("TRUNCATE TABLE teams");
+        stmt.executeUpdate("TRUNCATE TABLE departments");
 
         // 3. Unabhängige Kataloge
-        stmt.executeUpdate("DELETE FROM skills");
-        stmt.executeUpdate("DELETE FROM roles");
-        stmt.executeUpdate("DELETE FROM trainings");
-        stmt.executeUpdate("DELETE FROM training_skills");
+        stmt.executeUpdate("TRUNCATE TABLE skills");
+        stmt.executeUpdate("TRUNCATE TABLE roles");
+        stmt.executeUpdate("TRUNCATE TABLE trainings");
+        stmt.executeUpdate("TRUNCATE TABLE training_skills");
         stmt.close();
         System.out.println("🧹 Datenbank bereinigt für neuen Schreibvorgang.");
     }
@@ -830,6 +846,30 @@ public class DatabaseManager {
                     } else {
                         insertStmt.setNull(5, Types.DATE);
                     }
+                    insertStmt.addBatch();
+                }
+                insertStmt.executeBatch();
+            }
+        }
+    }
+
+    private void updateSkillHistory(Employee e) throws SQLException {
+        // First, delete all existing skill history for this employee
+        String deleteSql = "DELETE FROM skill_history WHERE employee_id=?";
+        try (PreparedStatement delStmt = connection.prepareStatement(deleteSql)) {
+            delStmt.setInt(1, e.getId());
+            delStmt.executeUpdate();
+        }
+
+        // Then, insert all skill history entries from the employee object
+        String insertSql = "INSERT INTO skill_history (employee_id, skill_id, acquire_date) VALUES (?, ?, ?)";
+        try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+            if (e.getSkillManager() != null) {
+                for (SkillManager.SkillHistoryEntry entry : e.getSkillManager().getSkillHistory()) {
+                    insertStmt.setInt(1, e.getId());
+                    insertStmt.setInt(2, entry.getSkillId());
+                    // Convert LocalDate to java.sql.Date
+                    insertStmt.setDate(3, java.sql.Date.valueOf(entry.getAcquireDate()));
                     insertStmt.addBatch();
                 }
                 insertStmt.executeBatch();
