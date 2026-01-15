@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-// TODO test this as well, i did not check what gpt wrote here
-
 /**
  * Manages skill history for one employee.
  * Mirrors table: skill_history (id, employee_id, skill_id, acquired_at)
@@ -173,10 +171,22 @@ public class SkillManager {
      * Adds a new skill acquisition.
      */
     public SkillHistoryEntry addSkill(int skillId, LocalDate acquiredAt) {
-        SkillHistoryEntry entry = new SkillHistoryEntry(getNextFreeId(), skillId, acquiredAt);
+
+        SkillHistoryEntry existing = getEntryBySkillId(skillId);
+
+        // Skill existiert bereits → überschreiben
+        if (existing != null) {
+            existing.setAcquireDate(acquiredAt);
+            return existing;
+        }
+
+        // Neu anlegen
+        SkillHistoryEntry entry =
+                new SkillHistoryEntry(getNextFreeId(), skillId, acquiredAt);
         skillHistory.add(entry);
         return entry;
     }
+
 
     /**
      * Convenience overload using Skill object.
@@ -206,6 +216,15 @@ public class SkillManager {
         if (entryToRemove != null) {
             skillHistory.remove(entryToRemove);
         }
+    }
+
+    private SkillHistoryEntry getEntryBySkillId(int skillId) {
+        for (SkillHistoryEntry entry : skillHistory) {
+            if (entry.getSkillId() == skillId) {
+                return entry;
+            }
+        }
+        return null;
     }
 
     public boolean hasReferences() {
