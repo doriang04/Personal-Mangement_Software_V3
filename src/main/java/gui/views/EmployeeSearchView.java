@@ -1,242 +1,265 @@
 package gui.views;
 
-import core.ServiceLocator;
-import gui.UIController;
-import model.*;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+
+import core.ServiceLocator;
+import gui.UIController;
+import static gui.UITheme.COLOR_ACCENT;
+import static gui.UITheme.COLOR_BG_CONTENT;
+import static gui.UITheme.COLOR_BORDER;
+import static gui.UITheme.COLOR_HEADER_BG;
+import static gui.UITheme.COLOR_HOVER;
+import static gui.UITheme.COLOR_TEXT_HEADER;
+import model.Department;
+import model.Employee;
+import model.Team;
 
 public class EmployeeSearchView extends JPanel implements View {
 
     private JTextField txtSearchEmployee;
     private JComboBox<DepartmentItem> comboFilterDepartment;
-    private JButton btnSearch;
     private JTable employeeResultTable;
     private DefaultTableModel tableModel;
+    private int hoveredRow = -1;
 
     private final boolean isPrivileged;
 
     public EmployeeSearchView() {
         setLayout(new BorderLayout());
+        setBackground(COLOR_BG_CONTENT);
 
-        // 1. Check permissions
         String role = ServiceLocator.getSessionManager().getUserPermission();
         if (role == null) role = "GUEST";
-        role = role.toUpperCase();
+        this.isPrivileged = role.toUpperCase().matches(".*(HR|ADMIN|LEAD).*");
 
-        this.isPrivileged = role.contains("HR") || role.contains("ADMIN") || role.contains("LEAD");
-
-        // 2. Build UI
         initUI();
-
-        // 3. Load initial data
         searchEmployees();
     }
 
     private void initUI() {
-        // --- HEADER: Filter Panel ---
-        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        // Header
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(true);
+        header.setBackground(COLOR_HEADER_BG);
+        header.setBorder(new EmptyBorder(20, 30, 20, 30));
 
-        // Name Search (Live Search)
-        filterPanel.add(new JLabel("Name:"));
-        txtSearchEmployee = new JTextField(15);
+        JLabel titleLabel = new JLabel("Mitarbeitersuche");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(COLOR_TEXT_HEADER);
+        header.add(titleLabel, BorderLayout.WEST);
+        add(header, BorderLayout.NORTH);
+
+        JPanel contentWrapper = new JPanel(new BorderLayout(0, 20));
+        contentWrapper.setOpaque(false);
+        contentWrapper.setBorder(new EmptyBorder(25, 30, 25, 30));
+
+        // Mittelteil
+        JPanel filterCard = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
+        filterCard.setBackground(Color.WHITE);
+        filterCard.setBorder(new LineBorder(COLOR_BORDER, 1, true));
+
+        txtSearchEmployee = new JTextField(20);
+        txtSearchEmployee.putClientProperty("JTextField.placeholderText", "Name suchen...");
         txtSearchEmployee.getDocument().addDocumentListener(new DocumentListener() {
-            // Note: These actions only trigger a read/filter operation, not a data modification.
             public void insertUpdate(DocumentEvent e) { searchEmployees(); }
             public void removeUpdate(DocumentEvent e) { searchEmployees(); }
             public void changedUpdate(DocumentEvent e) { searchEmployees(); }
         });
-        filterPanel.add(txtSearchEmployee);
 
-        // Department Filter
-        filterPanel.add(new JLabel("Abteilung:"));
         comboFilterDepartment = new JComboBox<>();
         refreshDepartmentCombo();
         comboFilterDepartment.addActionListener(e -> searchEmployees());
-        filterPanel.add(comboFilterDepartment);
 
-        // Search Button (optional due to live search)
-        btnSearch = new JButton("Suchen");
-        btnSearch.addActionListener(e -> searchEmployees());
-        filterPanel.add(btnSearch);
+        filterCard.add(new JLabel("Name:"));
+        filterCard.add(txtSearchEmployee);
+        filterCard.add(new JLabel("Abteilung:"));
+        filterCard.add(comboFilterDepartment);
+        
+        contentWrapper.add(filterCard, BorderLayout.NORTH);
 
-        add(filterPanel, BorderLayout.NORTH);
-
-        // --- CENTER: Table ---
+        // Tabelle
         initTable();
         JScrollPane scrollPane = new JScrollPane(employeeResultTable);
-        add(scrollPane, BorderLayout.CENTER);
-    }
-
-    private void refreshDepartmentCombo() {
-        Object selectedItem = comboFilterDepartment.getSelectedItem();
-        comboFilterDepartment.removeAllItems();
-        comboFilterDepartment.addItem(new DepartmentItem(null)); // "Alle Abteilungen"
-        for (Department dept : ServiceLocator.getDepartmentContainer().getDepartments()) {
-            comboFilterDepartment.addItem(new DepartmentItem(dept));
-        }
-        if (selectedItem != null) {
-            comboFilterDepartment.setSelectedItem(selectedItem);
-        }
+        scrollPane.setBorder(new LineBorder(COLOR_BORDER));
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        
+        contentWrapper.add(scrollPane, BorderLayout.CENTER);
+        add(contentWrapper, BorderLayout.CENTER);
     }
 
     private void initTable() {
+        // Tabelle initialisieren
         ArrayList<String> columns = new ArrayList<>();
-        columns.add("ID");
-        columns.add("Nachname");
-        columns.add("Vorname");
-        columns.add("Abteilung");
-        columns.add("E-Mail (Arbeit)");
-
-        if (isPrivileged) {
-            columns.add("Rolle");
-            columns.add("Telefon");
-        }
+        columns.add("ID"); columns.add("Nachname"); columns.add("Vorname");
+        columns.add("Abteilung"); columns.add("E-Mail (Arbeit)");
+        if (isPrivileged) { columns.add("Rolle"); columns.add("Telefon"); }
 
         tableModel = new DefaultTableModel(columns.toArray(), 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+            @Override public boolean isCellEditable(int row, int col) { return false; }
         };
 
         employeeResultTable = new JTable(tableModel);
-        employeeResultTable.setRowHeight(25);
-        employeeResultTable.getTableHeader().setReorderingAllowed(false);
+        employeeResultTable.setRowHeight(40);
+        employeeResultTable.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        employeeResultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        employeeResultTable.setSelectionBackground(Color.WHITE); 
+        employeeResultTable.setSelectionForeground(Color.BLACK);
+        employeeResultTable.setGridColor(COLOR_BORDER);
+        employeeResultTable.setShowVerticalLines(false);
+        employeeResultTable.setIntercellSpacing(new Dimension(0, 1));
+
+        // ID Spalte verstecken
         employeeResultTable.removeColumn(employeeResultTable.getColumnModel().getColumn(0));
 
+        // Custom Renderer
+        SelectionIndicatorRenderer renderer = new SelectionIndicatorRenderer();
+        employeeResultTable.setDefaultRenderer(Object.class, renderer);
+
+        // Header Styling
+        JTableHeader header = employeeResultTable.getTableHeader();
+        header.setFont(new Font("SansSerif", Font.BOLD, 14));
+        header.setBackground(Color.WHITE);
+        header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, COLOR_BORDER));
+
+        // Events
         employeeResultTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && employeeResultTable.getSelectedRow() != -1) {
-                    openSelectedProfile();
+                if (e.getClickCount() == 2 && employeeResultTable.getSelectedRow() != -1) openSelectedProfile();
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                hoveredRow = -1;
+                employeeResultTable.repaint();
+            }
+        });
+
+        // Hover-Effekt
+        employeeResultTable.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = employeeResultTable.rowAtPoint(e.getPoint());
+                if (row != hoveredRow) {
+                    hoveredRow = row;
+                    employeeResultTable.repaint();
                 }
             }
         });
     }
 
-    /**
-     * This method READS and filters data from the core containers.
-     * It does not modify any data, so a call to UIController.updateMainWindow() is not needed here.
-     */
-    private void searchEmployees() {
-        tableModel.setRowCount(0);
+    private class SelectionIndicatorRenderer extends DefaultTableCellRenderer {
+        // Custom TableCellRenderer mit Hover-Effekt und Indikatorlinie
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+                                                       boolean hasFocus, int row, int column) {
+            JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            boolean isHovered = (row == hoveredRow);
+            
+            if (isHovered) {
+                c.setBackground(COLOR_HOVER);
+                if (column == 0) {
+                    c.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(0, 5, 0, 0, COLOR_ACCENT),
+                        new EmptyBorder(0, 10, 0, 5)
+                    ));
+                } else {
+                    c.setBorder(new EmptyBorder(0, 15, 0, 5));
+                }
+            } else {
+                c.setBackground(Color.WHITE);
+                c.setBorder(new EmptyBorder(0, 15, 0, 5));
+            }
+            
+            return c;
+        }
+    }
 
+    private void searchEmployees() {
+        // Mitarbeitersuche basierend auf Filterkriterien
+        if (tableModel == null) return;
+        tableModel.setRowCount(0);
         String searchText = txtSearchEmployee.getText().toLowerCase().trim();
         DepartmentItem selectedDeptItem = (DepartmentItem) comboFilterDepartment.getSelectedItem();
-        Integer filterDeptId = (selectedDeptItem != null && selectedDeptItem.dept != null)
-                ? selectedDeptItem.dept.getId() : null;
+        Integer filterDeptId = (selectedDeptItem != null && selectedDeptItem.dept != null) ? selectedDeptItem.dept.getId() : null;
 
-        List<Employee> allEmployees = ServiceLocator.getEmployeeContainer().getEmployees();
-
-        for (Employee emp : allEmployees) {
-            boolean nameMatch = searchText.isEmpty() ||
-                    emp.getLastName().toLowerCase().contains(searchText) ||
-                    emp.getFirstName().toLowerCase().contains(searchText) ||
-                    emp.getUsername().toLowerCase().contains(searchText);
-
-            boolean deptMatch = true;
-            String deptName = "Keine Abteilung";
+        for (Employee emp : ServiceLocator.getEmployeeContainer().getEmployees()) {
+            if (emp.getId() == ServiceLocator.getSessionManager().getCurrentUser().getId()) continue;
 
             Team team = ServiceLocator.getTeamContainer().getTeamById(emp.getTeamId());
-            if (team != null) {
-                Department dept = ServiceLocator.getDepartmentContainer().getDepartmentById(team.getDepartmentId());
-                if (dept != null) {
-                    deptName = dept.getName();
-                    if (filterDeptId != null && dept.getId() != filterDeptId) deptMatch = false;
-                } else if (filterDeptId != null) deptMatch = false;
-            } else if (filterDeptId != null) {
-                deptMatch = false;
-            }
+            Department dept = (team != null) ? ServiceLocator.getDepartmentContainer().getDepartmentById(team.getDepartmentId()) : null;
+            
+            String deptName = (dept != null) ? dept.getName() : "Keine Abteilung";
+            if (filterDeptId != null && (dept == null || dept.getId() != filterDeptId)) continue;
 
-            if (nameMatch && deptMatch && emp.getId() != ServiceLocator.getSessionManager().getCurrentUser().getId()) {
-                ArrayList<Object> rowData = new ArrayList<>();
-                rowData.add(emp.getId());
-                rowData.add(emp.getLastName());
-                rowData.add(emp.getFirstName());
-                rowData.add(deptName);
-                rowData.add(emp.getEMail());
+            boolean nameMatch = searchText.isEmpty() || 
+                                emp.getLastName().toLowerCase().contains(searchText) || 
+                                emp.getFirstName().toLowerCase().contains(searchText);
 
+            if (nameMatch) {
+                ArrayList<Object> row = new ArrayList<>();
+                row.add(emp.getId()); row.add(emp.getLastName()); row.add(emp.getFirstName());
+                row.add(deptName); row.add(emp.getEMail());
                 if (isPrivileged) {
-                    String roleName = "-";
-                    try {
-                        if (emp.getRoleManager().getActiveRole() != null) {
-                            roleName = emp.getRoleManager().getActiveRole().getName();
-                        }
-                    } catch (Exception _) {}
-                    rowData.add(roleName);
-                    rowData.add(emp.getPhoneNumber());
+                    String rName = "-";
+                    try { if(emp.getRoleManager().getActiveRole() != null) rName = emp.getRoleManager().getActiveRole().getName(); } catch(Exception ignored){}
+                    row.add(rName); row.add(emp.getPhoneNumber());
                 }
-                tableModel.addRow(rowData.toArray());
+                tableModel.addRow(row.toArray());
             }
         }
     }
 
-    /**
-     * This method navigates to another view. It does not modify data itself.
-     * The new view (`EmployeeDetailTab`) will be responsible for handling data modifications
-     * and triggering a global refresh if necessary.
-     */
     private void openSelectedProfile() {
-        int selectedViewRow = employeeResultTable.getSelectedRow();
-        if (selectedViewRow == -1) return;
-
-        int modelRow = employeeResultTable.convertRowIndexToModel(selectedViewRow);
-        Object idObj = tableModel.getValueAt(modelRow, 0);
-        int empId = Integer.parseInt(idObj.toString());
-
+        // Öffnet das Detail-Tab des ausgewählten Mitarbeiters
+        int viewRow = employeeResultTable.getSelectedRow();
+        if (viewRow == -1) return;
+        int modelRow = employeeResultTable.convertRowIndexToModel(viewRow);
+        int empId = (int) tableModel.getValueAt(modelRow, 0);
         UIController.getInstance().openEmployeeDetailTab(empId);
     }
 
-    private static class DepartmentItem {
-        Department dept;
-        public DepartmentItem(Department d) { this.dept = d; }
-        @Override public String toString() { return (dept == null) ? "Alle Abteilungen" : dept.getName(); }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            DepartmentItem that = (DepartmentItem) o;
-            if (dept == null) return that.dept == null;
-            if (that.dept == null) return false;
-            return dept.getId() == that.dept.getId();
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(dept != null ? dept.getId() : -1);
-        }
+    private void refreshDepartmentCombo() {
+        // Aktualisiert die Abteilungs-ComboBox
+        DepartmentItem selected = (DepartmentItem) comboFilterDepartment.getSelectedItem();
+        comboFilterDepartment.removeAllItems();
+        comboFilterDepartment.addItem(new DepartmentItem(null));
+        for (Department d : ServiceLocator.getDepartmentContainer().getDepartments()) comboFilterDepartment.addItem(new DepartmentItem(d));
+        if (selected != null) comboFilterDepartment.setSelectedItem(selected);
     }
 
     @Override public String getViewId() { return "employee-search-view"; }
     @Override public String getViewTabTitle() { return "Mitarbeitersuche"; }
     @Override public JPanel getContent() { return this; }
+    @Override public boolean equals(View v) { return v != null && v.getViewId().equals(getViewId()); }
+    @Override public void updateSelf() { refreshDepartmentCombo(); searchEmployees(); }
 
-    @Override public boolean equals(View view) {
-        if (view == null) return false;
-        if (!view.getViewId().equals(getViewId())) return false;
-        if (!((EmployeeSearchView) view).txtSearchEmployee.getText().equals(this.txtSearchEmployee.getText())) return false;
-        return Objects.equals(Objects.requireNonNull(((EmployeeSearchView) view).comboFilterDepartment.getSelectedItem()).toString(), Objects.requireNonNull(this.comboFilterDepartment.getSelectedItem()).toString());
-    }
-
-    /**
-     * Refreshes the view by reloading data from core services.
-     * This method is CALLED BY the global UI update mechanism; it should not trigger one itself.
-     */
-    @Override
-    public void updateSelf() {
-        refreshDepartmentCombo();
-        searchEmployees();
+    private static class DepartmentItem {
+        Department dept; public DepartmentItem(Department d) { this.dept = d; }
+        @Override public String toString() { return (dept == null) ? "Alle Abteilungen" : dept.getName(); }
     }
 }

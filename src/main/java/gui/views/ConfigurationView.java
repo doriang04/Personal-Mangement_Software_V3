@@ -1,135 +1,181 @@
 package gui.views;
 
-import core.ServiceLocator;
-import gui.UIController; // Import the UIController
-import model.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+import core.ServiceLocator;
+import gui.UIController;
+import static gui.UITheme.COLOR_ACCENT;
+import static gui.UITheme.COLOR_BG_CONTENT;
+import static gui.UITheme.COLOR_BORDER;
+import static gui.UITheme.COLOR_HEADER_BG;
+import static gui.UITheme.COLOR_HOVER;
+import static gui.UITheme.COLOR_TEXT_HEADER;
+import static gui.UITheme.createModernCard;
+import static gui.UITheme.createStyledButton;
+import model.Company;
+import model.Department;
+import model.Role;
+import model.Skill;
+import model.Team;
+
 
 public class ConfigurationView extends JPanel implements View {
 
-    private final String viewId = "configuration-view";
-    private final String tabTitle = "Verwaltung";
-
-    // 1. Store references to the sub-panels
     private DepartmentManagementPanel departmentPanel;
     private TeamManagementPanel teamPanel;
     private RoleManagementPanel rolePanel;
     private SkillManagementPanel skillPanel;
 
+    private int hoveredIndex = -1; // Globaler Tracker für das Hovern in Listen
+
     public ConfigurationView() {
         setLayout(new BorderLayout());
+        setBackground(COLOR_BG_CONTENT);
 
-        // Haupt-Tab-Container
+        // Header
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(true);
+        header.setBackground(COLOR_HEADER_BG);
+        header.setBorder(new EmptyBorder(20, 30, 20, 30));
+        JLabel titleLabel = new JLabel("System-Verwaltung");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(COLOR_TEXT_HEADER);
+        header.add(titleLabel, BorderLayout.WEST);
+        add(header, BorderLayout.NORTH);
+
+        // Tabs für die verschiedenen Verwaltungsbereiche
         JTabbedPane tabbedPane = new JTabbedPane();
-
-        // 2. Instantiate panels and assign them to the fields
+        tabbedPane.setFont(new Font("SansSerif", Font.BOLD, 13));
+        
         departmentPanel = new DepartmentManagementPanel();
         teamPanel = new TeamManagementPanel();
         rolePanel = new RoleManagementPanel();
         skillPanel = new SkillManagementPanel();
 
-        // Tabs hinzufügen
         tabbedPane.addTab("Abteilungen", departmentPanel);
         tabbedPane.addTab("Teams", teamPanel);
         tabbedPane.addTab("Rollen", rolePanel);
         tabbedPane.addTab("Skills", skillPanel);
 
-        add(tabbedPane, BorderLayout.CENTER);
+        JPanel tabWrapper = new JPanel(new BorderLayout());
+        tabWrapper.setOpaque(false);
+        tabWrapper.setBorder(new EmptyBorder(20, 20, 20, 20));
+        tabWrapper.add(tabbedPane, BorderLayout.CENTER);
+
+        add(tabWrapper, BorderLayout.CENTER);
     }
 
-    @Override
-    public String getViewId() { return viewId; }
 
-    @Override
-    public String getViewTabTitle() { return tabTitle; }
+    private <T> void setupList(JList<T> list, DefaultListModel<T> model, java.util.function.Function<T, String> mapper) {
+        list.setModel(model);
+        list.setFixedCellHeight(35);
+        list.setSelectionBackground(Color.WHITE);
+        list.setSelectionForeground(Color.BLACK);
 
-    @Override
-    public JPanel getContent() { return this; }
+        //Hover zeugs
+        list.setCellRenderer((l, value, index, isSelected, cellHasFocus) -> {
+            JLabel lbl = new JLabel(" " + mapper.apply(value));
+            lbl.setOpaque(true);
+            lbl.setFont(new Font("SansSerif", Font.PLAIN, 13));
+            if (index == hoveredIndex) {
+                lbl.setBackground(COLOR_HOVER);
+                lbl.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 5, 0, 0, COLOR_ACCENT),
+                    new EmptyBorder(0, 10, 0, 5)
+                ));
+            } else {
+                lbl.setBackground(Color.WHITE);
+                lbl.setBorder(new EmptyBorder(0, 15, 0, 5));
+            }
+            return lbl;
+        });
 
-    @Override
-    public boolean equals(View view) {
-        return view != null && view.getViewId().equals(this.getViewId());
+        list.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int index = list.locationToIndex(e.getPoint());
+                if (index != hoveredIndex) {
+                    hoveredIndex = index;
+                    list.repaint();
+                }
+            }
+        });
+        list.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                hoveredIndex = -1;
+                list.repaint();
+            }
+        });
     }
 
-    /**
-     * Refreshes the view by telling all its child tabs to reload their data
-     * from the ServiceLocator. This ensures that all lists and dropdowns
-     * are up-to-date.
-     */
-    @Override
-    public void updateSelf() {
-        // 3. Call the loadData() method on each sub-panel
-        departmentPanel.loadData();
-        teamPanel.loadData();
-        rolePanel.loadData();
-        skillPanel.loadData();
-    }
 
-    // --- Inner classes are now updated ---
-
-    /**
-     * Tab 1: Abteilungen (Departments)
-     */
     private class DepartmentManagementPanel extends JPanel {
-        private DefaultListModel<Department> listModel;
-        private JList<Department> list;
-        private JTextField txtName;
-        private JComboBox<Company> cbCompany;
+        // Abteilungsverwaltung
+        private DefaultListModel<Department> listModel = new DefaultListModel<>();
+        private JList<Department> list = new JList<>();
+        private JTextField txtName = new JTextField();
+        private JComboBox<Company> cbCompany = new JComboBox<>();
 
         public DepartmentManagementPanel() {
-            setLayout(new GridLayout(1, 2, 10, 10));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            setLayout(new GridLayout(1, 2, 20, 0));
+            setOpaque(false);
+            setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            // Linke Seite: Liste
-            listModel = new DefaultListModel<>();
-            list = new JList<>(listModel);
-            list.setCellRenderer((ctx, value, index, isSelected, cellHasFocus) -> {
-                JLabel lbl = new JLabel(value.getName());
-                lbl.setOpaque(true);
-                lbl.setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE);
-                return lbl;
-            });
+            // Liste der vorhandenen Abteilungen
+            JPanel listCard = createModernCard("Vorhandene Abteilungen");
+            setupList(list, listModel, Department::getName);
+            listCard.add(new JScrollPane(list), BorderLayout.CENTER);
+            JButton btnDel = createStyledButton("Ausgewählte löschen", false);
+            btnDel.addActionListener(_ -> deleteSelected());
+            listCard.add(btnDel, BorderLayout.SOUTH);
 
-            JPanel listPanel = new JPanel(new BorderLayout());
-            listPanel.setBorder(new TitledBorder("Vorhandene Abteilungen"));
-            listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
-            JButton btnDelete = new JButton("Ausgewählte löschen");
-            btnDelete.addActionListener(_ -> {
-                try {
-                    deleteSelected();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
-                }
-            });
-            listPanel.add(btnDelete, BorderLayout.SOUTH);
-
-            // Rechte Seite: Erstellen
-            JPanel formPanel = new JPanel(new GridBagLayout());
-            formPanel.setBorder(new TitledBorder("Neue Abteilung erstellen"));
+            // Formular zum Hinzufügen neuer Abteilungen
+            JPanel formCard = createModernCard("Neue Abteilung");
+            JPanel form = new JPanel(new GridBagLayout()); form.setOpaque(false);
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5, 5, 5, 5);
-            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(5, 0, 5, 0); gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+            form.add(new JLabel("Name"), gbc);
+            gbc.gridy = 1; form.add(txtName, gbc);
+            gbc.gridy = 2; form.add(new JLabel("Firma"), gbc);
+            gbc.gridy = 3; form.add(cbCompany, gbc);
+            gbc.gridy = 4; gbc.insets = new Insets(15, 0, 0, 0);
+            JButton btnAdd = createStyledButton("Hinzufügen", true);
+            btnAdd.addActionListener(_ -> addNew());
+            form.add(btnAdd, gbc);
+            formCard.add(form, BorderLayout.NORTH);
 
-            txtName = new JTextField(15);
-            cbCompany = new JComboBox<>();
-            JButton btnAdd = new JButton("Hinzufügen");
-            btnAdd.addActionListener(e -> addNew());
-
-            addFormRow(formPanel, gbc, 0, "Name:", txtName);
-            addFormRow(formPanel, gbc, 1, "Firma:", cbCompany);
-            gbc.gridx = 1; gbc.gridy = 2;
-            formPanel.add(btnAdd, gbc);
-
-            add(listPanel);
-            add(formPanel);
-
+            add(listCard); add(formCard);
             loadData();
         }
 
         public void loadData() {
+            // Lade Abteilungen und Firmen in die Listen
             listModel.clear();
             ServiceLocator.getDepartmentContainer().getDepartments().forEach(listModel::addElement);
             cbCompany.removeAllItems();
@@ -137,330 +183,240 @@ public class ConfigurationView extends JPanel implements View {
         }
 
         private void addNew() {
+            // Neue Abteilung hinzufügen
             String name = txtName.getText().trim();
-            Company selectedCompany = (Company) cbCompany.getSelectedItem();
-
-            if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Name darf nicht leer sein.");
-                return;
-            }
-
-            int companyId = (selectedCompany != null) ? selectedCompany.getId() : 0;
-            Department newDept = new Department(name, companyId);
-            ServiceLocator.getDepartmentContainer().addDepartment(newDept);
+            if (name.isEmpty()) return;
+            Company sel = (Company) cbCompany.getSelectedItem();
+            ServiceLocator.getDepartmentContainer().addDepartment(new Department(name, sel != null ? sel.getId() : 0));
             txtName.setText("");
-
-            // Trigger a global UI refresh as core data has changed.
             UIController.getInstance().updateMainWindow();
         }
 
-        private void deleteSelected() throws Exception {
-            Department selected = list.getSelectedValue();
-            if (selected == null) return;
-
-            boolean isReferenced = ServiceLocator.getTeamContainer().getTeams().stream()
-                    .anyMatch(team -> team.getDepartmentId() == selected.getId());
-
-            if (isReferenced) {
-                JOptionPane.showMessageDialog(this, "Kann nicht gelöscht werden!\nEs existieren noch Teams in dieser Abteilung.", "Fehler", JOptionPane.ERROR_MESSAGE);
-                return;
+        private void deleteSelected() {
+            // bestimmte Abteilung löschen
+            Department sel = list.getSelectedValue();
+            if (sel == null) return;
+            boolean ref = ServiceLocator.getTeamContainer().getTeams().stream().anyMatch(t -> t.getDepartmentId() == sel.getId());
+            if (ref) { JOptionPane.showMessageDialog(this, "Abteilung enthält noch Teams!"); return; }
+            try {
+                ServiceLocator.getDepartmentContainer().removeDepartment(sel);
+                UIController.getInstance().updateMainWindow();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
             }
-
-            ServiceLocator.getDepartmentContainer().removeDepartment(selected);
-
-            // Trigger a global UI refresh as core data has changed.
-            UIController.getInstance().updateMainWindow();
         }
     }
 
-    /**
-     * Tab 2: Teams
-     */
     private class TeamManagementPanel extends JPanel {
-        private DefaultListModel<Team> listModel;
-        private JList<Team> list;
-        private JTextField txtName;
-        private JComboBox<Department> cbDepartment;
+        // Teamverwaltung
+        private DefaultListModel<Team> listModel = new DefaultListModel<>();
+        private JList<Team> list = new JList<>();
+        private JTextField txtName = new JTextField();
+        private JComboBox<Department> cbDept = new JComboBox<>();
 
         public TeamManagementPanel() {
-            setLayout(new GridLayout(1, 2, 10, 10));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            setLayout(new GridLayout(1, 2, 20, 0));
+            setOpaque(false);
+            setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            // Liste
-            listModel = new DefaultListModel<>();
-            list = new JList<>(listModel);
-            list.setCellRenderer((ctx, val, idx, sel, foc) -> {
-                JLabel lbl = new JLabel(val.getName());
-                lbl.setOpaque(true);
-                lbl.setBackground(sel ? Color.LIGHT_GRAY : Color.WHITE); return lbl;
+            // Liste der vorhandenen Teams
+            JPanel listCard = createModernCard("Vorhandene Teams");
+            setupList(list, listModel, Team::getName);
+            listCard.add(new JScrollPane(list), BorderLayout.CENTER);
+            JButton btnDel = createStyledButton("Team löschen", false);
+            btnDel.addActionListener(_ -> {
+                try { deleteSelected(); } catch (Exception e) { JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage()); }
             });
+            listCard.add(btnDel, BorderLayout.SOUTH);
 
-            JPanel listPanel = new JPanel(new BorderLayout());
-            listPanel.setBorder(new TitledBorder("Vorhandene Teams"));
-            listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
-            JButton btnDelete = new JButton("Team löschen");
-            btnDelete.addActionListener(_ -> {
-                try {
-                    deleteSelected();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
-                }
-            });
-            listPanel.add(btnDelete, BorderLayout.SOUTH);
+            // Formular zum Hinzufügen neuer Teams
+            JPanel formCard = createModernCard("Neues Team");
+            JPanel form = new JPanel(new GridBagLayout()); form.setOpaque(false);
+            GridBagConstraints gbc = new GridBagConstraints(); gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0; gbc.gridx = 0; gbc.insets = new Insets(5,0,5,0);
+            form.add(new JLabel("Team Name"), gbc);
+            gbc.gridy = 1; form.add(txtName, gbc);
+            gbc.gridy = 2; form.add(new JLabel("Zugehörige Abteilung"), gbc);
+            gbc.gridy = 3; form.add(cbDept, gbc);
+            gbc.gridy = 4; gbc.insets = new Insets(15,0,0,0);
+            JButton btnAdd = createStyledButton("Erstellen", true);
+            btnAdd.addActionListener(_ -> addNew());
+            form.add(btnAdd, gbc);
+            formCard.add(form, BorderLayout.NORTH);
 
-            // Formular
-            JPanel formPanel = new JPanel(new GridBagLayout());
-            formPanel.setBorder(new TitledBorder("Neues Team"));
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5,5,5,5); gbc.fill = GridBagConstraints.HORIZONTAL;
-
-            txtName = new JTextField(15);
-            cbDepartment = new JComboBox<>();
-            JButton btnAdd = new JButton("Erstellen");
-            btnAdd.addActionListener(e -> addNew());
-
-            addFormRow(formPanel, gbc, 0, "Name:", txtName);
-            addFormRow(formPanel, gbc, 1, "Abteilung:", cbDepartment);
-            gbc.gridx=1; gbc.gridy=2; formPanel.add(btnAdd, gbc);
-
-            add(listPanel);
-            add(formPanel);
-
+            add(listCard); add(formCard);
             loadData();
         }
 
         public void loadData() {
+            // Lade Teams und Firmen in die Listen
             listModel.clear();
             ServiceLocator.getTeamContainer().getTeams().forEach(listModel::addElement);
-
-            cbDepartment.removeAllItems();
-            ServiceLocator.getDepartmentContainer().getDepartments().forEach(cbDepartment::addItem);
+            cbDept.removeAllItems();
+            ServiceLocator.getDepartmentContainer().getDepartments().forEach(cbDept::addItem);
         }
 
         private void addNew() {
-            if (txtName.getText().trim().isEmpty() || cbDepartment.getSelectedItem() == null) return;
-
-            Team t = new Team(txtName.getText().trim(), ((Department)cbDepartment.getSelectedItem()).getId());
-
-            ServiceLocator.getTeamContainer().addTeam(t);
+            // Neues Team hinzufügen
+            if (txtName.getText().trim().isEmpty() || cbDept.getSelectedItem() == null) return;
+            ServiceLocator.getTeamContainer().addTeam(new Team(txtName.getText().trim(), ((Department)cbDept.getSelectedItem()).getId()));
             txtName.setText("");
-
-            // Trigger a global UI refresh as core data has changed.
             UIController.getInstance().updateMainWindow();
         }
 
         private void deleteSelected() throws Exception {
-            Team selected = list.getSelectedValue();
-            if (selected == null) return;
-
-            boolean used = ServiceLocator.getEmployeeContainer().getEmployees().stream()
-                    .anyMatch(e -> e.getTeamId() == selected.getId());
-
-            if (used) {
-                JOptionPane.showMessageDialog(this, "Team kann nicht gelöscht werden, da Mitarbeiter zugewiesen sind.", "Fehler", JOptionPane.ERROR_MESSAGE);
-            } else {
-                ServiceLocator.getTeamContainer().removeTeam(selected);
-
-                // Trigger a global UI refresh as core data has changed.
-                UIController.getInstance().updateMainWindow();
-            }
+            // Bestimmtes Team löschen
+            Team sel = list.getSelectedValue();
+            if (sel == null) return;
+            boolean used = ServiceLocator.getEmployeeContainer().getEmployees().stream().anyMatch(e -> e.getTeamId() == sel.getId());
+            if (used) { JOptionPane.showMessageDialog(this, "Team hat noch Mitarbeiter!"); return; }
+            ServiceLocator.getTeamContainer().removeTeam(sel);
+            UIController.getInstance().updateMainWindow();
         }
     }
 
-    /**
-     * Tab 3: Rollen (Roles)
-     */
     private class RoleManagementPanel extends JPanel {
-        private DefaultListModel<Role> listModel;
-        private JList<Role> list;
-        private JTextField txtName, txtPermission;
-        private JTextArea txtDesc;
+        // Rollenverwaltung
+        private DefaultListModel<Role> listModel = new DefaultListModel<>();
+        private JList<Role> list = new JList<>();
+        private JTextField txtName = new JTextField();
+        private JTextField txtPerm = new JTextField();
+        private JTextArea txtDesc = new JTextArea(3, 20);
 
         public RoleManagementPanel() {
-            setLayout(new GridLayout(1, 2, 10, 10));
-            setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            setLayout(new GridLayout(1, 2, 20, 0));
+            setOpaque(false);
+            setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            // Liste
-            listModel = new DefaultListModel<>();
-            list = new JList<>(listModel);
-            list.setCellRenderer((ctx, val, idx, sel, foc) -> {
-                JLabel lbl = new JLabel(val.getName());
-                lbl.setOpaque(true); lbl.setBackground(sel ? Color.LIGHT_GRAY : Color.WHITE); return lbl;
-            });
-            JPanel listPanel = new JPanel(new BorderLayout());
-            listPanel.setBorder(new TitledBorder("Rollen"));
-            listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
-            JButton btnDel = new JButton("Rolle löschen");
+            // Liste der vorhandenen Rollen
+            JPanel listCard = createModernCard("System-Rollen");
+            setupList(list, listModel, Role::getName);
+            listCard.add(new JScrollPane(list), BorderLayout.CENTER);
+            JButton btnDel = createStyledButton("Rolle entfernen", false);
             btnDel.addActionListener(_ -> {
-                try {
-                    deleteSelected();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
-                }
+                try { deleteSelected(); } catch (Exception e) { JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage()); }
             });
-            listPanel.add(btnDel, BorderLayout.SOUTH);
+            listCard.add(btnDel, BorderLayout.SOUTH);
 
-            // Formular
-            JPanel formPanel = new JPanel(new GridBagLayout());
-            formPanel.setBorder(new TitledBorder("Neue Rolle"));
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5,5,5,5); gbc.fill = GridBagConstraints.HORIZONTAL;
+            // Formular zum Hinzufügen neuer Rollen
+            JPanel formCard = createModernCard("Neue Rolle definieren");
+            JPanel form = new JPanel(new GridBagLayout()); form.setOpaque(false);
+            GridBagConstraints gbc = new GridBagConstraints(); gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0; gbc.gridx = 0; gbc.insets = new Insets(3,0,3,0);
+            form.add(new JLabel("Rollenbezeichnung"), gbc);
+            gbc.gridy = 1; form.add(txtName, gbc);
+            gbc.gridy = 2; form.add(new JLabel("Berechtigungsschlüssel"), gbc);
+            gbc.gridy = 3; form.add(txtPerm, gbc);
+            gbc.gridy = 4; form.add(new JLabel("Beschreibung"), gbc);
+            gbc.gridy = 5; txtDesc.setBorder(new LineBorder(COLOR_BORDER)); form.add(new JScrollPane(txtDesc), gbc);
+            gbc.gridy = 6; gbc.insets = new Insets(10,0,0,0);
+            JButton btnAdd = createStyledButton("Rolle speichern", true);
+            btnAdd.addActionListener(_ -> addNew());
+            form.add(btnAdd, gbc);
+            formCard.add(form, BorderLayout.NORTH);
 
-            txtName = new JTextField(15);
-            txtPermission = new JTextField(15);
-            txtDesc = new JTextArea(3, 15);
-            txtDesc.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-            JButton btnAdd = new JButton("Speichern");
-            btnAdd.addActionListener(e -> addNew());
-
-            addFormRow(formPanel, gbc, 0, "Name:", txtName);
-            addFormRow(formPanel, gbc, 1, "Beschreibung:", new JScrollPane(txtDesc));
-            addFormRow(formPanel, gbc, 2, "Permission Key:", txtPermission);
-            gbc.gridx=1; gbc.gridy=3; formPanel.add(btnAdd, gbc);
-
-            add(listPanel);
-            add(formPanel);
-
+            add(listCard); add(formCard);
             loadData();
         }
 
         public void loadData() {
+            // Lade Rollen in die Liste
             listModel.clear();
             ServiceLocator.getRoleContainer().getRoles().forEach(listModel::addElement);
         }
 
         private void addNew() {
-            if(txtName.getText().trim().isEmpty()) return;
-            Role r = new Role(txtName.getText().trim(), txtDesc.getText(), txtPermission.getText());
-
-            ServiceLocator.getRoleContainer().addRole(r);
-            txtName.setText(""); txtDesc.setText(""); txtPermission.setText("");
-
-            // Trigger a global UI refresh as core data has changed.
+            // Neue Rolle hinzufügen
+            if (txtName.getText().trim().isEmpty()) return;
+            ServiceLocator.getRoleContainer().addRole(new Role(txtName.getText().trim(), txtDesc.getText(), txtPerm.getText()));
+            txtName.setText(""); txtDesc.setText(""); txtPerm.setText("");
             UIController.getInstance().updateMainWindow();
         }
 
         private void deleteSelected() throws Exception {
-            Role selected = list.getSelectedValue();
-            if (selected == null) return;
-
-            boolean used = ServiceLocator.getEmployeeContainer().getEmployees().stream()
-                    .anyMatch(e -> {
-                        try {
-                            Role activeRole = e.getRoleManager().getActiveRole();
-                            return activeRole != null && activeRole.getId() == selected.getId();
-                        } catch (Exception ex) {
-                            return false;
-                        }
-                    });
-
-            if(used) {
-                JOptionPane.showMessageDialog(this, "Rolle wird noch von Mitarbeitern verwendet!", "Fehler", JOptionPane.ERROR_MESSAGE);
-            } else {
-                ServiceLocator.getRoleContainer().removeRole(selected);
-
-                // Trigger a global UI refresh as core data has changed.
-                UIController.getInstance().updateMainWindow();
-            }
+            // Bestimmte Rolle löschen
+            Role sel = list.getSelectedValue();
+            if (sel == null) return;
+            ServiceLocator.getRoleContainer().removeRole(sel);
+            UIController.getInstance().updateMainWindow();
         }
     }
 
-    /**
-     * Tab 4: Skills
-     */
     private class SkillManagementPanel extends JPanel {
-        private DefaultListModel<Skill> listModel;
-        private JList<Skill> list;
-        private JTextField txtName;
-        private JSpinner spYears;
-        private JTextArea txtDesc;
+        // Skillverwaltung
+        private DefaultListModel<Skill> listModel = new DefaultListModel<>();
+        private JList<Skill> list = new JList<>();
+        private JTextField txtName = new JTextField();
+        private JSpinner spYears = new JSpinner(new SpinnerNumberModel(0, 0, 50, 1));
+        private JTextArea txtDesc = new JTextArea(3, 20);
 
         public SkillManagementPanel() {
-            setLayout(new GridLayout(1, 2, 10, 10));
-            setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+            setLayout(new GridLayout(1, 2, 20, 0));
+            setOpaque(false);
+            setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            // Liste
-            listModel = new DefaultListModel<>();
-            list = new JList<>(listModel);
-            list.setCellRenderer((ctx, val, idx, sel, foc) -> {
-                JLabel lbl = new JLabel(val.getName() + " (" + val.getRequired_years() + "y)");
-                lbl.setOpaque(true); lbl.setBackground(sel ? Color.LIGHT_GRAY : Color.WHITE); return lbl;
-            });
-            JPanel listPanel = new JPanel(new BorderLayout());
-            listPanel.setBorder(new TitledBorder("Skills"));
-            listPanel.add(new JScrollPane(list), BorderLayout.CENTER);
-            JButton btnDel = new JButton("Skill löschen");
+            // Liste der vorhandenen Skills
+            JPanel listCard = createModernCard("Skill-Katalog");
+            setupList(list, listModel, s -> s.getName() + " (" + s.getRequired_years() + "J)");
+            listCard.add(new JScrollPane(list), BorderLayout.CENTER);
+            JButton btnDel = createStyledButton("Skill löschen", false);
             btnDel.addActionListener(_ -> {
-                try {
-                    deleteSelected();
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage());
-                }
+                try { deleteSelected(); } catch (Exception e) { JOptionPane.showMessageDialog(this, "Fehler: " + e.getMessage()); }
             });
-            listPanel.add(btnDel, BorderLayout.SOUTH);
+            listCard.add(btnDel, BorderLayout.SOUTH);
 
-            // Formular
-            JPanel formPanel = new JPanel(new GridBagLayout());
-            formPanel.setBorder(new TitledBorder("Neuer Skill"));
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(5,5,5,5); gbc.fill = GridBagConstraints.HORIZONTAL;
+            // Formular zum Hinzufügen neuer Skills
+            JPanel formCard = createModernCard("Neuen Skill anlegen");
+            JPanel form = new JPanel(new GridBagLayout()); form.setOpaque(false);
+            GridBagConstraints gbc = new GridBagConstraints(); gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0; gbc.gridx = 0; gbc.insets = new Insets(3,0,3,0);
+            form.add(new JLabel("Skill Name"), gbc);
+            gbc.gridy = 1; form.add(txtName, gbc);
+            gbc.gridy = 2; form.add(new JLabel("Mindestjahre Erfahrung"), gbc);
+            gbc.gridy = 3; form.add(spYears, gbc);
+            gbc.gridy = 4; form.add(new JLabel("Beschreibung"), gbc);
+            gbc.gridy = 5; txtDesc.setBorder(new LineBorder(COLOR_BORDER)); form.add(new JScrollPane(txtDesc), gbc);
+            gbc.gridy = 6; gbc.insets = new Insets(10,0,0,0);
+            JButton btnAdd = createStyledButton("Skill hinzufügen", true);
+            btnAdd.addActionListener(_ -> addNew());
+            form.add(btnAdd, gbc);
+            formCard.add(form, BorderLayout.NORTH);
 
-            txtName = new JTextField(15);
-            spYears = new JSpinner(new SpinnerNumberModel(0, 0, 50, 1));
-            txtDesc = new JTextArea(3, 15);
-            txtDesc.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-            JButton btnAdd = new JButton("Speichern");
-            btnAdd.addActionListener(e -> addNew());
-
-            addFormRow(formPanel, gbc, 0, "Name:", txtName);
-            addFormRow(formPanel, gbc, 1, "Jahre Exp:", spYears);
-            addFormRow(formPanel, gbc, 2, "Beschreibung:", new JScrollPane(txtDesc));
-            gbc.gridx=1; gbc.gridy=3; formPanel.add(btnAdd, gbc);
-
-            add(listPanel);
-            add(formPanel);
-
+            add(listCard); add(formCard);
             loadData();
         }
 
         public void loadData() {
+            // Lade Skills in die Liste
             listModel.clear();
             ServiceLocator.getSkillContainer().getSkills().forEach(listModel::addElement);
         }
 
         private void addNew() {
-            if(txtName.getText().trim().isEmpty()) return;
-            Skill s = new Skill((Integer) spYears.getValue(), txtName.getText().trim(), txtDesc.getText());
-
-            ServiceLocator.getSkillContainer().addSkill(s);
+            // Neuen Skill hinzufügen
+            if (txtName.getText().trim().isEmpty()) return;
+            ServiceLocator.getSkillContainer().addSkill(new Skill((Integer)spYears.getValue(), txtName.getText().trim(), txtDesc.getText()));
             txtName.setText(""); txtDesc.setText("");
-
-            // Trigger a global UI refresh as core data has changed.
             UIController.getInstance().updateMainWindow();
         }
 
         private void deleteSelected() throws Exception {
-            Skill selected = list.getSelectedValue();
-            if(selected == null) return;
-
-            boolean used = ServiceLocator.getEmployeeContainer().getEmployees().stream()
-                    .anyMatch(e -> e.getSkillManager().getSkillById(selected.getId()) != null);
-
-            if(used) {
-                JOptionPane.showMessageDialog(this, "Kann nicht gelöscht werden!\nEs existieren noch Mitarbeiter mit diesem Skill.", "Fehler", JOptionPane.ERROR_MESSAGE);
-            } else {
-                ServiceLocator.getSkillContainer().removeSkill(selected);
-
-                // Trigger a global UI refresh as core data has changed.
-                UIController.getInstance().updateMainWindow();
-            }
+            // Bestimmten Skill löschen
+            Skill sel = list.getSelectedValue();
+            if (sel == null) return;
+            ServiceLocator.getSkillContainer().removeSkill(sel);
+            UIController.getInstance().updateMainWindow();
         }
     }
 
-    private void addFormRow(JPanel p, GridBagConstraints gbc, int row, String label, JComponent comp) {
-        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.0;
-        p.add(new JLabel(label), gbc);
-        gbc.gridx = 1; gbc.weightx = 1.0;
-        p.add(comp, gbc);
+    @Override public String getViewId() { return "configuration-view"; }
+    @Override public String getViewTabTitle() { return "Verwaltung"; }
+    @Override public JPanel getContent() { return this; }
+    @Override public boolean equals(View v) { return v != null && v.getViewId().equals(getViewId()); }
+
+    @Override
+    public void updateSelf() {
+        // Daten in allen Panels neu laden
+        departmentPanel.loadData();
+        teamPanel.loadData();
+        rolePanel.loadData();
+        skillPanel.loadData();
     }
 }

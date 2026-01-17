@@ -1,22 +1,56 @@
 package gui.views;
 
-import core.ServiceLocator;
-import gui.UIController; // Import the UIController
-import model.*;
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+import core.ServiceLocator;
+import gui.UIController;
+import static gui.UITheme.COLOR_ACCENT;
+import static gui.UITheme.COLOR_BG_CONTENT;
+import static gui.UITheme.COLOR_BORDER;
+import static gui.UITheme.COLOR_HEADER_BG;
+import static gui.UITheme.COLOR_HOVER;
+import static gui.UITheme.COLOR_TEXT_HEADER;
+import static gui.UITheme.createModernCard;
+import static gui.UITheme.createStyledButton;
+import model.Employee;
+import model.Role;
+import model.Team;
 
 public class EmployeeManagementView extends JPanel implements View {
 
-    private JList<String> employeeList;
-    private DefaultListModel<String> listModel;
-    private ArrayList<Employee> currentListCache;
+    private JList<Employee> employeeList;
+    private DefaultListModel<Employee> listModel;
+    private int hoveredIndex = -1;
 
-    // --- INPUT FIELDS ---
     private JTextField txtFirstName, txtLastName, txtUsername, txtEmail, txtPhone, txtAddress;
     private JPasswordField txtPassword;
     private JComboBox<String> cbGender;
@@ -25,39 +59,101 @@ public class EmployeeManagementView extends JPanel implements View {
     private JTextField txtDateOfBirth, txtHireDate;
 
     public EmployeeManagementView() {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setLayout(new BorderLayout());
+        setBackground(COLOR_BG_CONTENT);
 
-        // --- LEFT PANEL: List & Delete ---
-        JPanel leftPanel = new JPanel(new BorderLayout(5, 5));
-        leftPanel.setBorder(new TitledBorder("Mitarbeiter verwalten"));
+        // Header
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(true);
+        header.setBackground(COLOR_HEADER_BG);
+        header.setBorder(new EmptyBorder(20, 30, 20, 30));
+        JLabel titleLabel = new JLabel("Personalverwaltung");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(COLOR_TEXT_HEADER);
+        header.add(titleLabel, BorderLayout.WEST);
+        add(header, BorderLayout.NORTH);
+
+        // Mittelteil
+        JPanel leftPanel = createLeftPanel();
+        JPanel rightPanel = createRightPanel();
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
+        splitPane.setDividerLocation(400);
+        splitPane.setDividerSize(1);
+        splitPane.setBorder(new EmptyBorder(20, 20, 20, 20));
+        splitPane.setOpaque(false);
+
+        add(splitPane, BorderLayout.CENTER);
+        refreshList();
+    }
+
+    private JPanel createLeftPanel() {
+        JPanel container = new JPanel(new BorderLayout(0, 15));
+        container.setOpaque(false);
+        container.setBorder(new EmptyBorder(0, 0, 0, 10));
+
+        JPanel card = createModernCard("Mitarbeiter-Verzeichnis");
         listModel = new DefaultListModel<>();
         employeeList = new JList<>(listModel);
-        leftPanel.add(new JScrollPane(employeeList), BorderLayout.CENTER);
+        employeeList.setCellRenderer(new EmployeeListRenderer());
+        employeeList.setFixedCellHeight(50);
+        employeeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        employeeList.setSelectionBackground(Color.WHITE);
+        employeeList.setSelectionForeground(Color.BLACK);
+        
+        // Hover Logik
+        employeeList.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int index = employeeList.locationToIndex(e.getPoint());
+                if (index != hoveredIndex) {
+                    hoveredIndex = index;
+                    employeeList.repaint();
+                }
+            }
+        });
+        employeeList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                hoveredIndex = -1;
+                employeeList.repaint();
+            }
+        });
 
-        JButton btnDelete = new JButton("Ausgewählten Mitarbeiter löschen");
-        btnDelete.setBackground(new Color(255, 100, 100));
-        btnDelete.setForeground(Color.WHITE);
-        btnDelete.addActionListener(_ -> deleteSelectedEmployee());
-        leftPanel.add(btnDelete, BorderLayout.SOUTH);
+        JScrollPane scrollPane = new JScrollPane(employeeList);
+        scrollPane.setBorder(new LineBorder(COLOR_BORDER));
+        card.add(scrollPane, BorderLayout.CENTER);
 
-        // --- RIGHT PANEL: Add ---
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBorder(new TitledBorder("Neuen Mitarbeiter anlegen"));
+        JButton btnDelete = createStyledButton("Mitarbeiter löschen", false);
+        btnDelete.addActionListener(_ -> {
+            try {
+                deleteSelectedEmployee();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
+            }
+        });
+        card.add(btnDelete, BorderLayout.SOUTH);
+
+        container.add(card, BorderLayout.CENTER);
+        return container;
+    }
+
+    private JPanel createRightPanel() {
+        JPanel card = createModernCard("Neuen Mitarbeiter erfassen");
         JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 4, 4, 4);
+        gbc.insets = new Insets(8, 0, 2, 0);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.weightx = 1.0;
 
-        // Initialize fields
-        txtFirstName = new JTextField(20);
-        txtLastName = new JTextField(20);
-        txtUsername = new JTextField(20);
-        txtPassword = new JPasswordField(20);
-        txtEmail = new JTextField(20);
-        txtPhone = new JTextField(20);
-        txtAddress = new JTextField(20);
+        txtFirstName = new JTextField();
+        txtLastName = new JTextField();
+        txtUsername = new JTextField();
+        txtPassword = new JPasswordField();
+        txtEmail = new JTextField();
+        txtPhone = new JTextField();
+        txtAddress = new JTextField();
         txtDateOfBirth = new JTextField("YYYY-MM-DD");
         txtHireDate = new JTextField(LocalDate.now().toString());
         cbGender = new JComboBox<>(new String[]{"Männlich", "Weiblich", "Divers"});
@@ -65,184 +161,147 @@ public class EmployeeManagementView extends JPanel implements View {
         cbRole = new JComboBox<>();
         loadComboBoxData();
 
-        // Add fields to layout
         int row = 0;
-        addFormRow(formPanel, gbc, row++, "Vorname*:", txtFirstName);
-        addFormRow(formPanel, gbc, row++, "Nachname*:", txtLastName);
-        addFormRow(formPanel, gbc, row++, "Benutzername*:", txtUsername);
-        addFormRow(formPanel, gbc, row++, "Passwort*:", txtPassword);
-        addFormRow(formPanel, gbc, row++, "Team*:", cbTeam);
-        addFormRow(formPanel, gbc, row++, "Rolle*:", cbRole);
-        gbc.gridx=0; gbc.gridy=row++; gbc.gridwidth=2; formPanel.add(new JSeparator(), gbc); gbc.gridwidth=1;
-        addFormRow(formPanel, gbc, row++, "E-Mail:", txtEmail);
-        addFormRow(formPanel, gbc, row++, "Telefon:", txtPhone);
-        addFormRow(formPanel, gbc, row++, "Adresse:", txtAddress);
-        addFormRow(formPanel, gbc, row++, "Geburtsdatum:", txtDateOfBirth);
-        addFormRow(formPanel, gbc, row++, "Einstellungsdatum:", txtHireDate);
-        addFormRow(formPanel, gbc, row++, "Geschlecht:", cbGender);
+        addModernFormRow(formPanel, gbc, row++, "Vorname*", txtFirstName);
+        addModernFormRow(formPanel, gbc, row++, "Nachname*", txtLastName);
+        addModernFormRow(formPanel, gbc, row++, "Benutzername*", txtUsername);
+        addModernFormRow(formPanel, gbc, row++, "Passwort*", txtPassword);
+        addModernFormRow(formPanel, gbc, row++, "Team*", cbTeam);
+        addModernFormRow(formPanel, gbc, row++, "Rolle*", cbRole);
+        
+        gbc.gridy = row++; gbc.insets = new Insets(15, 0, 15, 0);
+        formPanel.add(new JSeparator(), gbc);
+        
+        gbc.insets = new Insets(8, 0, 2, 0);
+        addModernFormRow(formPanel, gbc, row++, "E-Mail", txtEmail);
+        addModernFormRow(formPanel, gbc, row++, "Telefon", txtPhone);
+        addModernFormRow(formPanel, gbc, row++, "Einstellungsdatum", txtHireDate);
 
-        JButton btnAdd = new JButton("Mitarbeiter hinzufügen");
+        JButton btnAdd = createStyledButton("Mitarbeiter hinzufügen", true);
         btnAdd.addActionListener(e -> createEmployee());
-        rightPanel.add(new JScrollPane(formPanel), BorderLayout.CENTER);
-        rightPanel.add(btnAdd, BorderLayout.SOUTH);
+        
+        card.add(new JScrollPane(formPanel), BorderLayout.CENTER);
+        card.add(btnAdd, BorderLayout.SOUTH);
 
-        // Split Pane for layout
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
-        splitPane.setDividerLocation(350);
-        add(splitPane, BorderLayout.CENTER);
+        return card;
+    }
 
-        refreshList();
+    private void addModernFormRow(JPanel p, GridBagConstraints gbc, int row, String labelText, JComponent comp) {
+        gbc.gridy = row;
+        JPanel rowPanel = new JPanel(new BorderLayout(0, 5));
+        rowPanel.setOpaque(false);
+        JLabel lbl = new JLabel(labelText);
+        lbl.setFont(new Font("SansSerif", Font.BOLD, 12));
+        lbl.setForeground(COLOR_TEXT_HEADER);
+        rowPanel.add(lbl, BorderLayout.NORTH);
+        rowPanel.add(comp, BorderLayout.CENTER);
+        p.add(rowPanel, gbc);
+    }
+
+
+    private class EmployeeListRenderer extends DefaultListCellRenderer {
+        // ListCellRenderer für Mitarbeiter mit Hover-Effekt
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            Employee emp = (Employee) value;
+            JPanel panel = new JPanel(new BorderLayout(10, 0));
+            panel.setPreferredSize(new Dimension(0, 50));
+            
+            boolean isHovered = (index == hoveredIndex);
+            
+            if (isHovered) {
+                panel.setBackground(COLOR_HOVER);
+                panel.setBorder(BorderFactory.createMatteBorder(0, 5, 0, 0, COLOR_ACCENT));
+            } else {
+                panel.setBackground(Color.WHITE);
+                panel.setBorder(new EmptyBorder(0, 15, 0, 5));
+            }
+
+            JLabel nameLabel = new JLabel("  " + emp.getFirstName() + " " + emp.getLastName());
+            nameLabel.setFont(new Font("SansSerif", isSelected ? Font.BOLD : Font.PLAIN, 13));
+            
+            JLabel idLabel = new JLabel("ID: " + emp.getId() + "  ");
+            idLabel.setFont(new Font("Monospaced", Font.PLAIN, 11));
+            idLabel.setForeground(Color.GRAY);
+
+            panel.add(nameLabel, BorderLayout.CENTER);
+            panel.add(idLabel, BorderLayout.EAST);
+
+            return panel;
+        }
     }
 
     private void createEmployee() {
-        // --- 1. Validation ---
-        List<String> missingFields = new ArrayList<>();
-        if (txtFirstName.getText().trim().isEmpty()) missingFields.add("Vorname");
-        if (txtLastName.getText().trim().isEmpty()) missingFields.add("Nachname");
-        if (txtUsername.getText().trim().isEmpty()) missingFields.add("Benutzername");
-        if (new String(txtPassword.getPassword()).trim().isEmpty()) missingFields.add("Passwort");
-        if (cbTeam.getSelectedItem() == null || ((TeamItem) cbTeam.getSelectedItem()).team == null) missingFields.add("Team");
-        if (cbRole.getSelectedItem() == null || ((RoleItem) cbRole.getSelectedItem()).role == null) missingFields.add("Rolle");
-
-        if (!missingFields.isEmpty()) {
-            String message = "Folgende Pflichtfelder müssen ausgefüllt werden:\n" + String.join(", ", missingFields);
-            JOptionPane.showMessageDialog(this, message, "Fehlende Eingaben", JOptionPane.WARNING_MESSAGE);
+        if (txtFirstName.getText().trim().isEmpty() || txtLastName.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Pflichtfelder ausfüllen!", "Warnung", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
-            // --- 2. Data collection ---
-            String firstName = txtFirstName.getText().trim();
-            String lastName = txtLastName.getText().trim();
-            String username = txtUsername.getText().trim();
-            String password = new String(txtPassword.getPassword());
-            int teamId = ((TeamItem) cbTeam.getSelectedItem()).team.getId();
-            Role selectedRole = ((RoleItem) cbRole.getSelectedItem()).role;
-            String email = txtEmail.getText().trim().isEmpty() ? "n/a" : txtEmail.getText().trim();
-            String phone = txtPhone.getText().trim().isEmpty() ? "n/a" : txtPhone.getText().trim();
-            String address = txtAddress.getText().trim().isEmpty() ? "n/a" : txtAddress.getText().trim();
-            char gender = ((String)cbGender.getSelectedItem()).charAt(0);
-            LocalDate hireDate = LocalDate.parse(txtHireDate.getText());
-            java.util.Date hireDateAsDate = java.sql.Date.valueOf(hireDate);
-
-            // --- 3. Create new Employee object ---
             int newId = ServiceLocator.getEmployeeContainer().getEmployees().stream()
                     .mapToInt(Employee::getId).max().orElse(0) + 1;
 
             Employee newEmp = new Employee(
-                    newId, teamId, username, password, firstName, lastName, email,
-                    null, address, gender, hireDateAsDate, 0, true, phone
+                    newId, ((TeamItem) cbTeam.getSelectedItem()).team.getId(),
+                    txtUsername.getText().trim(), new String(txtPassword.getPassword()),
+                    txtFirstName.getText().trim(), txtLastName.getText().trim(),
+                    txtEmail.getText().trim(), null, txtAddress.getText().trim(),
+                    ((String)cbGender.getSelectedItem()).charAt(0),
+                    java.sql.Date.valueOf(LocalDate.parse(txtHireDate.getText())),
+                    0, true, txtPhone.getText().trim()
             );
 
-            if(newEmp.getRoleManager() != null) {
-                newEmp.getRoleManager().assignRole(selectedRole.getId(), hireDate);
-            }
+            Role selRole = ((RoleItem) cbRole.getSelectedItem()).role;
+            if(selRole != null) newEmp.getRoleManager().assignRole(selRole.getId(), LocalDate.now());
 
-            // --- 4. Save and update UI ---
             ServiceLocator.getEmployeeContainer().addEmployee(newEmp);
-
-            // Since we modified core data, trigger a global UI refresh.
-            // This will update all views, including this one's list.
             UIController.getInstance().updateMainWindow();
-
-            clearForm(); // Clear the form fields locally.
-
-            JOptionPane.showMessageDialog(this, "Mitarbeiter '" + firstName + " " + lastName + "' (ID: " + newId + ") erfolgreich angelegt.", "Erfolg", JOptionPane.INFORMATION_MESSAGE);
-
+            clearForm();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Ein unerwarteter Fehler ist aufgetreten:\n" + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
         }
     }
 
-    private void addFormRow(JPanel p, GridBagConstraints gbc, int row, String label, JComponent comp) {
-        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.1;
-        p.add(new JLabel(label), gbc);
-        gbc.gridx = 1; gbc.weightx = 0.9;
-        p.add(comp, gbc);
+    private void deleteSelectedEmployee() throws Exception {
+        Employee selected = employeeList.getSelectedValue();
+        if (selected == null) return;
+
+        if (JOptionPane.showConfirmDialog(this, "Löschen?") == JOptionPane.YES_OPTION) {
+            ServiceLocator.getEmployeeContainer().removeEmployee(selected);
+            UIController.getInstance().updateMainWindow();
+        }
+    }
+
+    private void refreshList() {
+        listModel.clear();
+        ServiceLocator.getEmployeeContainer().getEmployees().forEach(listModel::addElement);
     }
 
     private void loadComboBoxData() {
-        cbTeam.removeAllItems();
-        cbRole.removeAllItems();
-
+        cbTeam.removeAllItems(); cbRole.removeAllItems();
         cbTeam.addItem(new TeamItem(null));
         ServiceLocator.getTeamContainer().getTeams().forEach(t -> cbTeam.addItem(new TeamItem(t)));
-
         cbRole.addItem(new RoleItem(null));
         ServiceLocator.getRoleContainer().getRoles().forEach(r -> cbRole.addItem(new RoleItem(r)));
     }
 
     private void clearForm() {
-        txtFirstName.setText("");
-        txtLastName.setText("");
-        txtUsername.setText("");
-        txtPassword.setText("");
-        txtEmail.setText("");
-        txtPhone.setText("");
-        txtAddress.setText("");
-        txtDateOfBirth.setText("YYYY-MM-DD");
-        txtHireDate.setText(LocalDate.now().toString());
-        cbTeam.setSelectedIndex(0);
-        cbRole.setSelectedIndex(0);
-        cbGender.setSelectedIndex(0);
+        txtFirstName.setText(""); txtLastName.setText(""); txtUsername.setText("");
+        txtPassword.setText(""); txtEmail.setText("");
     }
 
-    private void refreshList() {
-        listModel.clear();
-        currentListCache = new ArrayList<>(ServiceLocator.getEmployeeContainer().getEmployees());
-        for (Employee e : currentListCache) {
-            listModel.addElement(e.getId() + " | " + e.getFirstName() + " " + e.getLastName() + " (" + e.getUsername() + ")");
-        }
-    }
-
-    private void deleteSelectedEmployee() {
-        int index = employeeList.getSelectedIndex();
-        if (index == -1) {
-            JOptionPane.showMessageDialog(this, "Bitte wählen Sie einen Mitarbeiter aus.");
-            return;
-        }
-
-        Employee toDelete = currentListCache.get(index);
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Sollen " + toDelete.getFirstName() + " " + toDelete.getLastName() + " wirklich gelöscht werden?",
-                "Löschen bestätigen", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                ServiceLocator.getEmployeeContainer().removeEmployee(toDelete);
-
-                // Since we modified core data, trigger a global UI refresh.
-                UIController.getInstance().updateMainWindow();
-
-                JOptionPane.showMessageDialog(this, "Mitarbeiter gelöscht!");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Fehler beim Löschen: " + ex.getMessage());
-            }
-        }
-    }
-
-    // Helper inner classes
     static class TeamItem {
-        Team team;
-        public TeamItem(Team t) { this.team = t; }
+        Team team; public TeamItem(Team t) { this.team = t; }
         @Override public String toString() { return (team == null) ? "- Kein Team -" : team.getName(); }
     }
     static class RoleItem {
-        Role role;
-        public RoleItem(Role r) { this.role = r; }
+        Role role; public RoleItem(Role r) { this.role = r; }
         @Override public String toString() { return (role == null) ? "- Keine Rolle -" : role.getName(); }
     }
 
-    // View interface methods
     @Override public String getViewId() { return "admin-employee-management"; }
     @Override public String getViewTabTitle() { return "Personalverwaltung"; }
     @Override public JPanel getContent() { return this; }
     @Override public boolean equals(View view) { return view != null && view.getViewId().equals(getViewId()); }
-
-    @Override
-    public void updateSelf() {
-        refreshList();
-        loadComboBoxData();
-    }
+    @Override public void updateSelf() { refreshList(); loadComboBoxData(); }
 }

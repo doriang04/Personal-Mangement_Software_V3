@@ -1,14 +1,37 @@
 package gui.views;
 
-import core.SessionManager;
-import core.ServiceLocator;
-import gui.UIController;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+import core.ServiceLocator;
+import core.SessionManager;
+import gui.UIController;
+import static gui.UITheme.COLOR_BG_CONTENT;
+import static gui.UITheme.COLOR_BORDER;
+import static gui.UITheme.COLOR_HEADER_BG;
+import static gui.UITheme.COLOR_STATUS_GREEN;
+import static gui.UITheme.COLOR_STATUS_RED;
+import static gui.UITheme.COLOR_TEXT_HEADER;
+import static gui.UITheme.createModernCard;
+import static gui.UITheme.createStyledButton;
 
 public class AdminControlPanelView extends JPanel implements View {
 
@@ -19,131 +42,134 @@ public class AdminControlPanelView extends JPanel implements View {
 
     public AdminControlPanelView() {
         this.sessionManager = ServiceLocator.getSessionManager();
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-
         initUI();
-        updateStatusDisplay(); // Load initial status
+        updateStatusDisplay();
     }
 
     private void initUI() {
-        // --- UPPER AREA: Status & Control ---
-        JPanel controlPanel = new JPanel(new GridBagLayout());
-        controlPanel.setBorder(new TitledBorder("Systemzustand"));
+        setLayout(new BorderLayout());
+        setBackground(COLOR_BG_CONTENT);
 
+        // Header
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(true);
+        header.setBackground(COLOR_HEADER_BG);
+        header.setBorder(new EmptyBorder(20, 30, 20, 30));
+        
+        JLabel titleLabel = new JLabel("System-Administration");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(COLOR_TEXT_HEADER);
+        header.add(titleLabel, BorderLayout.WEST);
+        add(header, BorderLayout.NORTH);
+
+        JPanel contentContainer = new JPanel(new GridBagLayout());
+        contentContainer.setOpaque(false);
+        contentContainer.setBorder(new EmptyBorder(30, 40, 30, 40));
+        
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Status Label
-        lblSystemStatus = new JLabel("Lade Status...", SwingConstants.CENTER);
-        lblSystemStatus.setFont(new Font("Arial", Font.BOLD, 18));
-        lblSystemStatus.setOpaque(true);
-        lblSystemStatus.setPreferredSize(new Dimension(300, 40));
-
         gbc.gridx = 0; gbc.gridy = 0;
-        controlPanel.add(lblSystemStatus, gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(0, 0, 25, 0);
 
-        // Toggle Button
-        btnToggleMaintenance = new JButton("Wartungsmodus umschalten");
-        btnToggleMaintenance.setPreferredSize(new Dimension(250, 40));
+        // Mittelteil --> Systemstatus / Kontrolle
+        JPanel statusCard = createModernCard("Systemzustand & Kontrolle");
+        JPanel statusContent = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
+        statusContent.setOpaque(false);
+
+        lblSystemStatus = new JLabel("Lade...", SwingConstants.CENTER);
+        lblSystemStatus.setFont(new Font("SansSerif", Font.BOLD, 16));
+        lblSystemStatus.setOpaque(true);
+        lblSystemStatus.setForeground(Color.WHITE);
+        lblSystemStatus.setPreferredSize(new Dimension(300, 50));
+
+        btnToggleMaintenance = createStyledButton("Umschalten", true);
+        btnToggleMaintenance.setPreferredSize(new Dimension(350, 50));
         btnToggleMaintenance.addActionListener(e -> toggleMaintenanceMode());
 
+        statusContent.add(lblSystemStatus);
+        statusContent.add(btnToggleMaintenance);
+        statusCard.add(statusContent, BorderLayout.CENTER);
+        
+        contentContainer.add(statusCard, gbc);
+
+        // Log-Bereich
         gbc.gridy = 1;
-        controlPanel.add(btnToggleMaintenance, gbc);
-
-        add(controlPanel, BorderLayout.NORTH);
-
-        // --- LOWER AREA: Log ---
-        JPanel logPanel = new JPanel(new BorderLayout(5, 5));
-        logPanel.setBorder(new TitledBorder("System-Ereignisprotokoll"));
-
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        
+        JPanel logCard = createModernCard("System-Ereignisprotokoll");
         logArea = new JTextArea();
         logArea.setEditable(false);
         logArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        logArea.setBackground(new Color(240, 240, 240));
+        logArea.setBackground(new Color(248, 248, 248));
+        logArea.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        logPanel.add(new JScrollPane(logArea), BorderLayout.CENTER);
+        JScrollPane logScroll = new JScrollPane(logArea);
+        logScroll.setBorder(new LineBorder(COLOR_BORDER, 1));
+        logCard.add(logScroll, BorderLayout.CENTER);
 
-        add(logPanel, BorderLayout.CENTER);
+        contentContainer.add(logCard, gbc);
 
-        log("Admin-Panel geöffnet.");
+        add(contentContainer, BorderLayout.CENTER);
+        log("Admin-Panel Sitzung gestartet.");
     }
 
+
+
+    // Umschalten des Wartungsmodus --> Unterschiedliche Anzeige und Log-Eintrag
     private void toggleMaintenanceMode() {
-        boolean currentState = sessionManager.isMaintenanceModeActive();
-        boolean newState = !currentState;
-
-        // 1. Change status in SessionManager (also saves to system.properties)
+        boolean newState = !sessionManager.isMaintenanceModeActive();
         sessionManager.setMaintenanceModeActive(newState);
-
-        // 2. Update GUI
         updateStatusDisplay();
 
-        // 3. Log & Warn
         if (newState) {
-            log("ACHTUNG: Wartungsmodus wurde AKTIVIERT.");
-            log("Neue Anmeldungen für Nicht-Admins sind jetzt gesperrt.");
+            log("WARNUNG: Wartungsmodus AKTIVIERT.");
             JOptionPane.showMessageDialog(this,
-                    "Wartungsmodus ist nun AKTIV.\nNicht-Admin Benutzer können sich nicht mehr einloggen.",
-                    "Systemstatus geändert", JOptionPane.WARNING_MESSAGE);
+                    "Wartungsmodus AKTIV. Nur Administratoren können sich einloggen.",
+                    "Systemstatus", JOptionPane.WARNING_MESSAGE);
         } else {
-            log("Wartungsmodus wurde DEAKTIVIERT. System ist online.");
+            log("System ist wieder ONLINE.");
             JOptionPane.showMessageDialog(this,
-                    "System ist wieder ONLINE.\nAnmeldungen sind wieder für alle möglich.",
-                    "Systemstatus geändert", JOptionPane.INFORMATION_MESSAGE);
+                    "System ONLINE. Alle Benutzer können sich anmelden.",
+                    "Systemstatus", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
+    // Aktualisiert die Anzeige basierend auf dem aktuellen Wartungsmodus-Status
     private void updateStatusDisplay() {
         boolean active = sessionManager.isMaintenanceModeActive();
 
         if (active) {
-            lblSystemStatus.setText("SYSTEMSTATUS: WARTUNGSMODUS");
-            lblSystemStatus.setBackground(new Color(255, 100, 100)); // Red
-            lblSystemStatus.setForeground(Color.WHITE);
-            btnToggleMaintenance.setText("Wartungsmodus deaktivieren (Online gehen)");
+            lblSystemStatus.setText("STATUS: WARTUNG");
+            lblSystemStatus.setBackground(COLOR_STATUS_RED);
+            btnToggleMaintenance.setText("System ONLINE schalten");
+            btnToggleMaintenance.setBackground(COLOR_STATUS_GREEN);
         } else {
-            lblSystemStatus.setText("SYSTEMSTATUS: ONLINE");
-            lblSystemStatus.setBackground(new Color(100, 200, 100)); // Green
-            lblSystemStatus.setForeground(Color.BLACK);
-            btnToggleMaintenance.setText("Wartungsmodus aktivieren (Sperren)");
+            lblSystemStatus.setText("STATUS: ONLINE");
+            lblSystemStatus.setBackground(COLOR_STATUS_GREEN);
+            btnToggleMaintenance.setText("Wartungsmodus AKTIVIEREN");
+            btnToggleMaintenance.setBackground(COLOR_STATUS_RED);
         }
-
-        // This call might be needed to update other parts of the application,
-        // e.g., a global status bar in the main window.
+        
+        this.revalidate();
+        this.repaint();
         UIController.getInstance().updateMainWindow();
     }
 
     private void log(String message) {
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         logArea.append("[" + time + "] " + message + "\n");
-        // Auto-scroll to the bottom
         logArea.setCaretPosition(logArea.getDocument().getLength());
     }
 
-    @Override
-    public String getViewId() { return "admin-control-panel"; }
+    @Override public String getViewId() { return "admin-control-panel"; }
+    @Override public String getViewTabTitle() { return "Systemsteuerung"; }
+    @Override public JPanel getContent() { return this; }
+    @Override public boolean equals(View view) { return view != null && view.getViewId().equals(getViewId()); }
 
-    @Override
-    public String getViewTabTitle() { return "Systemsteuerung"; }
-
-    @Override
-    public JPanel getContent() { return this; }
-
-    @Override
-    public boolean equals(View view) {
-        return view != null && view.getViewId().equals(getViewId());
-    }
-
-    /**
-     * Refreshes the view's components by re-fetching data from the core services.
-     * This is typically called when the view becomes visible (e.g., tab is selected)
-     * to ensure it displays the most current system state.
-     */
     @Override
     public void updateSelf() {
-        log("Ansicht wird aktualisiert...");
         updateStatusDisplay();
     }
 }

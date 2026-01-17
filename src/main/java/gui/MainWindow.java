@@ -1,25 +1,48 @@
 package gui;
 
-import core.ServiceLocator;
-import gui.views.View;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import core.ServiceLocator;
+import static gui.UITheme.COLOR_ACCENT;
+import static gui.UITheme.COLOR_BG_CONTENT;
+import static gui.UITheme.COLOR_HEADER_BG;
+import static gui.UITheme.COLOR_TEXT_HEADER;
+import gui.views.View;
+
 public class MainWindow extends JFrame {
 
     private static MainWindow instance;
-
     private final JPanel contentWrapper;
     private JTabbedPane tabbedPane;
-    private JPanel northPanel;
-    private JLabel systemStatusLabel;
-
     private JPanel navigationPanel;
+    private JLabel systemStatusLabel;
+    private JPanel northHeader;
 
     public static synchronized MainWindow getInstance() {
         if (instance == null) {
@@ -30,16 +53,17 @@ public class MainWindow extends JFrame {
 
     private MainWindow() {
         setTitle("Personalmanagement Software");
-
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        setSize(450, 550);
+        setSize(1200, 800);
         setLocationRelativeTo(null);
 
         contentWrapper = new JPanel(new BorderLayout());
+        contentWrapper.setBackground(COLOR_BG_CONTENT);
         setContentPane(contentWrapper);
     }
 
     public void showSingleView(View view, String title, int width, int height) {
+        // Entferne alle vorherigen Inhalte
         contentWrapper.removeAll();
         contentWrapper.setLayout(new BorderLayout());
         contentWrapper.add(view.getContent(), BorderLayout.CENTER);
@@ -50,84 +74,119 @@ public class MainWindow extends JFrame {
 
         revalidate();
         repaint();
-
         if (!isVisible()) setVisible(true);
     }
 
     public void setupMainLayout(String userName, String role, ActionListener logoutAction) {
+        // Entferne alle vorherigen Inhalte
         contentWrapper.removeAll();
-        contentWrapper.setLayout(new BorderLayout(5, 5));
+        contentWrapper.setLayout(new BorderLayout());
 
-        northPanel = createNorthPanel(userName, role, logoutAction);
-        contentWrapper.add(northPanel, BorderLayout.NORTH);
+        // links: Navigation
+        contentWrapper.add(createWestPanelContainer(logoutAction), BorderLayout.WEST);
 
-        contentWrapper.add(createWestPanelContainer(), BorderLayout.WEST);
+        // Center: Header + Tabs
+        JPanel centerWrapper = new JPanel(new BorderLayout());
+        centerWrapper.setBackground(COLOR_BG_CONTENT);
+        centerWrapper.setBorder(new EmptyBorder(20, 25, 20, 25));
+
+        northHeader = createModernHeader(userName, role);
+        centerWrapper.add(northHeader, BorderLayout.NORTH);
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-        tabbedPane.setBorder(new EmptyBorder(0, 5, 0, 0));
-        contentWrapper.add(tabbedPane, BorderLayout.CENTER);
+        tabbedPane.setBorder(new EmptyBorder(10, 0, 0, 0));
+        centerWrapper.add(tabbedPane, BorderLayout.CENTER);
+
+        contentWrapper.add(centerWrapper, BorderLayout.CENTER);
 
         setTitle("Personalmanagement Software");
-        setSize(1200, 800);
+        setSize(1280, 850);
         setLocationRelativeTo(null);
+        
+        updateSystemStatusLabel(); 
+        
         revalidate();
         repaint();
     }
 
-    private JPanel createNorthPanel(String name, String role, ActionListener logoutAction) {
-        JPanel northPanel = new JPanel(new BorderLayout());
-        northPanel.setBorder(new EmptyBorder(8, 12, 8, 12));
-        northPanel.setBackground(new Color(230, 230, 230));
-
-        JLabel userLabel = new JLabel("Angemeldet als: " + name + " (" + role + ")");
-        userLabel.setFont(userLabel.getFont().deriveFont(Font.BOLD));
-        northPanel.add(userLabel, BorderLayout.WEST);
+    //  Header
+    private JPanel createModernHeader(String name, String role) {
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(false);
+        
+        JPanel textPanel = new JPanel(new GridLayout(2, 1));
+        textPanel.setOpaque(false);
+        
+        JLabel lblWelcome = new JLabel("Hallo, " + name);
+        lblWelcome.setFont(new Font("SansSerif", Font.BOLD, 22));
+        lblWelcome.setForeground(COLOR_TEXT_HEADER);
+        
+        JLabel lblRole = new JLabel("Rolle: " + role);
+        lblRole.setForeground(Color.GRAY);
+        
+        textPanel.add(lblWelcome);
+        textPanel.add(lblRole);
+        
+        header.add(textPanel, BorderLayout.WEST);
 
         systemStatusLabel = new JLabel();
         systemStatusLabel.setForeground(new Color(217, 56, 56));
         systemStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        updateSystemStatusLabel(); // Initial setzen
-        northPanel.add(systemStatusLabel, BorderLayout.CENTER);
-
-        JButton btnLogout = new JButton("Logout");
-        btnLogout.setFocusPainted(false);
-        btnLogout.addActionListener(logoutAction);
-        northPanel.add(btnLogout, BorderLayout.EAST);
-
-        return northPanel;
+        header.add(systemStatusLabel, BorderLayout.CENTER);
+        
+        javax.swing.Icon avatarIcon;
+        java.net.URL avatarURL = getClass().getResource("/gui/Icons/Avatar.png");
+        if (avatarURL != null) {
+            ImageIcon raw = new ImageIcon(avatarURL);
+            java.awt.Image scaled = raw.getImage().getScaledInstance(56, 56, java.awt.Image.SCALE_SMOOTH);
+            avatarIcon = new ImageIcon(scaled);
+        } else {
+            avatarIcon = new javax.swing.plaf.metal.MetalIconFactory.TreeLeafIcon();
+        }
+        JLabel avatar = new JLabel(avatarIcon);
+        avatar.setPreferredSize(new Dimension(56, 56));
+        avatar.setHorizontalAlignment(SwingConstants.CENTER);
+        avatar.setOpaque(false);
+        avatar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
+        header.add(avatar, BorderLayout.EAST);
+        
+        return header;
     }
 
-    private JScrollPane createWestPanelContainer() {
+    private JScrollPane createWestPanelContainer(ActionListener logoutAction) {
+        // Navigation Panel
         navigationPanel = new JPanel();
         navigationPanel.setLayout(new BoxLayout(navigationPanel, BoxLayout.Y_AXIS));
-        navigationPanel.setBorder(new EmptyBorder(10, 5, 10, 5));
-        navigationPanel.setBackground(new Color(245, 245, 245));
+        navigationPanel.setBorder(new EmptyBorder(20, 15, 20, 15));
+        navigationPanel.setBackground(COLOR_HEADER_BG);
 
-        JLabel navTitle = new JLabel("Navigation");
-        navTitle.setFont(navTitle.getFont().deriveFont(Font.BOLD, 16f));
-        navTitle.setBorder(new EmptyBorder(0, 5, 15, 0));
-        navTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
-        navigationPanel.add(navTitle);
+        JLabel logo = new JLabel("Personal Manager");
+        logo.setFont(new Font("SansSerif", Font.BOLD, 18));
+        logo.setForeground(COLOR_ACCENT);
+        logo.setBorder(new EmptyBorder(0, 10, 30, 0));
+        navigationPanel.add(logo);
 
         JScrollPane scrollPane = new JScrollPane(navigationPanel);
-        scrollPane.setBorder(null);
-        scrollPane.setPreferredSize(new Dimension(220, 0));
+        scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, new Color(230, 230, 230)));
+        scrollPane.setPreferredSize(new Dimension(240, 0));
         return scrollPane;
     }
 
     public void addNavigationSection(String title) {
+        // Section Label
         if (navigationPanel == null) return;
         JLabel label = new JLabel(title.toUpperCase());
-        label.setFont(label.getFont().deriveFont(Font.BOLD, 11f));
-        label.setForeground(Color.GRAY);
-        label.setBorder(new EmptyBorder(15, 8, 5, 0)); // Etwas mehr Abstand oben
+        label.setFont(new Font("SansSerif", Font.BOLD, 11));
+        label.setForeground(new Color(156, 163, 175));
+        label.setBorder(new EmptyBorder(20, 10, 10, 0));
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         navigationPanel.add(label);
         navigationPanel.revalidate();
     }
 
     public void addNavigationEntry(String text, Runnable onClickAction) {
+        // Navigation Button
         if (navigationPanel == null) return;
 
         JButton button = new JButton(text);
@@ -136,15 +195,23 @@ public class MainWindow extends JFrame {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setOpaque(true);
-        button.setBackground(navigationPanel.getBackground());
+        button.setBackground(COLOR_HEADER_BG);
+        button.setForeground(new Color(75, 85, 99));
+        button.setFont(new Font("SansSerif", Font.PLAIN, 14));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
         button.setBorder(new EmptyBorder(0, 10, 0, 0));
 
         button.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) { button.setBackground(new Color(220, 220, 220)); }
-            public void mouseExited(MouseEvent e) { button.setBackground(navigationPanel.getBackground()); }
+            public void mouseEntered(MouseEvent e) { 
+                button.setBackground(new Color(243, 232, 255)); 
+                button.setForeground(COLOR_ACCENT);
+            }
+            public void mouseExited(MouseEvent e) { 
+                button.setBackground(COLOR_HEADER_BG); 
+                button.setForeground(new Color(75, 85, 99));
+            }
         });
 
         button.addActionListener(_ -> onClickAction.run());
@@ -153,15 +220,44 @@ public class MainWindow extends JFrame {
     }
 
     public void addSpacerToNav() {
-        if(navigationPanel != null) navigationPanel.add(Box.createVerticalStrut(20));
+        if(navigationPanel != null) navigationPanel.add(Box.createVerticalStrut(15));
     }
 
-    public void addGlueToNav() {
-        if(navigationPanel != null) navigationPanel.add(Box.createVerticalGlue());
+    // Fügt am Ende der Navigation einen Logout-Button hinzu
+    public void addGlueToNav(ActionListener logoutAction) {
+        if (navigationPanel == null) return;
+
+        navigationPanel.add(Box.createVerticalGlue());
+        navigationPanel.add(new JSeparator(JSeparator.HORIZONTAL));
+        navigationPanel.add(Box.createVerticalStrut(10));
+
+        // Logout Button
+        JButton btnLogout = new JButton("🚪 Logout");
+        btnLogout.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnLogout.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnLogout.setForeground(new Color(220, 38, 38));
+        btnLogout.setContentAreaFilled(false);
+        btnLogout.setBorderPainted(false);
+        btnLogout.setFocusPainted(false);
+        btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        btnLogout.addActionListener(logoutAction);
+        
+        // Hover Effekt für Logout
+        btnLogout.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) { btnLogout.setForeground(Color.RED.darker()); }
+            public void mouseExited(MouseEvent e) { btnLogout.setForeground(new Color(220, 38, 38)); }
+        });
+
+        navigationPanel.add(btnLogout);
+        navigationPanel.add(Box.createVerticalStrut(10));
     }
 
     public void openTab(View view, boolean closable) {
         JComponent component = view.getContent();
+        component.putClientProperty("viewId", view.getViewId()); 
+        
+        component.setBackground(Color.WHITE);
         String title = view.getViewTabTitle();
 
         tabbedPane.addTab(title, component);
@@ -170,13 +266,16 @@ public class MainWindow extends JFrame {
         JPanel tabComponent = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         tabComponent.setOpaque(false);
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        titleLabel.setForeground(new Color(55, 65, 81));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
         tabComponent.add(titleLabel);
 
         if (closable) {
-            JButton closeButton = new JButton("x");
+            JButton closeButton = new JButton("×");
+            closeButton.setFont(new Font("SansSerif", Font.PLAIN, 16));
             closeButton.setBorderPainted(false);
             closeButton.setContentAreaFilled(false);
+            closeButton.setForeground(Color.GRAY);
             closeButton.setMargin(new Insets(0,2,0,2));
             closeButton.addActionListener(_ -> {
                 int i = tabbedPane.indexOfTabComponent(tabComponent);
@@ -190,17 +289,25 @@ public class MainWindow extends JFrame {
     }
 
     public boolean selectTabIfExists(View view) {
+        // Prüfe ob Tab mit der View bereits existiert
+        if (tabbedPane == null) return false;
+        
+        String searchId = view.getViewId();
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            View tab_component = (View) tabbedPane.getComponentAt(i);
-            if (view.equals(tab_component)) {
-                tabbedPane.setSelectedIndex(i);
-                return true;
+            Component c = tabbedPane.getComponentAt(i);
+            if (c instanceof JComponent) {
+                Object tabId = ((JComponent) c).getClientProperty("viewId");
+                if (searchId.equals(tabId)) {
+                    tabbedPane.setSelectedIndex(i);
+                    return true;
+                }
             }
         }
         return false;
     }
 
     private void updateSystemStatusLabel() {
+        // Aktualisiere Systemstatus im Header
         if (systemStatusLabel == null) return;
 
         boolean maintenance =
@@ -212,11 +319,12 @@ public class MainWindow extends JFrame {
     }
 
     public void updateSelf() {
+        // Aktualisiere Header und alle Tabs
         updateSystemStatusLabel();
 
-        if (northPanel != null) {
-            northPanel.revalidate();
-            northPanel.repaint();
+        if (northHeader != null) {
+            northHeader.revalidate();
+            northHeader.repaint();
         }
 
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
@@ -227,5 +335,4 @@ public class MainWindow extends JFrame {
         revalidate();
         repaint();
     }
-
 }

@@ -1,13 +1,23 @@
 package gui;
 
-import core.ServiceLocator;
-import core.SessionManager;
-import gui.views.*;
-
-// NEUE IMPORTS
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import core.ServiceLocator;
+import core.SessionManager;
+import gui.views.ConfigurationView;
+import gui.views.DashboardView;
+import gui.views.EmployeeManagementView;
+import gui.views.EmployeeSearchView;
+import gui.views.LoginView;
+import gui.views.MyProfileView;
+import gui.views.MyTrainingsView;
+import gui.views.TrainingManagementView;
+import gui.views.View;
+
 
 public class UIController {
 
@@ -61,17 +71,29 @@ public class UIController {
         String name = sessionManager.getUserFirstNameAndLastName();
         String role = sessionManager.getUserPermission();
 
-        mainWindow.setupMainLayout(name, role, _ -> logout());
+        mainWindow.setupMainLayout(name, role, _ -> handleLogout());
         buildNavigation(role);
         openDashboard();
     }
 
-    public void logout() {
+    private void handleLogout() {
+    // Sicherheitsabfrage (Optional)
+    int confirm = JOptionPane.showConfirmDialog(mainWindow, 
+        "Möchten Sie sich wirklich ausloggen?", "Logout", JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
+        database.DatabaseManager.getInstance().saveAllData();
         sessionManager.logout();
-        showLoginScreen();
+        showLoginScreen(); 
     }
+}
+    
+private void handleLogout(java.awt.event.ActionEvent e) 
+{
+    handleLogout();
+}
 
-    private void buildNavigation(String role) { // TODO finish this method to include all needed navigation
+private void buildNavigation(String role) { // TODO finish this method to include all needed navigation
         // --- Standard für alle ---
         mainWindow.addNavigationEntry("Dashboard", this::openDashboard);
         mainWindow.addNavigationEntry("Mitarbeiter suchen",
@@ -114,7 +136,7 @@ public class UIController {
                     () -> openTabOrFocus(new EmployeeManagementView(), true));
         }
 
-        mainWindow.addGlueToNav();
+        mainWindow.addGlueToNav(this::handleLogout);
     }
 
     private void openDashboard() {

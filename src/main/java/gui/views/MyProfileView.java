@@ -1,145 +1,204 @@
 package gui.views;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import core.ServiceLocator;
-import gui.UIController; // Import the UIController
+import gui.UIController;
+import static gui.UITheme.COLOR_ACCENT;
+import static gui.UITheme.COLOR_BG_CONTENT;
+import static gui.UITheme.COLOR_BORDER;
+import static gui.UITheme.COLOR_HEADER_BG;
+import static gui.UITheme.COLOR_TEXT_HEADER;
+import static gui.UITheme.createStyledButton;
 import gui.components.RoleHistoryPanel;
 import gui.components.SkillHistoryPanel;
 import model.Employee;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.awt.*;
-
 public class MyProfileView extends JPanel implements View {
 
     private Employee currentUser;
-
-    // --- STATE VARIABLES ---
     private boolean isInEditMode = false;
     private boolean hasUnsavedChanges = false;
 
-    // Editable fields
-    private JTextField txtFirstName;
-    private JTextField txtLastName;
-    private JTextField txtEmail;
-    private JTextField txtPhone;
-    private JTextField txtAddress;
+    private JTextField txtFirstName, txtLastName, txtEmail, txtPhone, txtAddress;
     private JPasswordField txtPassword;
+    private JTextField txtId, txtUsername, txtRole, txtTeam, txtSkills;
 
-    // Permanently read-only fields
-    private JTextField txtId;
-    private JTextField txtUsername;
-    private JTextField txtRole;
-    private JTextField txtTeam;
-    private JTextField txtSkills;
-
-    // Footer components
     private JButton btnPrimaryAction;
     private JButton btnDiscard;
     private JLabel lblUnsavedChanges;
 
     public MyProfileView() {
-        setLayout(new BorderLayout());
         this.currentUser = ServiceLocator.getSessionManager().getCurrentUser();
         initUI();
     }
 
     private void initUI() {
-        // --- Header ---
-        JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        setLayout(new BorderLayout());
+        setBackground(COLOR_BG_CONTENT);
+
+        // Header
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(true);
+        header.setBackground(COLOR_HEADER_BG);
+        header.setBorder(new EmptyBorder(20, 30, 20, 30));
         JLabel title = new JLabel("Mein Profil");
-        title.setFont(new Font("Arial", Font.BOLD, 18));
-        header.add(title);
-        header.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        title.setFont(new Font("SansSerif", Font.BOLD, 22));
+        title.setForeground(COLOR_TEXT_HEADER);
+        header.add(title, BorderLayout.WEST);
         add(header, BorderLayout.NORTH);
 
-        // --- Form Panel ---
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        // Mittelteil
+        JPanel cardPanel = new JPanel(new GridBagLayout());
+        cardPanel.setBackground(Color.WHITE);
+        cardPanel.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(COLOR_BORDER, 1, true),
+                new EmptyBorder(30, 40, 30, 40)
+        ));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(8, 10, 8, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // -- Initialize fields --
-        txtId = createReadOnlyField();
-        txtUsername = createReadOnlyField();
-        txtRole = createReadOnlyField();
-        txtTeam = createReadOnlyField();
-        txtSkills = createReadOnlyField();
+        initFields();
 
-        txtFirstName = new JTextField(20);
-        txtLastName = new JTextField(20);
-        txtEmail = new JTextField(20);
-        txtPhone = new JTextField(20);
-        txtAddress = new JTextField(20);
-        txtPassword = new JPasswordField(20);
-
-        // -- Build layout --
         int row = 0;
-        addFormRow(formPanel, gbc, row++, "Mitarbeiter-ID:", txtId);
-        addFormRow(formPanel, gbc, row++, "Benutzername:", txtUsername);
+        addModernRow(cardPanel, gbc, row++, "Mitarbeiter-ID:", txtId);
+        addModernRow(cardPanel, gbc, row++, "Benutzername:", txtUsername);
 
-        JPanel rolePanel = new JPanel(new BorderLayout(5, 0));
+        // Rolle mit Button für Historie
+        JPanel rolePanel = new JPanel(new BorderLayout(10, 0));
+        rolePanel.setOpaque(false);
         rolePanel.add(txtRole, BorderLayout.CENTER);
-        JButton btnHistory = new JButton("Historie");
-        btnHistory.setMargin(new Insets(2, 5, 2, 5));
-        btnHistory.addActionListener(_ -> showRoleHistoryDialog());
-        rolePanel.add(btnHistory, BorderLayout.EAST);
-        addFormRow(formPanel, gbc, row++, "Rolle:", rolePanel);
+        JButton btnRoleHistory = createStyledButton("Historie", false);
+        btnRoleHistory.addActionListener(_ -> showRoleHistoryDialog());
+        rolePanel.add(btnRoleHistory, BorderLayout.EAST);
+        addModernRow(cardPanel, gbc, row++, "Rolle:", rolePanel);
 
-        JPanel skillPanel = new JPanel(new BorderLayout(5, 0));
+        JPanel skillPanel = new JPanel(new BorderLayout(10, 0));
+        skillPanel.setOpaque(false);
         skillPanel.add(txtSkills, BorderLayout.CENTER);
-        JButton btnSkillHistory = new JButton("Historie");
-        btnSkillHistory.setMargin(new Insets(2, 5, 2, 5));
+        JButton btnSkillHistory = createStyledButton("Historie", false);
         btnSkillHistory.addActionListener(_ -> showSkillHistoryDialog(false));
         skillPanel.add(btnSkillHistory, BorderLayout.EAST);
-        addFormRow(formPanel, gbc, row++, "Skills:", skillPanel);
+        addModernRow(cardPanel, gbc, row++, "Skills:", skillPanel);
 
-        addFormRow(formPanel, gbc, row++, "Team / Abteilung:", txtTeam);
+        addModernRow(cardPanel, gbc, row++, "Team / Abteilung:", txtTeam);
 
-        JSeparator sep = new JSeparator();
         gbc.gridx = 0; gbc.gridy = row++; gbc.gridwidth = 2;
-        formPanel.add(sep, gbc);
-        gbc.gridwidth = 1;
+        gbc.insets = new Insets(20, 10, 20, 10);
+        cardPanel.add(new JSeparator(), gbc);
+        gbc.gridwidth = 1; gbc.insets = new Insets(8, 10, 8, 10);
 
-        addFormRow(formPanel, gbc, row++, "Vorname:", txtFirstName);
-        addFormRow(formPanel, gbc, row++, "Nachname:", txtLastName);
-        addFormRow(formPanel, gbc, row++, "E-Mail:", txtEmail);
-        addFormRow(formPanel, gbc, row++, "Telefon:", txtPhone);
-        addFormRow(formPanel, gbc, row++, "Adresse:", txtAddress);
-        addFormRow(formPanel, gbc, row++, "Passwort:", txtPassword);
+        addModernRow(cardPanel, gbc, row++, "Vorname:", txtFirstName);
+        addModernRow(cardPanel, gbc, row++, "Nachname:", txtLastName);
+        addModernRow(cardPanel, gbc, row++, "E-Mail:", txtEmail);
+        addModernRow(cardPanel, gbc, row++, "Telefon:", txtPhone);
+        addModernRow(cardPanel, gbc, row++, "Adresse:", txtAddress);
+        addModernRow(cardPanel, gbc, row++, "Passwort:", txtPassword);
 
-        add(new JScrollPane(formPanel), BorderLayout.CENTER);
+        JPanel centerWrapper = new JPanel(new GridBagLayout());
+        centerWrapper.setOpaque(false);
+        centerWrapper.add(cardPanel, new GridBagConstraints());
 
-        // --- Footer ---
-        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JScrollPane scrollPane = new JScrollPane(centerWrapper);
+        scrollPane.setBorder(null);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Fußzeile
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 20));
+        footer.setOpaque(true);
+        footer.setBackground(COLOR_BG_CONTENT);
+        footer.setBorder(new EmptyBorder(0, 0, 10, 30));
+
         lblUnsavedChanges = new JLabel("* Ungespeicherte Änderungen");
-        lblUnsavedChanges.setForeground(Color.BLUE.darker());
+        lblUnsavedChanges.setFont(new Font("SansSerif", Font.ITALIC, 12));
+        lblUnsavedChanges.setForeground(COLOR_ACCENT);
 
-        btnDiscard = new JButton("Änderungen verwerfen");
+        btnDiscard = createStyledButton("Änderungen verwerfen", false);
+        btnDiscard.setForeground(new Color(220, 38, 38));
         btnDiscard.addActionListener(_ -> discardChanges());
 
-        btnPrimaryAction = new JButton();
-        btnPrimaryAction.setBackground(new Color(100, 200, 100));
+        btnPrimaryAction = createStyledButton("Profil bearbeiten", true);
         btnPrimaryAction.addActionListener(_ -> handlePrimaryAction());
 
         footer.add(lblUnsavedChanges);
         footer.add(btnDiscard);
         footer.add(btnPrimaryAction);
-        footer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
         add(footer, BorderLayout.SOUTH);
 
-        // Load data, add listeners, and set initial UI state
         loadData();
         addChangeListeners();
         updateUiForCurrentState();
     }
 
+    private void initFields() {
+        txtId = createModernTextField(false);
+        txtUsername = createModernTextField(false);
+        txtRole = createModernTextField(false);
+        txtSkills = createModernTextField(false);
+        txtTeam = createModernTextField(false);
+        txtFirstName = createModernTextField(true);
+        txtLastName = createModernTextField(true);
+        txtEmail = createModernTextField(true);
+        txtPhone = createModernTextField(true);
+        txtAddress = createModernTextField(true);
+        
+        txtPassword = new JPasswordField(20);
+        txtPassword.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        txtPassword.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(COLOR_BORDER, 1), new EmptyBorder(8, 10, 8, 10)));
+    }
+
+    private JTextField createModernTextField(boolean editable) {
+        JTextField tf = new JTextField(20);
+        tf.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        tf.setEditable(editable);
+        tf.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(COLOR_BORDER, 1), new EmptyBorder(8, 10, 8, 10)));
+        if (!editable) tf.setBackground(new Color(245, 245, 245));
+        return tf;
+    }
+
+    private void addModernRow(JPanel p, GridBagConstraints gbc, int row, String labelText, JComponent comp) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("SansSerif", Font.BOLD, 14));
+        label.setForeground(COLOR_TEXT_HEADER);
+        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.0;
+        p.add(label, gbc);
+        gbc.gridx = 1; gbc.weightx = 1.0;
+        p.add(comp, gbc);
+    }
+
     private void updateUiForCurrentState() {
         enableEditableFields(isInEditMode);
-
         if (isInEditMode) {
             lblUnsavedChanges.setVisible(hasUnsavedChanges);
             btnDiscard.setVisible(hasUnsavedChanges);
@@ -152,75 +211,32 @@ public class MyProfileView extends JPanel implements View {
     }
 
     private void enableEditableFields(boolean enable) {
-        txtFirstName.setEditable(enable);
-        txtLastName.setEditable(enable);
-        txtEmail.setEditable(enable);
-        txtPhone.setEditable(enable);
-        txtAddress.setEditable(enable);
-        txtPassword.setEditable(enable);
-
-        Color bgColor = enable ? Color.WHITE : new Color(240, 240, 240);
-        txtFirstName.setBackground(bgColor);
-        txtLastName.setBackground(bgColor);
-        txtEmail.setBackground(bgColor);
-        txtPhone.setBackground(bgColor);
-        txtAddress.setBackground(bgColor);
-        txtPassword.setBackground(bgColor);
-    }
-
-    private void addChangeListeners() {
-        DocumentListener dl = new DocumentListener() {
-            @Override public void insertUpdate(DocumentEvent e) { markAsChanged(); }
-            @Override public void removeUpdate(DocumentEvent e) { markAsChanged(); }
-            @Override public void changedUpdate(DocumentEvent e) { markAsChanged(); }
-        };
-
-        txtFirstName.getDocument().addDocumentListener(dl);
-        txtLastName.getDocument().addDocumentListener(dl);
-        txtEmail.getDocument().addDocumentListener(dl);
-        txtPhone.getDocument().addDocumentListener(dl);
-        txtAddress.getDocument().addDocumentListener(dl);
-        txtPassword.getDocument().addDocumentListener(dl);
-    }
-
-    private void markAsChanged() {
-        if (isInEditMode && !hasUnsavedChanges) {
-            hasUnsavedChanges = true;
-            updateUiForCurrentState();
+        JTextField[] fields = {txtFirstName, txtLastName, txtEmail, txtPhone, txtAddress, txtPassword};
+        for (JTextField f : fields) {
+            f.setEditable(enable);
+            f.setBackground(enable ? Color.WHITE : new Color(248, 248, 248));
         }
     }
 
     private void handlePrimaryAction() {
         if (isInEditMode) {
-            if (hasUnsavedChanges) {
-                saveChanges();
-            } else {
-                isInEditMode = false;
-                updateUiForCurrentState();
+            if (hasUnsavedChanges) saveChanges();
+            else { 
+                isInEditMode = false; 
+                loadData();
+                updateUiForCurrentState(); 
             }
         } else {
             isInEditMode = true;
             hasUnsavedChanges = false;
-            updateUiForCurrentState();
-        }
-    }
-
-    private void discardChanges() {
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Möchten Sie wirklich alle ungespeicherten Änderungen verwerfen?",
-                "Änderungen verwerfen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            isInEditMode = false;
-            hasUnsavedChanges = false;
-            loadData();
+            txtPassword.setText("");
             updateUiForCurrentState();
         }
     }
 
     private void saveChanges() {
         if (currentUser == null) return;
-
+        
         if (txtFirstName.getText().trim().isEmpty() || txtLastName.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vor- und Nachname dürfen nicht leer sein.", "Fehler", JOptionPane.ERROR_MESSAGE);
             return;
@@ -231,43 +247,61 @@ public class MyProfileView extends JPanel implements View {
         currentUser.setEMail(txtEmail.getText().trim());
         currentUser.setPhoneNumber(txtPhone.getText().trim());
         currentUser.setAddress(txtAddress.getText().trim());
-        // Only update password if the field is not empty
-        if (new String(txtPassword.getPassword()).trim().length() > 0) {
-            currentUser.setPassword(new String(txtPassword.getPassword()));
+        
+        String newPwd = new String(txtPassword.getPassword());
+        if (!newPwd.isEmpty() && !newPwd.equals("********")) {
+            currentUser.setPassword(newPwd);
         }
 
-        // Here you would call the database persistence layer
-        // ServiceLocator.getDatabaseManager().saveEmployee(currentUser);
         JOptionPane.showMessageDialog(this, "Profil erfolgreich aktualisiert!");
-
         isInEditMode = false;
         hasUnsavedChanges = false;
-
-        // The underlying employee data has changed. Trigger a global UI refresh
-        // to ensure all views (including this one) are updated consistently.
         UIController.getInstance().updateMainWindow();
-
-        // The global refresh will call updateSelf() which handles reloading data.
-        // We still call this to immediately update the button state.
+        loadData();
         updateUiForCurrentState();
+    }
+
+    private void discardChanges() {
+        if (JOptionPane.showConfirmDialog(this, "Änderungen verwerfen?", "Abbrechen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            isInEditMode = false;
+            hasUnsavedChanges = false;
+            loadData();
+            updateUiForCurrentState();
+        }
+    }
+
+    private void markAsChanged() {
+        if (isInEditMode && !hasUnsavedChanges) {
+            hasUnsavedChanges = true;
+            updateUiForCurrentState();
+        }
+    }
+
+    private void addChangeListeners() {
+        DocumentListener dl = new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { markAsChanged(); }
+            public void removeUpdate(DocumentEvent e) { markAsChanged(); }
+            public void changedUpdate(DocumentEvent e) { markAsChanged(); }
+        };
+        txtFirstName.getDocument().addDocumentListener(dl);
+        txtLastName.getDocument().addDocumentListener(dl);
+        txtEmail.getDocument().addDocumentListener(dl);
+        txtPhone.getDocument().addDocumentListener(dl);
+        txtAddress.getDocument().addDocumentListener(dl);
+        txtPassword.getDocument().addDocumentListener(dl);
     }
 
     private void loadData() {
         if (currentUser == null) return;
         txtId.setText(String.valueOf(currentUser.getId()));
         txtUsername.setText(currentUser.getUsername());
-        String roleName = "-";
-        if (currentUser.getRoleManager() != null && currentUser.getRoleManager().getActiveRole() != null) {
-            roleName = currentUser.getRoleManager().getActiveRole().getName();
-        }
+        
+        String roleName = (currentUser.getRoleManager() != null && currentUser.getRoleManager().getActiveRole() != null) 
+                ? currentUser.getRoleManager().getActiveRole().getName() : "-";
         txtRole.setText(roleName);
 
-        String skillsInfo = "-";
-        if (currentUser.getSkillManager() != null) {
-            int activeSkillsCount = currentUser.getSkillManager().getActiveSkills().size();
-            skillsInfo = activeSkillsCount + (activeSkillsCount == 1 ? " aktiver Skill" : " aktive Skills");
-        }
-        txtSkills.setText(skillsInfo);
+        int activeSkillsCount = (currentUser.getSkillManager() != null) ? currentUser.getSkillManager().getActiveSkills().size() : 0;
+        txtSkills.setText(activeSkillsCount + (activeSkillsCount == 1 ? " aktiver Skill" : " aktive Skills"));
 
         txtTeam.setText("Team-ID: " + currentUser.getTeamId());
         txtFirstName.setText(currentUser.getFirstName());
@@ -275,54 +309,26 @@ public class MyProfileView extends JPanel implements View {
         txtEmail.setText(currentUser.getEMail());
         txtPhone.setText(currentUser.getPhoneNumber());
         txtAddress.setText(currentUser.getAddress());
-
-        // For security, don't display the actual password.
-        txtPassword.setText("");
+        
+        // Zeigt an, dass ein PW existiert, ohne es auszulesen
+        txtPassword.setText("********"); 
     }
 
     private void showRoleHistoryDialog() {
-        JDialog historyDialog = new JDialog(
-                (Frame) SwingUtilities.getWindowAncestor(this), "Meine Rollenhistorie", Dialog.ModalityType.APPLICATION_MODAL);
-        // This view is read-only, so no data-changed callback is needed.
-        RoleHistoryPanel panel = new RoleHistoryPanel(this.currentUser, false, null);
-        historyDialog.setContentPane(panel);
-        historyDialog.setSize(600, 400);
-        historyDialog.setLocationRelativeTo(this);
-        historyDialog.setVisible(true);
+        JDialog diag = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Meine Rollenhistorie", Dialog.ModalityType.APPLICATION_MODAL);
+        diag.setContentPane(new RoleHistoryPanel(this.currentUser, false, null));
+        diag.setSize(600, 400);
+        diag.setLocationRelativeTo(this);
+        diag.setVisible(true);
     }
 
     private void showSkillHistoryDialog(boolean isEditable) {
-        if (this.currentUser == null) {
-            JOptionPane.showMessageDialog(this, "Kein Benutzer ausgewählt.", "Fehler", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        JDialog historyDialog = new JDialog(
-                (Frame) SwingUtilities.getWindowAncestor(this), "Meine Skill-Historie", Dialog.ModalityType.APPLICATION_MODAL);
-
-        // Pass a callback to the panel. If it modifies data (adds/removes a skill),
-        // it will execute this callback to trigger a global UI refresh.
-        Runnable onDataChangedCallback = () -> UIController.getInstance().updateMainWindow();
-        SkillHistoryPanel panel = new SkillHistoryPanel(this.currentUser, isEditable, onDataChangedCallback);
-
-        historyDialog.setContentPane(panel);
-        historyDialog.setSize(700, 450);
-        historyDialog.setLocationRelativeTo(this);
-        historyDialog.setVisible(true);
-        // The previous local `loadData()` call is no longer needed, as the global refresh handles it.
-    }
-
-    private JTextField createReadOnlyField() {
-        JTextField tf = new JTextField(20);
-        tf.setEditable(false);
-        tf.setBackground(new Color(240, 240, 240));
-        return tf;
-    }
-
-    private void addFormRow(JPanel panel, GridBagConstraints gbc, int row, String labelText, JComponent field) {
-        gbc.gridx = 0; gbc.gridy = row; gbc.weightx = 0.0;
-        panel.add(new JLabel(labelText), gbc);
-        gbc.gridx = 1; gbc.weightx = 1.0;
-        panel.add(field, gbc);
+        if (this.currentUser == null) return;
+        JDialog diag = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Meine Skill-Historie", Dialog.ModalityType.APPLICATION_MODAL);
+        diag.setContentPane(new SkillHistoryPanel(this.currentUser, isEditable, () -> UIController.getInstance().updateMainWindow()));
+        diag.setSize(700, 450);
+        diag.setLocationRelativeTo(this);
+        diag.setVisible(true);
     }
 
     @Override public String getViewId() { return "my-profile-view"; }
@@ -330,21 +336,9 @@ public class MyProfileView extends JPanel implements View {
     @Override public JPanel getContent() { return this; }
     @Override public boolean equals(View view) { return view != null && view.getViewId().equals(getViewId()); }
 
-    /**
-     * Refreshes the view's data from the core services.
-     * This will only update the UI if the user is not in edit mode,
-     * to prevent overwriting any unsaved changes.
-     */
     @Override
     public void updateSelf() {
         this.currentUser = ServiceLocator.getSessionManager().getCurrentUser();
-        if (this.currentUser == null) {
-            return;
-        }
-
-        // CRITICAL: Only refresh if not in edit mode to prevent overwriting user input.
-        if (!isInEditMode) {
-            loadData();
-        }
+        if (this.currentUser != null && !isInEditMode) loadData();
     }
 }
