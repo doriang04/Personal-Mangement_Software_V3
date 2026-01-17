@@ -1,18 +1,47 @@
 package gui.views;
 
-import core.ServiceLocator;
-import core.SessionManager;
-import gui.UIController; // Import the UIController
-import gui.components.AssignTrainingDialog;
-import gui.components.CreateTrainingDialog;
-import model.*;
-import model.TrainingManager.TrainingHistoryEntry;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+import core.ServiceLocator;
+import core.SessionManager;
+import gui.UIController;
+import static gui.UITheme.COLOR_ACCENT;
+import static gui.UITheme.COLOR_BG_CONTENT;
+import static gui.UITheme.COLOR_BORDER;
+import static gui.UITheme.COLOR_HEADER_BG;
+import static gui.UITheme.COLOR_HOVER;
+import static gui.UITheme.COLOR_TEXT_HEADER;
+import gui.components.AssignTrainingDialog;
+import gui.components.CreateTrainingDialog;
+import model.Employee;
+import model.Skill;
+import model.Training;
+import model.TrainingManager;
+import model.TrainingManager.TrainingHistoryEntry;
 
 public class TrainingManagementView extends JPanel implements View {
 
@@ -23,160 +52,235 @@ public class TrainingManagementView extends JPanel implements View {
     private JTabbedPane innerTabbedPane;
     private JTable teamProgressTable;
     private DefaultTableModel teamProgressModel;
-
     private JTable trainingCatalogTable;
     private DefaultTableModel trainingCatalogModel;
 
+    private int hoveredRow = -1;
+
     public TrainingManagementView() {
         this.sessionManager = ServiceLocator.getSessionManager();
-
-        // Safely get the role
         String role = sessionManager.getUserPermission();
         this.currentUserRole = (role != null) ? role.toUpperCase() : "GUEST";
-
-        // Get the current user
         this.currentUser = sessionManager.getCurrentUser();
 
         setLayout(new BorderLayout());
+        setBackground(COLOR_BG_CONTENT);
         initUI();
     }
 
-    private boolean isPrivilegedAdminOrHR() {
-        return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR");
-    }
-
     private void initUI() {
-        JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        header.add(new JLabel("Schulungsverwaltung - Eingeloggt als: " + currentUserRole));
+        // --- Header ---
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(true);
+        header.setBackground(COLOR_HEADER_BG);
+        header.setBorder(new EmptyBorder(20, 30, 20, 30));
+
+        JPanel titleWrapper = new JPanel(new GridLayout(2, 1, 2, 2));
+        titleWrapper.setOpaque(false);
+
+        JLabel titleLabel = new JLabel("Schulungsverwaltung");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(COLOR_TEXT_HEADER);
+
+        JLabel subLabel = new JLabel("Status: Angemeldet als " + currentUserRole);
+        subLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        subLabel.setForeground(new Color(107, 114, 128));
+
+        titleWrapper.add(titleLabel);
+        titleWrapper.add(subLabel);
+        header.add(titleWrapper, BorderLayout.WEST);
         add(header, BorderLayout.NORTH);
 
+        // Tabs
         innerTabbedPane = new JTabbedPane();
+        innerTabbedPane.setFont(new Font("SansSerif", Font.BOLD, 13));
 
-        // Tab 1: Training Catalog (always visible)
         innerTabbedPane.addTab("Schulungskatalog", createCatalogPanel());
 
-        // Tab 2: Team Progress (visible to managers)
         if (isPrivilegedManager()) {
             innerTabbedPane.addTab("Team-Fortschritt", createTeamProgressPanel());
         }
 
-        add(innerTabbedPane, BorderLayout.CENTER);
+        JPanel tabWrapper = new JPanel(new BorderLayout());
+        tabWrapper.setOpaque(false);
+        tabWrapper.setBorder(new EmptyBorder(20, 20, 20, 20));
+        tabWrapper.add(innerTabbedPane, BorderLayout.CENTER);
+
+        add(tabWrapper, BorderLayout.CENTER);
     }
 
+    private JPanel createCatalogPanel() {
+        JPanel card = createCardPanel();
+        String[] columns = {"ID", "Titel", "Beschreibung", "Dauer (h)", "Vermittelte Skills"};
+        trainingCatalogModel = new DefaultTableModel(columns, 0) {
+            @Override public boolean isCellEditable(int row, int col) { return false; }
+        };
+        trainingCatalogTable = createStyledTable(trainingCatalogModel);
+        card.add(new JScrollPane(trainingCatalogTable), BorderLayout.CENTER);
+
+        if (isPrivilegedAdminOrHR()) {
+            JButton btnCreate = createStyledButton("Neues Training erstellen", true);
+            btnCreate.addActionListener(_ -> openCreateTrainingDialog());
+            card.add(createButtonWrapper(btnCreate), BorderLayout.SOUTH);
+        }
+        loadCatalogData();
+        return card;
+    }
+
+    private JPanel createTeamProgressPanel() {
+        JPanel card = createCardPanel();
+        String[] columns = {"Mitarbeiter", "Schulung", "Status", "Zuweisungsdatum"};
+        teamProgressModel = new DefaultTableModel(columns, 0) {
+            @Override public boolean isCellEditable(int row, int col) { return false; }
+        };
+        teamProgressTable = createStyledTable(teamProgressModel);
+        card.add(new JScrollPane(teamProgressTable), BorderLayout.CENTER);
+
+        JButton btnAssign = createStyledButton("Schulung zuweisen", true);
+        btnAssign.addActionListener(e -> {
+            Window parentWindow = SwingUtilities.getWindowAncestor(this);
+            new AssignTrainingDialog(parentWindow, () -> UIController.getInstance().updateMainWindow()).setVisible(true);
+        });
+        card.add(createButtonWrapper(btnAssign), BorderLayout.SOUTH);
+        loadTeamProgressData();
+        return card;
+    }
+
+    private JTable createStyledTable(DefaultTableModel model) {
+        JTable table = new JTable(model);
+        table.setRowHeight(40);
+        table.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 13));
+        table.getTableHeader().setBackground(Color.WHITE);
+        
+        // Selektion neutral halten
+        table.setSelectionBackground(Color.WHITE);
+        table.setSelectionForeground(Color.BLACK);
+        
+        table.setGridColor(COLOR_BORDER);
+        table.setShowVerticalLines(false);
+        table.setIntercellSpacing(new Dimension(0, 1));
+
+        SelectionIndicatorRenderer renderer = new SelectionIndicatorRenderer();
+        table.setDefaultRenderer(Object.class, renderer);
+
+        table.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                if (row != hoveredRow) {
+                    hoveredRow = row;
+                    table.repaint();
+                }
+            }
+        });
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {
+                hoveredRow = -1;
+                table.repaint();
+            }
+        });
+
+        return table;
+    }
+
+    private class SelectionIndicatorRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+                                                       boolean hasFocus, int row, int column) {
+            
+            JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            boolean isHovered = (row == hoveredRow);
+            
+            if (isHovered) {
+                c.setBackground(COLOR_HOVER);
+            } else {
+                c.setBackground(Color.WHITE);
+            }
+
+            c.setFont(new Font("SansSerif", isSelected ? Font.BOLD : Font.PLAIN, 13));
+
+            if (column == 0 && isHovered) {
+                c.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 4, 0, 0, COLOR_ACCENT),
+                    new EmptyBorder(0, 11, 0, 10)
+                ));
+            } else {
+                c.setBorder(new EmptyBorder(0, 15, 0, 10));
+            }
+
+            return c;
+        }
+    }
+
+    private JPanel createCardPanel() {
+        JPanel panel = new JPanel(new BorderLayout(0, 15));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        return panel;
+    }
+
+    private JPanel createButtonWrapper(JButton btn) {
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 10));
+        wrapper.setOpaque(false);
+        wrapper.add(btn);
+        return wrapper;
+    }
+
+    private JButton createStyledButton(String text, boolean primary) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("SansSerif", Font.BOLD, 13));
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btn.setFocusPainted(false);
+        btn.setOpaque(true);
+        btn.setBorderPainted(false);
+        
+        btn.setBackground(COLOR_ACCENT);
+        btn.setForeground(Color.WHITE);
+        btn.setBorder(new EmptyBorder(10, 20, 10, 20));
+        return btn;
+    }
+
+    private boolean isPrivilegedAdminOrHR() { return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR"); }
     private boolean isPrivilegedManager() {
-        return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR") || currentUserRole.contains("CEO") || currentUserRole.contains("LEAD") || currentUserRole.contains("MANAGER");
+        return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR") || 
+               currentUserRole.contains("CEO") || currentUserRole.contains("LEAD") || 
+               currentUserRole.contains("MANAGER");
     }
 
     private void openCreateTrainingDialog() {
         Window parentWindow = SwingUtilities.getWindowAncestor(this);
-        // The dialog will modify the training data. The callback should trigger a global
-        // UI refresh to ensure all views are updated, not just this one.
-        CreateTrainingDialog dialog = new CreateTrainingDialog(parentWindow, () -> UIController.getInstance().updateMainWindow());
-        dialog.setVisible(true);
-    }
-
-    private JPanel createCatalogPanel() {
-        JPanel panel = new JPanel(new BorderLayout(0, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-        String[] columns = {"ID", "Titel", "Beschreibung", "Dauer (h)", "Skills"};
-        trainingCatalogModel = new DefaultTableModel(columns, 0) {
-            @Override public boolean isCellEditable(int row, int col) { return false; }
-        };
-        trainingCatalogTable = new JTable(trainingCatalogModel);
-        panel.add(new JScrollPane(trainingCatalogTable), BorderLayout.CENTER);
-
-        // Button panel only for HR/Admin
-        if (isPrivilegedAdminOrHR()) {
-            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            JButton btnCreate = new JButton("Neues Training erstellen");
-            btnCreate.addActionListener(_ -> openCreateTrainingDialog());
-            buttonPanel.add(btnCreate);
-            panel.add(buttonPanel, BorderLayout.SOUTH);
-        }
-
-        loadCatalogData();
-        return panel;
-    }
-
-    private JPanel createTeamProgressPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-
-        String[] columns = {"Mitarbeiter", "Schulung", "Status", "Datum / Info"};
-        teamProgressModel = new DefaultTableModel(columns, 0) {
-            @Override public boolean isCellEditable(int row, int col) { return false; }
-        };
-        teamProgressTable = new JTable(teamProgressModel);
-        panel.add(new JScrollPane(teamProgressTable), BorderLayout.CENTER);
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton btnAssign = new JButton("Schulung zuweisen");
-        btnAssign.addActionListener(e -> {
-            Window parentWindow = SwingUtilities.getWindowAncestor(this);
-            // Assigning a training modifies employee data. Trigger a global UI refresh
-            // on success to update all views that might depend on this data.
-            new AssignTrainingDialog(parentWindow, () -> UIController.getInstance().updateMainWindow()).setVisible(true);
-        });
-
-        buttonPanel.add(btnAssign);
-        panel.add(buttonPanel, BorderLayout.SOUTH);
-
-        loadTeamProgressData();
-        return panel;
+        new CreateTrainingDialog(parentWindow, () -> UIController.getInstance().updateMainWindow()).setVisible(true);
     }
 
     private void loadCatalogData() {
         if (trainingCatalogModel == null) return;
         trainingCatalogModel.setRowCount(0);
-
         for (Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
             String skillsText = t.getSkillManager().getSkills().stream()
                     .map(entry -> ServiceLocator.getSkillContainer().getSkillById(entry.getSkillId()))
-                    .filter(skill -> skill != null)
-                    .map(Skill::getName)
-                    .collect(Collectors.joining(", "));
-            if (skillsText.isEmpty()) {
-                skillsText = "-";
-            }
-
-            trainingCatalogModel.addRow(new Object[]{
-                    t.getId(),
-                    t.getTitle(),
-                    t.getDescription(),
-                    t.getLength(),
-                    skillsText
-            });
+                    .filter(skill -> skill != null).map(Skill::getName).collect(Collectors.joining(", "));
+            trainingCatalogModel.addRow(new Object[]{t.getId(), t.getTitle(), t.getDescription(), t.getLength(), skillsText.isEmpty() ? "-" : skillsText});
         }
     }
 
     public void loadTeamProgressData() {
         if (teamProgressModel == null) return;
         teamProgressModel.setRowCount(0);
-
         List<Employee> allEmployees = ServiceLocator.getEmployeeContainer().getEmployees();
         boolean seeAll = currentUserRole.contains("HR") || currentUserRole.contains("ADMIN") || currentUserRole.contains("CEO");
-
         for (Employee emp : allEmployees) {
-            boolean show = false;
-            if (seeAll) {
-                show = true;
-            } else if (currentUser != null && emp.getTeamId() == currentUser.getTeamId()) {
-                show = true; // Team lead sees their team
-            }
-
-            if (show) {
+            if (seeAll || (currentUser != null && emp.getTeamId() == currentUser.getTeamId())) {
                 TrainingManager tm = emp.getTrainingManager();
                 List<TrainingHistoryEntry> history = (tm != null) ? tm.getTrainingHistory() : null;
-
                 if (history == null || history.isEmpty()) {
-                    teamProgressModel.addRow(new Object[]{(emp.getFirstName() + " " + emp.getLastName()), "-", "Keine Zuweisung", "-"});
+                    teamProgressModel.addRow(new Object[]{emp.getFirstName() + " " + emp.getLastName(), "-", "Keine Zuweisung", "-"});
                 } else {
                     for (TrainingHistoryEntry entry : history) {
-                        Training training = ServiceLocator.getTrainingContainer().getTrainingById(entry.getTrainingId());
-                        String title = (training != null) ? training.getTitle() : "Unbekannt (ID: " + entry.getTrainingId() + ")";
-                        String status = (entry.getStatus() != null) ? entry.getStatus().toString() : "OPEN";
-
-                        teamProgressModel.addRow(new Object[]{(emp.getFirstName() + " " + emp.getLastName()), title, status, entry.getAssignedAt()});
+                        Training tr = ServiceLocator.getTrainingContainer().getTrainingById(entry.getTrainingId());
+                        teamProgressModel.addRow(new Object[]{emp.getFirstName() + " " + emp.getLastName(), tr != null ? tr.getTitle() : "ID: " + entry.getTrainingId(), entry.getStatus(), entry.getAssignedAt()});
                     }
                 }
             }
@@ -187,20 +291,5 @@ public class TrainingManagementView extends JPanel implements View {
     @Override public String getViewTabTitle() { return "Schulungsverwaltung"; }
     @Override public JPanel getContent() { return this; }
     @Override public boolean equals(View view) { return view != null && view.getViewId().equals(this.getViewId()); }
-
-    /**
-     * Refreshes all data displayed in this view.
-     * This reloads the training catalog and, if visible, the team progress table.
-     */
-    @Override
-    public void updateSelf() {
-        // 1. Refresh the training catalog, which is always visible.
-        loadCatalogData();
-
-        // 2. Refresh the team progress table, but only if the user has
-        //    permissions to see it (and thus the model is not null).
-        if (teamProgressModel != null) {
-            loadTeamProgressData();
-        }
-    }
+    @Override public void updateSelf() { loadCatalogData(); if (teamProgressModel != null) loadTeamProgressData(); }
 }
