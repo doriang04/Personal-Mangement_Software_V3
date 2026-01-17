@@ -136,7 +136,7 @@ public class MainWindow extends JFrame {
         header.add(systemStatusLabel, BorderLayout.CENTER);
         
         javax.swing.Icon avatarIcon;
-        java.net.URL avatarURL = getClass().getResource("/gui/Icons/Avatar.png");
+        java.net.URL avatarURL = getClass().getResource("src/main/resources/icons/Avatar.png");
         if (avatarURL != null) {
             ImageIcon raw = new ImageIcon(avatarURL);
             java.awt.Image scaled = raw.getImage().getScaledInstance(56, 56, java.awt.Image.SCALE_SMOOTH);

@@ -51,7 +51,7 @@ public class LoginView extends JPanel implements View {
 
         // Logo / Icon
         javax.swing.Icon icon;
-        java.net.URL imgURL = getClass().getResource("/gui/Icons/Logo.png");
+        java.net.URL imgURL = getClass().getResource("src/main/resources/icons/Logo.png");
         if (imgURL != null) {
             ImageIcon raw = new ImageIcon(imgURL);
             java.awt.Image scaled = raw.getImage().getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH);
