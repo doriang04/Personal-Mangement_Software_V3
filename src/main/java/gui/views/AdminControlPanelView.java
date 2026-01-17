@@ -11,6 +11,7 @@ import java.awt.Insets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,8 +31,8 @@ import static gui.UITheme.COLOR_HEADER_BG;
 import static gui.UITheme.COLOR_STATUS_GREEN;
 import static gui.UITheme.COLOR_STATUS_RED;
 import static gui.UITheme.COLOR_TEXT_HEADER;
-import static gui.UITheme.createModernCard;
 import static gui.UITheme.createStyledButton;
+
 
 public class AdminControlPanelView extends JPanel implements View {
 
@@ -72,7 +73,6 @@ public class AdminControlPanelView extends JPanel implements View {
         gbc.weightx = 1.0;
         gbc.insets = new Insets(0, 0, 25, 0);
 
-        // Mittelteil --> Systemstatus / Kontrolle
         JPanel statusCard = createModernCard("Systemzustand & Kontrolle");
         JPanel statusContent = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         statusContent.setOpaque(false);
@@ -83,6 +83,7 @@ public class AdminControlPanelView extends JPanel implements View {
         lblSystemStatus.setForeground(Color.WHITE);
         lblSystemStatus.setPreferredSize(new Dimension(300, 50));
 
+        // Initialer Button-Zustand (Farbe wird in updateStatusDisplay gesetzt)
         btnToggleMaintenance = createStyledButton("Umschalten", true);
         btnToggleMaintenance.setPreferredSize(new Dimension(350, 50));
         btnToggleMaintenance.addActionListener(e -> toggleMaintenanceMode());
@@ -93,7 +94,6 @@ public class AdminControlPanelView extends JPanel implements View {
         
         contentContainer.add(statusCard, gbc);
 
-        // Log-Bereich
         gbc.gridy = 1;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -115,9 +115,22 @@ public class AdminControlPanelView extends JPanel implements View {
         log("Admin-Panel Sitzung gestartet.");
     }
 
+    private JPanel createModernCard(String title) {
+        JPanel card = new JPanel(new BorderLayout(0, 15));
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(COLOR_BORDER, 1, true),
+                new EmptyBorder(25, 25, 25, 25)
+        ));
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        titleLabel.setForeground(COLOR_TEXT_HEADER);
+        card.add(titleLabel, BorderLayout.NORTH);
+        return card;
+    }
 
 
-    // Umschalten des Wartungsmodus --> Unterschiedliche Anzeige und Log-Eintrag
     private void toggleMaintenanceMode() {
         boolean newState = !sessionManager.isMaintenanceModeActive();
         sessionManager.setMaintenanceModeActive(newState);
@@ -136,7 +149,6 @@ public class AdminControlPanelView extends JPanel implements View {
         }
     }
 
-    // Aktualisiert die Anzeige basierend auf dem aktuellen Wartungsmodus-Status
     private void updateStatusDisplay() {
         boolean active = sessionManager.isMaintenanceModeActive();
 
