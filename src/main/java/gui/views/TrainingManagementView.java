@@ -12,6 +12,7 @@ import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -69,7 +70,6 @@ public class TrainingManagementView extends JPanel implements View {
     }
 
     private void initUI() {
-        // --- Header ---
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(true);
         header.setBackground(COLOR_HEADER_BG);
@@ -91,12 +91,10 @@ public class TrainingManagementView extends JPanel implements View {
         header.add(titleWrapper, BorderLayout.WEST);
         add(header, BorderLayout.NORTH);
 
-        // Tabs
         innerTabbedPane = new JTabbedPane();
         innerTabbedPane.setFont(new Font("SansSerif", Font.BOLD, 13));
 
         innerTabbedPane.addTab("Schulungskatalog", createCatalogPanel());
-
         if (isPrivilegedManager()) {
             innerTabbedPane.addTab("Team-Fortschritt", createTeamProgressPanel());
         }
@@ -105,7 +103,6 @@ public class TrainingManagementView extends JPanel implements View {
         tabWrapper.setOpaque(false);
         tabWrapper.setBorder(new EmptyBorder(20, 20, 20, 20));
         tabWrapper.add(innerTabbedPane, BorderLayout.CENTER);
-
         add(tabWrapper, BorderLayout.CENTER);
     }
 
@@ -119,7 +116,7 @@ public class TrainingManagementView extends JPanel implements View {
         card.add(new JScrollPane(trainingCatalogTable), BorderLayout.CENTER);
 
         if (isPrivilegedAdminOrHR()) {
-            JButton btnCreate = createStyledButton("Neues Training erstellen", true);
+            JButton btnCreate = createStyledButton("Neues Training erstellen");
             btnCreate.addActionListener(_ -> openCreateTrainingDialog());
             card.add(createButtonWrapper(btnCreate), BorderLayout.SOUTH);
         }
@@ -136,7 +133,7 @@ public class TrainingManagementView extends JPanel implements View {
         teamProgressTable = createStyledTable(teamProgressModel);
         card.add(new JScrollPane(teamProgressTable), BorderLayout.CENTER);
 
-        JButton btnAssign = createStyledButton("Schulung zuweisen", true);
+        JButton btnAssign = createStyledButton("Schulung zuweisen");
         btnAssign.addActionListener(e -> {
             Window parentWindow = SwingUtilities.getWindowAncestor(this);
             new AssignTrainingDialog(parentWindow, () -> UIController.getInstance().updateMainWindow()).setVisible(true);
@@ -152,11 +149,8 @@ public class TrainingManagementView extends JPanel implements View {
         table.setFont(new Font("SansSerif", Font.PLAIN, 13));
         table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 13));
         table.getTableHeader().setBackground(Color.WHITE);
-        
-        // Selektion neutral halten
         table.setSelectionBackground(Color.WHITE);
         table.setSelectionForeground(Color.BLACK);
-        
         table.setGridColor(COLOR_BORDER);
         table.setShowVerticalLines(false);
         table.setIntercellSpacing(new Dimension(0, 1));
@@ -181,36 +175,25 @@ public class TrainingManagementView extends JPanel implements View {
                 table.repaint();
             }
         });
-
         return table;
     }
 
     private class SelectionIndicatorRenderer extends DefaultTableCellRenderer {
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                        boolean hasFocus, int row, int column) {
-            
             JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            
             boolean isHovered = (row == hoveredRow);
-            
-            if (isHovered) {
-                c.setBackground(COLOR_HOVER);
-            } else {
-                c.setBackground(Color.WHITE);
-            }
-
+            c.setBackground(isHovered ? COLOR_HOVER : Color.WHITE);
             c.setFont(new Font("SansSerif", isSelected ? Font.BOLD : Font.PLAIN, 13));
-
             if (column == 0 && isHovered) {
                 c.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 4, 0, 0, COLOR_ACCENT),
-                    new EmptyBorder(0, 11, 0, 10)
+                        BorderFactory.createMatteBorder(0, 4, 0, 0, COLOR_ACCENT),
+                        new EmptyBorder(0, 11, 0, 10)
                 ));
             } else {
                 c.setBorder(new EmptyBorder(0, 15, 0, 10));
             }
-
             return c;
         }
     }
@@ -229,14 +212,13 @@ public class TrainingManagementView extends JPanel implements View {
         return wrapper;
     }
 
-    private JButton createStyledButton(String text, boolean primary) {
+    private JButton createStyledButton(String text) {
         JButton btn = new JButton(text);
         btn.setFont(new Font("SansSerif", Font.BOLD, 13));
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setFocusPainted(false);
         btn.setOpaque(true);
         btn.setBorderPainted(false);
-        
         btn.setBackground(COLOR_ACCENT);
         btn.setForeground(Color.WHITE);
         btn.setBorder(new EmptyBorder(10, 20, 10, 20));
@@ -245,9 +227,9 @@ public class TrainingManagementView extends JPanel implements View {
 
     private boolean isPrivilegedAdminOrHR() { return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR"); }
     private boolean isPrivilegedManager() {
-        return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR") || 
-               currentUserRole.contains("CEO") || currentUserRole.contains("LEAD") || 
-               currentUserRole.contains("MANAGER");
+        return currentUserRole.contains("ADMIN") || currentUserRole.contains("HR") ||
+                currentUserRole.contains("CEO") || currentUserRole.contains("LEAD") ||
+                currentUserRole.contains("MANAGER");
     }
 
     private void openCreateTrainingDialog() {
@@ -261,7 +243,7 @@ public class TrainingManagementView extends JPanel implements View {
         for (Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
             String skillsText = t.getSkillManager().getSkills().stream()
                     .map(entry -> ServiceLocator.getSkillContainer().getSkillById(entry.getSkillId()))
-                    .filter(skill -> skill != null).map(Skill::getName).collect(Collectors.joining(", "));
+                    .filter(Objects::nonNull).map(Skill::getName).collect(Collectors.joining(", "));
             trainingCatalogModel.addRow(new Object[]{t.getId(), t.getTitle(), t.getDescription(), t.getLength(), skillsText.isEmpty() ? "-" : skillsText});
         }
     }

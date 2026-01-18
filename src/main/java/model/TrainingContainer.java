@@ -19,7 +19,7 @@ public class TrainingContainer {
     }
 
     public void removeTraining(Training training) throws Exception {
-        if (training.hasReferences()) throw new Exception("Not allowed to delete training, as it is referenced.");
+        if (training.hasReferences()) throw new Exception("Die Schulung darf nicht gelöscht werden, da es referenziert wird.");
         trainings.remove(training);
     }
 

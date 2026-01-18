@@ -7,8 +7,6 @@ public class Team {
     private int id;
     private String name;
     private int departmentId;
-    // TODO: Teams können Teams haben (Hierarchie)
-    // TODO: note for above: leck ei
     
     public Team(String name, int departmentId) {
         this.id = ServiceLocator.getTeamContainer().getNextFreeId();

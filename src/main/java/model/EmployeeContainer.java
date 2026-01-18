@@ -21,7 +21,7 @@ public class EmployeeContainer {
     }
 
     public void removeEmployee(Employee employee) throws Exception {
-        if (employee.hasReferences()) throw new Exception("Not allowed to delete employee, as it is referenced.");
+        if (employee.hasReferences()) throw new Exception("Mitarbeiter darf nicht gelöscht werden, da er referenziert wird.");
         this.employees.remove(employee);
     }
 

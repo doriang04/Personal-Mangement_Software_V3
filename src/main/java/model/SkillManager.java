@@ -6,13 +6,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Manages skill history for one employee.
- * Mirrors table: skill_history (id, employee_id, skill_id, acquired_at)
- */
 public class SkillManager {
 
-    private int employeeId; // was final
+    private int employeeId;
     private final ArrayList<SkillHistoryEntry> skillHistory = new ArrayList<>();
 
     public int getId() {
@@ -38,13 +34,10 @@ public class SkillManager {
         }
     }
 
-    /**
-     * Represents one row in skill_history.
-     */
     public static class SkillHistoryEntry {
-        private int historyId;        // skill_history.id (0 if not persisted yet)
-        private int skillId;          // skill_history.skill_id
-        private LocalDate acquireDate; // skill_history.acquired_at
+        private int historyId;
+        private int skillId;
+        private LocalDate acquireDate;
 
         public SkillHistoryEntry(int historyId, int skillId, LocalDate acquireDate) {
             this.historyId = historyId;
@@ -80,9 +73,6 @@ public class SkillManager {
             this.acquireDate = acquireDate;
         }
 
-        /**
-         * Skill expires after 3 years.
-         */
         public boolean isExpired() {
             return acquireDate.plusYears(3).isBefore(LocalDate.now());
         }
@@ -124,9 +114,6 @@ public class SkillManager {
         return employeeId;
     }
 
-    /**
-     * Replace history with data loaded from DB.
-     */
     public void setSkillHistory(ArrayList<SkillHistoryEntry> entries) {
         skillHistory.clear();
         if (entries != null) {
@@ -134,16 +121,10 @@ public class SkillManager {
         }
     }
 
-    /**
-     * Full history (immutable copy).
-     */
     public ArrayList<SkillHistoryEntry> getSkillHistory() {
         return new ArrayList<>(skillHistory);
     }
 
-    /**
-     * Active skills = not expired.
-     */
     public ArrayList<SkillHistoryEntry> getActiveSkills() {
         ArrayList<SkillHistoryEntry> active = new ArrayList<>();
         for (SkillHistoryEntry entry : skillHistory) {
@@ -154,9 +135,6 @@ public class SkillManager {
         return active;
     }
 
-    /**
-     * Inactive skills = expired.
-     */
     public ArrayList<SkillHistoryEntry> getInactiveSkills() {
         ArrayList<SkillHistoryEntry> inactive = new ArrayList<>();
         for (SkillHistoryEntry entry : skillHistory) {
@@ -167,20 +145,15 @@ public class SkillManager {
         return inactive;
     }
 
-    /**
-     * Adds a new skill acquisition.
-     */
     public SkillHistoryEntry addSkill(int skillId, LocalDate acquiredAt) {
 
         SkillHistoryEntry existing = getEntryBySkillId(skillId);
 
-        // Skill existiert bereits → überschreiben
         if (existing != null) {
             existing.setAcquireDate(acquiredAt);
             return existing;
         }
 
-        // Neu anlegen
         SkillHistoryEntry entry =
                 new SkillHistoryEntry(getNextFreeId(), skillId, acquiredAt);
         skillHistory.add(entry);
@@ -188,17 +161,10 @@ public class SkillManager {
     }
 
 
-    /**
-     * Convenience overload using Skill object.
-     */
     public SkillHistoryEntry addSkill(Skill skill, LocalDate acquiredAt) {
         return addSkill(skill.getId(), acquiredAt);
     }
 
-    /**
-     * Removes expired skills permanently (optional cleanup).
-     * Normally you would keep them for history, but this is available if needed.
-     */
     public void removeExpiredSkills() {
         Iterator<SkillHistoryEntry> iterator = skillHistory.iterator();
         while (iterator.hasNext()) {
@@ -208,10 +174,6 @@ public class SkillManager {
         }
     }
 
-    /**
-     * Removes a specific skill history entry from the employee's record.
-     * @param entryToRemove The entry to be removed.
-     */
     public void removeSkillEntry(SkillHistoryEntry entryToRemove) {
         if (entryToRemove != null) {
             skillHistory.remove(entryToRemove);

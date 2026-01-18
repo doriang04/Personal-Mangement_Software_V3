@@ -18,7 +18,6 @@ import gui.views.MyTrainingsView;
 import gui.views.TrainingManagementView;
 import gui.views.View;
 
-
 public class UIController {
 
     private static UIController instance;
@@ -33,7 +32,6 @@ public class UIController {
     private UIController() {
         this.mainWindow = MainWindow.getInstance();
         this.sessionManager = ServiceLocator.getSessionManager();
-
         initShutdownListener();
     }
 
@@ -45,16 +43,11 @@ public class UIController {
                 shutdownApplication();
             }
         });
-
     }
 
-    // NEU: Zentrale Methode zum Beenden
     public void shutdownApplication() {
-        System.out.println("🛑 Programm wird beendet...");
-
         database.DatabaseManager.getInstance().saveAllDataOnce();
         ServiceLocator.getSessionManager().logout();
-
         System.exit(0);
     }
 
@@ -71,70 +64,46 @@ public class UIController {
         String name = sessionManager.getUserFirstNameAndLastName();
         String role = sessionManager.getUserPermission();
 
-        mainWindow.setupMainLayout(name, role, _ -> handleLogout());
+        mainWindow.setupMainLayout(name, role);
         buildNavigation(role);
         openDashboard();
     }
 
     private void handleLogout() {
-    // Sicherheitsabfrage (Optional)
-    int confirm = JOptionPane.showConfirmDialog(mainWindow, 
-        "Möchten Sie sich wirklich ausloggen?", "Logout", JOptionPane.YES_NO_OPTION);
-    
-    if (confirm == JOptionPane.YES_OPTION) {
-        database.DatabaseManager.getInstance().saveAllData();
-        sessionManager.logout();
-        showLoginScreen(); 
+        int confirm = JOptionPane.showConfirmDialog(mainWindow,
+                "Möchten Sie sich wirklich ausloggen?", "Logout", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            database.DatabaseManager.getInstance().saveAllData();
+            sessionManager.logout();
+            showLoginScreen();
+        }
     }
-}
-    
-private void handleLogout(java.awt.event.ActionEvent e) 
-{
-    handleLogout();
-}
 
-private void buildNavigation(String role) { // TODO finish this method to include all needed navigation
-        // --- Standard für alle ---
+    private void handleLogout(java.awt.event.ActionEvent e) {
+        handleLogout();
+    }
+
+    private void buildNavigation(String role) {
         mainWindow.addNavigationEntry("Dashboard", this::openDashboard);
-        mainWindow.addNavigationEntry("Mitarbeiter suchen",
-                () -> openTabOrFocus(new EmployeeSearchView(), true));
-        mainWindow.addNavigationEntry("Mein Profil",
-                () -> openTabOrFocus(new MyProfileView(), true));
-        mainWindow.addNavigationEntry("Meine Schulungen",
-                () -> openTabOrFocus(new MyTrainingsView(), true));
+        mainWindow.addNavigationEntry("Mitarbeiter suchen", () -> openTabOrFocus(new EmployeeSearchView(), true));
+        mainWindow.addNavigationEntry("Mein Profil", () -> openTabOrFocus(new MyProfileView(), true));
+        mainWindow.addNavigationEntry("Meine Schulungen", () -> openTabOrFocus(new MyTrainingsView(), true));
 
         mainWindow.addSpacerToNav();
 
-        // --- Rollenspezifisch ---
-        if ("HR".equals(role)) {
-            mainWindow.addNavigationSection("HR Management");
-        }
-
-        if ("TEAM_LEAD".equals(role)) {
-            mainWindow.addNavigationSection("Teamleitung");
-            // Beispiel:
-            // mainWindow.addNavigationEntry("Mein Team",
-            //      () -> openTabOrFocus(TeamOverviewView.class, TeamOverviewView::new, true));
-        }
-
+        if ("HR".equals(role)) mainWindow.addNavigationSection("HR Management");
+        if ("TEAM_LEAD".equals(role)) mainWindow.addNavigationSection("Teamleitung");
         if ("ADMIN".equals(role)) {
             mainWindow.addNavigationSection("Administration");
-            mainWindow.addNavigationEntry("Daten Konfiguration",
-                    () -> openTabOrFocus(new ConfigurationView(), true));
-            mainWindow.addNavigationEntry("Systemsteuerung ⚙️",
-                    () -> openTabOrFocus(new gui.views.AdminControlPanelView(), true));
-            // mainWindow.addNavigationEntry("Einstellungen", ...);
+            mainWindow.addNavigationEntry("Daten Konfiguration", () -> openTabOrFocus(new ConfigurationView(), true));
+            mainWindow.addNavigationEntry("Systemsteuerung", () -> openTabOrFocus(new gui.views.AdminControlPanelView(), true));
         }
 
-        if ("HR".equals(role) || "TEAM_LEAD".equals(role) || "ADMIN".equals(role)) {
-            mainWindow.addNavigationEntry("Schulungsverwaltung",
-                    () -> openTabOrFocus(new TrainingManagementView(), true));
-        }
+        if ("HR".equals(role) || "TEAM_LEAD".equals(role) || "ADMIN".equals(role))
+            mainWindow.addNavigationEntry("Schulungsverwaltung", () -> openTabOrFocus(new TrainingManagementView(), true));
 
-        if ("ADMIN".equals(role) || "HR".equals(role)) {
-            mainWindow.addNavigationEntry("Personal verwalten (+/-)",
-                    () -> openTabOrFocus(new EmployeeManagementView(), true));
-        }
+        if ("ADMIN".equals(role) || "HR".equals(role))
+            mainWindow.addNavigationEntry("Personal verwalten", () -> openTabOrFocus(new EmployeeManagementView(), true));
 
         mainWindow.addGlueToNav(this::handleLogout);
     }
@@ -145,18 +114,6 @@ private void buildNavigation(String role) { // TODO finish this method to includ
 
     public void openTabOrFocus(View view, boolean closable) {
         if (!mainWindow.selectTabIfExists(view)) mainWindow.openTab(view, closable);
-    }
-
-    /**
-     * Öffnet das Profil eines Mitarbeiters in einem neuen Tab.
-     * Wird von EmployeeSearchView per Doppelklick aufgerufen.
-     */
-    public void openEmployeeDetailTab(int employeeId) { // TODO usage ändern, sodass es via openTabOrFocus läuft
-        // 1. View erstellen (ID übergeben)
-        gui.views.EmployeeDetailView view = new gui.views.EmployeeDetailView(employeeId);
-
-        // 2. WICHTIG: Tab im Hauptfenster öffnen! (DIESE ZEILE FEHLTE)
-        mainWindow.openTab(view, true);
     }
 
     public void updateMainWindow() {

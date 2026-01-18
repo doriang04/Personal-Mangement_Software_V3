@@ -42,58 +42,49 @@ public class LoginView extends JPanel implements View {
 
     private void initUI() {
         setBackground(COLOR_BG_CONTENT);
-        setLayout(new GridBagLayout()); //zentrieren 
+        setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 40, 5, 40);
         gbc.gridx = 0;
 
-        // Logo / Icon
         javax.swing.Icon icon;
         java.net.URL imgURL = getClass().getResource("src/main/resources/icons/Logo.png");
         if (imgURL != null) {
             ImageIcon raw = new ImageIcon(imgURL);
             java.awt.Image scaled = raw.getImage().getScaledInstance(70, 70, java.awt.Image.SCALE_SMOOTH);
             icon = new ImageIcon(scaled);
-        } else {
-            icon = new javax.swing.plaf.metal.MetalIconFactory.TreeLeafIcon();
-        }
-        // Logo Label
+        } else icon = new javax.swing.plaf.metal.MetalIconFactory.TreeLeafIcon();
+
         JLabel lblIcon = new JLabel(icon);
         lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
         lblIcon.setPreferredSize(new Dimension(100, 100));
 
-        // System Titel
         JLabel lblHR = new JLabel("Personal Management System");
         lblHR.setForeground(COLOR_TEXT_HEADER);
         lblHR.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        // Überschrift 
+
         JLabel lblWelcome = new JLabel("Willkommen zurück!");
         lblWelcome.setFont(new Font("SansSerif", Font.BOLD, 24));
         lblWelcome.setHorizontalAlignment(SwingConstants.CENTER);
         lblWelcome.setForeground(COLOR_ACCENT);
 
-        // Einleitungstext
         JLabel lblStartText = new JLabel("Bitte melden Sie sich an, um fortzufahren.");
         lblStartText.setForeground(COLOR_TEXT_HEADER);
         lblStartText.setHorizontalAlignment(SwingConstants.CENTER);
 
-        //Eingabefelder 
         JLabel lblUserTag = new JLabel("Nutzername");
         lblUserTag.setFont(new Font("SansSerif", Font.BOLD, 12));
-        txtUsername = createStyledTextField("beispielname");
+        txtUsername = createStyledTextField();
 
         JLabel lblPassTag = new JLabel("Passwort");
         lblPassTag.setFont(new Font("SansSerif", Font.BOLD, 12));
         pwdPassword = createStyledPasswordField();
 
-        // Button zum Anmelden
         btnLogin = new JButton("Anmelden");
         styleButton(btnLogin);
 
-        // Fehlermeldung
         lblError = new JLabel(" ", SwingConstants.CENTER);
         lblError.setForeground(Color.RED);
 
@@ -102,7 +93,6 @@ public class LoginView extends JPanel implements View {
         lblMaintenanceMessage.setFont(lblMaintenanceMessage.getFont().deriveFont(Font.BOLD));
         lblMaintenanceMessage.setVisible(sessionManager.isMaintenanceModeActive());
 
-        // alles zum grid hinzufügen
         gbc.gridy = 0; add(lblIcon, gbc);
         gbc.insets = new Insets(0, 40, 20, 40);
         gbc.gridy = 1; add(lblHR, gbc);
@@ -110,29 +100,26 @@ public class LoginView extends JPanel implements View {
         gbc.gridy = 2; add(lblWelcome, gbc);
         gbc.insets = new Insets(0, 40, 30, 40);
         gbc.gridy = 3; add(lblStartText, gbc);
-        
         gbc.insets = new Insets(10, 40, 5, 40);
         gbc.gridy = 4; add(lblUserTag, gbc);
         gbc.gridy = 5; add(txtUsername, gbc);
-        
         gbc.gridy = 6; add(lblPassTag, gbc);
         gbc.gridy = 7; add(pwdPassword, gbc);
-
         gbc.insets = new Insets(20, 40, 10, 40);
         gbc.gridy = 8; add(btnLogin, gbc);
         gbc.gridy = 9; add(lblError, gbc);
         gbc.gridy = 10; add(lblMaintenanceMessage, gbc);
-        
+
         btnLogin.addActionListener(_ -> handleLogin());
-        pwdPassword.addActionListener(_ -> handleLogin());    
+        pwdPassword.addActionListener(_ -> handleLogin());
     }
 
-    private JTextField createStyledTextField(String placeholder) {
+    private JTextField createStyledTextField() {
         JTextField field = new JTextField(20);
         field.setPreferredSize(new Dimension(300, 45));
         field.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(209, 213, 219), 1, true),
-            new EmptyBorder(0, 10, 0, 10)
+                BorderFactory.createLineBorder(new Color(209, 213, 219), 1, true),
+                new EmptyBorder(0, 10, 0, 10)
         ));
         return field;
     }
@@ -141,13 +128,12 @@ public class LoginView extends JPanel implements View {
         JPasswordField field = new JPasswordField(20);
         field.setPreferredSize(new Dimension(300, 45));
         field.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(209, 213, 219), 1, true),
-            new EmptyBorder(0, 10, 0, 10)
+                BorderFactory.createLineBorder(new Color(209, 213, 219), 1, true),
+                new EmptyBorder(0, 10, 0, 10)
         ));
         return field;
     }
 
-    //wie sieht ein Button aus
     private void styleButton(JButton btn) {
         btn.setBackground(COLOR_ACCENT);
         btn.setForeground(Color.WHITE);
@@ -158,8 +144,6 @@ public class LoginView extends JPanel implements View {
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setOpaque(true);
         btn.setContentAreaFilled(true);
-        
-        // Hover Effekt
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) { btn.setBackground(COLOR_ACCENT.darker()); }
             public void mouseExited(java.awt.event.MouseEvent evt) { btn.setBackground(COLOR_ACCENT); }
@@ -189,30 +173,9 @@ public class LoginView extends JPanel implements View {
         }
     }
 
-        @Override
-        public String getViewId() {
-            return "login-view";
-        }
-
-        @Override
-        public String getViewTabTitle() {
-            return "Personalmanagement - Login";
-        }
-
-        @Override
-        public JPanel getContent() {
-            return this;
-        }
-
-        @Override
-        public boolean equals(View view) {
-            return view.getViewId().equals(this.getViewId());
-        }
-
-        @Override
-        public void updateSelf() {
-            lblMaintenanceMessage.setVisible(sessionManager.isMaintenanceModeActive());
-
-        }
-
+    @Override public String getViewId() { return "login-view"; }
+    @Override public String getViewTabTitle() { return "Personalmanagement - Login"; }
+    @Override public JPanel getContent() { return this; }
+    @Override public boolean equals(View view) { return view.getViewId().equals(this.getViewId()); }
+    @Override public void updateSelf() { lblMaintenanceMessage.setVisible(sessionManager.isMaintenanceModeActive()); }
 }

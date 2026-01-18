@@ -33,7 +33,6 @@ import static gui.UITheme.COLOR_STATUS_RED;
 import static gui.UITheme.COLOR_TEXT_HEADER;
 import static gui.UITheme.createStyledButton;
 
-
 public class AdminControlPanelView extends JPanel implements View {
 
     private JLabel lblSystemStatus;
@@ -51,12 +50,10 @@ public class AdminControlPanelView extends JPanel implements View {
         setLayout(new BorderLayout());
         setBackground(COLOR_BG_CONTENT);
 
-        // Header
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(true);
         header.setBackground(COLOR_HEADER_BG);
         header.setBorder(new EmptyBorder(20, 30, 20, 30));
-        
         JLabel titleLabel = new JLabel("System-Administration");
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
         titleLabel.setForeground(COLOR_TEXT_HEADER);
@@ -66,7 +63,7 @@ public class AdminControlPanelView extends JPanel implements View {
         JPanel contentContainer = new JPanel(new GridBagLayout());
         contentContainer.setOpaque(false);
         contentContainer.setBorder(new EmptyBorder(30, 40, 30, 40));
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -83,7 +80,6 @@ public class AdminControlPanelView extends JPanel implements View {
         lblSystemStatus.setForeground(Color.WHITE);
         lblSystemStatus.setPreferredSize(new Dimension(300, 50));
 
-        // Initialer Button-Zustand (Farbe wird in updateStatusDisplay gesetzt)
         btnToggleMaintenance = createStyledButton("Umschalten", true);
         btnToggleMaintenance.setPreferredSize(new Dimension(350, 50));
         btnToggleMaintenance.addActionListener(e -> toggleMaintenanceMode());
@@ -91,13 +87,12 @@ public class AdminControlPanelView extends JPanel implements View {
         statusContent.add(lblSystemStatus);
         statusContent.add(btnToggleMaintenance);
         statusCard.add(statusContent, BorderLayout.CENTER);
-        
         contentContainer.add(statusCard, gbc);
 
         gbc.gridy = 1;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        
+
         JPanel logCard = createModernCard("System-Ereignisprotokoll");
         logArea = new JTextArea();
         logArea.setEditable(false);
@@ -108,7 +103,6 @@ public class AdminControlPanelView extends JPanel implements View {
         JScrollPane logScroll = new JScrollPane(logArea);
         logScroll.setBorder(new LineBorder(COLOR_BORDER, 1));
         logCard.add(logScroll, BorderLayout.CENTER);
-
         contentContainer.add(logCard, gbc);
 
         add(contentContainer, BorderLayout.CENTER);
@@ -122,14 +116,12 @@ public class AdminControlPanelView extends JPanel implements View {
                 new LineBorder(COLOR_BORDER, 1, true),
                 new EmptyBorder(25, 25, 25, 25)
         ));
-
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         titleLabel.setForeground(COLOR_TEXT_HEADER);
         card.add(titleLabel, BorderLayout.NORTH);
         return card;
     }
-
 
     private void toggleMaintenanceMode() {
         boolean newState = !sessionManager.isMaintenanceModeActive();
@@ -163,9 +155,9 @@ public class AdminControlPanelView extends JPanel implements View {
             btnToggleMaintenance.setText("Wartungsmodus AKTIVIEREN");
             btnToggleMaintenance.setBackground(COLOR_STATUS_RED);
         }
-        
-        this.revalidate();
-        this.repaint();
+
+        revalidate();
+        repaint();
         UIController.getInstance().updateMainWindow();
     }
 
@@ -181,7 +173,5 @@ public class AdminControlPanelView extends JPanel implements View {
     @Override public boolean equals(View view) { return view != null && view.getViewId().equals(getViewId()); }
 
     @Override
-    public void updateSelf() {
-        updateStatusDisplay();
-    }
+    public void updateSelf() { updateStatusDisplay(); }
 }

@@ -32,6 +32,7 @@ import model.Skill;
 import model.SkillManager;
 import model.Training;
 import model.TrainingManager;
+
 public class DashboardView extends JPanel implements View {
 
     private JPanel trainingPanel;
@@ -42,10 +43,8 @@ public class DashboardView extends JPanel implements View {
         setLayout(new BorderLayout());
         setBackground(COLOR_BG_CONTENT);
 
-        // Header
         add(createHeader(), BorderLayout.NORTH);
 
-        // Mittelteil
         JPanel centerContainer = new JPanel(new GridBagLayout());
         centerContainer.setOpaque(false);
         centerContainer.setBorder(new EmptyBorder(30, 40, 30, 40));
@@ -117,8 +116,8 @@ public class DashboardView extends JPanel implements View {
     private void loadDashboardData() {
         Training openTraining = null;
         if (ServiceLocator.getSessionManager().getCurrentUser() != null) {
-            ArrayList<TrainingManager.TrainingHistoryEntry> allTrainings = 
-                ServiceLocator.getSessionManager().getCurrentUser().getTrainingManager().getTrainingHistory();
+            ArrayList<TrainingManager.TrainingHistoryEntry> allTrainings =
+                    ServiceLocator.getSessionManager().getCurrentUser().getTrainingManager().getTrainingHistory();
             for (TrainingManager.TrainingHistoryEntry entry : allTrainings) {
                 if (entry.getStatus() == TrainingManager.Status.OPEN) {
                     openTraining = ServiceLocator.getTrainingContainer().getTrainingById(entry.getTrainingId());
@@ -129,8 +128,8 @@ public class DashboardView extends JPanel implements View {
         updateTrainingCard(openTraining);
 
         if (ServiceLocator.getSessionManager().getCurrentUser() != null) {
-            ArrayList<SkillManager.SkillHistoryEntry> inactive = 
-                ServiceLocator.getSessionManager().getCurrentUser().getSkillManager().getInactiveSkills();
+            ArrayList<SkillManager.SkillHistoryEntry> inactive =
+                    ServiceLocator.getSessionManager().getCurrentUser().getSkillManager().getInactiveSkills();
             updateSkillsCard(inactive);
         }
     }
@@ -199,7 +198,7 @@ public class DashboardView extends JPanel implements View {
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setFocusPainted(false);
         btn.setOpaque(true);
-        btn.setBorderPainted(false); 
+        btn.setBorderPainted(false);
 
         if (primary) {
             btn.setBackground(COLOR_ACCENT);
@@ -209,8 +208,8 @@ public class DashboardView extends JPanel implements View {
             btn.setBackground(Color.WHITE);
             btn.setForeground(COLOR_TEXT_HEADER);
             btn.setBorder(BorderFactory.createCompoundBorder(
-                new LineBorder(COLOR_BORDER, 1, true),
-                new EmptyBorder(10, 20, 10, 20)
+                    new LineBorder(COLOR_BORDER, 1, true),
+                    new EmptyBorder(10, 20, 10, 20)
             ));
             btn.setBorderPainted(true);
         }

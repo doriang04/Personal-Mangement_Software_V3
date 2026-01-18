@@ -3,40 +3,43 @@ package model;
 import core.ServiceLocator;
 
 import java.time.LocalDate;
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class TrainingManager {
 
-    private int employeeId; // was final
+    private int employeeId;
     private final ArrayList<TrainingHistoryEntry> trainingHistory = new ArrayList<>();
 
     public int getId() {
         return employeeId;
     }
 
-    public enum Status {
-        OPEN,
-        DONE
-    }
     public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
     }
 
-    public static class TrainingHistoryEntry {
-        private int historyId;          // training_history.id
-        private int trainingId;         // training_history.training_id
-        private Status status;          // OPEN / DONE
-        private LocalDate assignedAt;   // training_history.assigned_at
-        private LocalDate completedAt;  // training_history.completed_at (nullable)
+    public int getEmployeeId() {
+        return employeeId;
+    }
 
-        public TrainingHistoryEntry(
-                int historyId,
-                int trainingId,
-                Status status,
-                LocalDate assignedAt,
-                LocalDate completedAt
-        ) {
+    public ArrayList<TrainingHistoryEntry> getTrainingHistory() {
+        return trainingHistory;
+    }
+
+    public enum Status {
+        OPEN,
+        DONE
+    }
+
+    public static class TrainingHistoryEntry {
+        private int historyId;
+        private int trainingId;
+        private Status status;
+        private LocalDate assignedAt;
+        private LocalDate completedAt;
+
+        public TrainingHistoryEntry(int historyId, int trainingId, Status status, LocalDate assignedAt, LocalDate completedAt) {
             this.historyId = historyId;
             this.trainingId = trainingId;
             this.status = status;
@@ -48,9 +51,7 @@ public class TrainingManager {
             this(0, trainingId, Status.OPEN, assignedAt, null);
         }
 
-        public TrainingHistoryEntry() {
-
-        }
+        public TrainingHistoryEntry() {}
 
         public int getHistoryId() {
             return historyId;
@@ -94,30 +95,14 @@ public class TrainingManager {
         this.employeeId = employee.getId();
     }
 
-    public TrainingManager() {
+    public TrainingManager() {}
 
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public ArrayList<TrainingHistoryEntry> getTrainingHistory() {
-        return trainingHistory;
-    }
-
-    /**
-     * Assigns a training to the employee.
-     */
     public TrainingHistoryEntry assignTraining(int trainingId, LocalDate assignedAt) {
         TrainingHistoryEntry entry = new TrainingHistoryEntry(trainingId, assignedAt);
         trainingHistory.add(entry);
         return entry;
     }
 
-    /**
-     * Completes an open training.
-     */
     public void completeTraining(int trainingId, LocalDate completionDate) {
         Optional<TrainingHistoryEntry> entryOpt = trainingHistory.stream()
                 .filter(e -> e.getTrainingId() == trainingId && e.isOpen())
@@ -131,12 +116,10 @@ public class TrainingManager {
         Employee employee = ServiceLocator.getEmployeeContainer().getEmployeeById(employeeId);
         employee.getSkillManager().addSkillsFromTraining(
                 ServiceLocator.getTrainingContainer().getTrainingById(trainingId),
-                completionDate);
+                completionDate
+        );
     }
 
-    /**
-     * Used when loading from DB.
-     */
     public void setTrainingHistory(ArrayList<TrainingHistoryEntry> entries) {
         trainingHistory.clear();
         if (entries != null) {

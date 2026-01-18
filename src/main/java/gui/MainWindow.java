@@ -45,9 +45,7 @@ public class MainWindow extends JFrame {
     private JPanel northHeader;
 
     public static synchronized MainWindow getInstance() {
-        if (instance == null) {
-            instance = new MainWindow();
-        }
+        if (instance == null) instance = new MainWindow();
         return instance;
     }
 
@@ -63,7 +61,6 @@ public class MainWindow extends JFrame {
     }
 
     public void showSingleView(View view, String title, int width, int height) {
-        // Entferne alle vorherigen Inhalte
         contentWrapper.removeAll();
         contentWrapper.setLayout(new BorderLayout());
         contentWrapper.add(view.getContent(), BorderLayout.CENTER);
@@ -77,15 +74,12 @@ public class MainWindow extends JFrame {
         if (!isVisible()) setVisible(true);
     }
 
-    public void setupMainLayout(String userName, String role, ActionListener logoutAction) {
-        // Entferne alle vorherigen Inhalte
+    public void setupMainLayout(String userName, String role) {
         contentWrapper.removeAll();
         contentWrapper.setLayout(new BorderLayout());
 
-        // links: Navigation
-        contentWrapper.add(createWestPanelContainer(logoutAction), BorderLayout.WEST);
+        contentWrapper.add(createWestPanelContainer(), BorderLayout.WEST);
 
-        // Center: Header + Tabs
         JPanel centerWrapper = new JPanel(new BorderLayout());
         centerWrapper.setBackground(COLOR_BG_CONTENT);
         centerWrapper.setBorder(new EmptyBorder(20, 25, 20, 25));
@@ -103,38 +97,35 @@ public class MainWindow extends JFrame {
         setTitle("Personalmanagement Software");
         setSize(1280, 850);
         setLocationRelativeTo(null);
-        
-        updateSystemStatusLabel(); 
-        
+
+        updateSystemStatusLabel();
         revalidate();
         repaint();
     }
 
-    //  Header
     private JPanel createModernHeader(String name, String role) {
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
-        
+
         JPanel textPanel = new JPanel(new GridLayout(2, 1));
         textPanel.setOpaque(false);
-        
+
         JLabel lblWelcome = new JLabel("Hallo, " + name);
         lblWelcome.setFont(new Font("SansSerif", Font.BOLD, 22));
         lblWelcome.setForeground(COLOR_TEXT_HEADER);
-        
+
         JLabel lblRole = new JLabel("Rolle: " + role);
         lblRole.setForeground(Color.GRAY);
-        
+
         textPanel.add(lblWelcome);
         textPanel.add(lblRole);
-        
         header.add(textPanel, BorderLayout.WEST);
 
         systemStatusLabel = new JLabel();
         systemStatusLabel.setForeground(new Color(217, 56, 56));
         systemStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
         header.add(systemStatusLabel, BorderLayout.CENTER);
-        
+
         javax.swing.Icon avatarIcon;
         java.net.URL avatarURL = getClass().getResource("src/main/resources/icons/Avatar.png");
         if (avatarURL != null) {
@@ -150,12 +141,11 @@ public class MainWindow extends JFrame {
         avatar.setOpaque(false);
         avatar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
         header.add(avatar, BorderLayout.EAST);
-        
+
         return header;
     }
 
-    private JScrollPane createWestPanelContainer(ActionListener logoutAction) {
-        // Navigation Panel
+    private JScrollPane createWestPanelContainer() {
         navigationPanel = new JPanel();
         navigationPanel.setLayout(new BoxLayout(navigationPanel, BoxLayout.Y_AXIS));
         navigationPanel.setBorder(new EmptyBorder(20, 15, 20, 15));
@@ -174,7 +164,6 @@ public class MainWindow extends JFrame {
     }
 
     public void addNavigationSection(String title) {
-        // Section Label
         if (navigationPanel == null) return;
         JLabel label = new JLabel(title.toUpperCase());
         label.setFont(new Font("SansSerif", Font.BOLD, 11));
@@ -186,7 +175,6 @@ public class MainWindow extends JFrame {
     }
 
     public void addNavigationEntry(String text, Runnable onClickAction) {
-        // Navigation Button
         if (navigationPanel == null) return;
 
         JButton button = new JButton(text);
@@ -204,12 +192,12 @@ public class MainWindow extends JFrame {
         button.setBorder(new EmptyBorder(0, 10, 0, 0));
 
         button.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) { 
-                button.setBackground(new Color(243, 232, 255)); 
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(new Color(243, 232, 255));
                 button.setForeground(COLOR_ACCENT);
             }
-            public void mouseExited(MouseEvent e) { 
-                button.setBackground(COLOR_HEADER_BG); 
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(COLOR_HEADER_BG);
                 button.setForeground(new Color(75, 85, 99));
             }
         });
@@ -223,7 +211,6 @@ public class MainWindow extends JFrame {
         if(navigationPanel != null) navigationPanel.add(Box.createVerticalStrut(15));
     }
 
-    // Fügt am Ende der Navigation einen Logout-Button hinzu
     public void addGlueToNav(ActionListener logoutAction) {
         if (navigationPanel == null) return;
 
@@ -231,8 +218,7 @@ public class MainWindow extends JFrame {
         navigationPanel.add(new JSeparator(JSeparator.HORIZONTAL));
         navigationPanel.add(Box.createVerticalStrut(10));
 
-        // Logout Button
-        JButton btnLogout = new JButton("🚪 Logout");
+        JButton btnLogout = new JButton("Logout");
         btnLogout.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnLogout.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnLogout.setForeground(new Color(220, 38, 38));
@@ -242,8 +228,6 @@ public class MainWindow extends JFrame {
         btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         btnLogout.addActionListener(logoutAction);
-        
-        // Hover Effekt für Logout
         btnLogout.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) { btnLogout.setForeground(Color.RED.darker()); }
             public void mouseExited(MouseEvent e) { btnLogout.setForeground(new Color(220, 38, 38)); }
@@ -255,8 +239,7 @@ public class MainWindow extends JFrame {
 
     public void openTab(View view, boolean closable) {
         JComponent component = view.getContent();
-        component.putClientProperty("viewId", view.getViewId()); 
-        
+        component.putClientProperty("viewId", view.getViewId());
         component.setBackground(Color.WHITE);
         String title = view.getViewTabTitle();
 
@@ -289,9 +272,7 @@ public class MainWindow extends JFrame {
     }
 
     public boolean selectTabIfExists(View view) {
-        // Prüfe ob Tab mit der View bereits existiert
         if (tabbedPane == null) return false;
-        
         String searchId = view.getViewId();
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
             Component c = tabbedPane.getComponentAt(i);
@@ -307,31 +288,20 @@ public class MainWindow extends JFrame {
     }
 
     private void updateSystemStatusLabel() {
-        // Aktualisiere Systemstatus im Header
         if (systemStatusLabel == null) return;
-
-        boolean maintenance =
-                ServiceLocator.getSessionManager().isMaintenanceModeActive();
-
-        systemStatusLabel.setText(
-                maintenance ? "SYSTEM IST IM WARTUNGSMODUS" : ""
-        );
+        systemStatusLabel.setText(ServiceLocator.getSessionManager().isMaintenanceModeActive() ? "SYSTEM IST IM WARTUNGSMODUS" : "");
     }
 
     public void updateSelf() {
-        // Aktualisiere Header und alle Tabs
         updateSystemStatusLabel();
-
         if (northHeader != null) {
             northHeader.revalidate();
             northHeader.repaint();
         }
-
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
             View tab_component = (View) tabbedPane.getComponentAt(i);
             tab_component.updateSelf();
         }
-
         revalidate();
         repaint();
     }

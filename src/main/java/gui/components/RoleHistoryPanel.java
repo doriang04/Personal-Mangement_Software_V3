@@ -16,19 +16,13 @@ import java.util.List;
 
 public class RoleHistoryPanel extends JPanel {
 
-    private Employee employee; // Changed to non-final to allow updates
+    private Employee employee;
     private final boolean isEditable;
-    private final Runnable onDataChangedCallback; // Callback for global refresh
+    private final Runnable onDataChangedCallback;
 
     private JTable historyTable;
     private RoleHistoryTableModel tableModel;
 
-    /**
-     * Updated constructor to accept a callback.
-     * @param employee The employee whose role history is displayed.
-     * @param isEditable If true, editing controls are visible.
-     * @param onDataChangedCallback A callback to run after data is successfully modified. Can be null.
-     */
     public RoleHistoryPanel(Employee employee, boolean isEditable, Runnable onDataChangedCallback) {
         this.employee = employee;
         this.isEditable = isEditable;
@@ -41,30 +35,25 @@ public class RoleHistoryPanel extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Titel
-        String titleText = "Rollenhistorie für: " + employee.getFirstName() + " " + employee.getLastName();
-        JLabel titleLabel = new JLabel(titleText);
+        JLabel titleLabel = new JLabel("Rollenhistorie für: " + employee.getFirstName() + " " + employee.getLastName());
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         add(titleLabel, BorderLayout.NORTH);
 
-        // Tabelle
         tableModel = new RoleHistoryTableModel(new ArrayList<>());
         historyTable = new JTable(tableModel);
         historyTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         historyTable.setFillsViewportHeight(true);
-
         add(new JScrollPane(historyTable), BorderLayout.CENTER);
 
-        // Buttons (nur wenn bearbeitbar)
         if (isEditable) {
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             JButton btnAdd = new JButton("Hinzufügen");
             JButton btnEdit = new JButton("Bearbeiten");
             JButton btnDelete = new JButton("Löschen");
 
-            btnAdd.addActionListener(e -> addEntry());
-            btnEdit.addActionListener(e -> editEntry());
-            btnDelete.addActionListener(e -> deleteEntry());
+            btnAdd.addActionListener(_ -> addEntry());
+            btnEdit.addActionListener(_ -> editEntry());
+            btnDelete.addActionListener(_ -> deleteEntry());
 
             buttonPanel.add(btnAdd);
             buttonPanel.add(btnEdit);
@@ -73,9 +62,6 @@ public class RoleHistoryPanel extends JPanel {
         }
     }
 
-    /**
-     * Reloads and displays the role history data for the current employee.
-     */
     public void loadData() {
         if (employee == null || employee.getRoleManager() == null) {
             tableModel.setHistory(new ArrayList<>());
@@ -84,15 +70,6 @@ public class RoleHistoryPanel extends JPanel {
         ArrayList<RoleHistoryEntry> history = employee.getRoleManager().getRoleHistory();
         history.sort(Comparator.comparing(RoleHistoryEntry::getAcquireDate).reversed());
         tableModel.setHistory(history);
-    }
-
-    /**
-     * Updates the employee reference for this panel. This is useful when the parent view
-     * reloads its data and gets a new employee object instance.
-     * @param employee The new, fresh Employee object.
-     */
-    public void updateEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     private void addEntry() {
@@ -116,12 +93,10 @@ public class RoleHistoryPanel extends JPanel {
             }
 
             JOptionPane.showMessageDialog(this, "Eintrag hinzugefügt.");
-
-            // Trigger global refresh via the provided callback.
             if (onDataChangedCallback != null) {
                 onDataChangedCallback.run();
             } else {
-                loadData(); // Fallback to local refresh if no callback is given.
+                loadData();
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
@@ -156,7 +131,6 @@ public class RoleHistoryPanel extends JPanel {
             employee.getRoleManager().updateRoleHistoryEntry(entryToEdit);
             JOptionPane.showMessageDialog(this, "Eintrag aktualisiert.");
 
-            // Trigger global refresh via the provided callback.
             if (onDataChangedCallback != null) {
                 onDataChangedCallback.run();
             } else {
@@ -181,7 +155,6 @@ public class RoleHistoryPanel extends JPanel {
             employee.getRoleManager().removeRoleHistoryEntry(entryToDelete);
             JOptionPane.showMessageDialog(this, "Eintrag gelöscht.");
 
-            // Trigger global refresh via the provided callback.
             if (onDataChangedCallback != null) {
                 onDataChangedCallback.run();
             } else {
@@ -193,14 +166,14 @@ public class RoleHistoryPanel extends JPanel {
     private Role selectRoleDialog(String title, int preselectedRoleId) {
         List<Role> roles = ServiceLocator.getRoleContainer().getRoles();
         Role preselectedRole = null;
-        for(Role r : roles) {
-            if(r.getId() == preselectedRoleId) {
+        for (Role r : roles) {
+            if (r.getId() == preselectedRoleId) {
                 preselectedRole = r;
                 break;
             }
         }
 
-        Role selected = (Role) JOptionPane.showInputDialog(
+        return (Role) JOptionPane.showInputDialog(
                 this,
                 "Bitte eine Rolle auswählen:",
                 title,
@@ -209,14 +182,12 @@ public class RoleHistoryPanel extends JPanel {
                 roles.toArray(),
                 preselectedRole
         );
-        return selected;
     }
 
     private Role selectRoleDialog(String title) {
         return selectRoleDialog(title, -1);
     }
 
-    // --- Inner class for the Table Model ---
     private static class RoleHistoryTableModel extends AbstractTableModel {
         private final String[] columnNames = {"Rolle", "Startdatum", "Enddatum", "Status"};
         private List<RoleHistoryEntry> history;
@@ -253,7 +224,6 @@ public class RoleHistoryPanel extends JPanel {
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             RoleHistoryEntry entry = history.get(rowIndex);
-
             switch (columnIndex) {
                 case 0:
                     Role role = ServiceLocator.getRoleContainer().getRoleById(entry.getRoleId());

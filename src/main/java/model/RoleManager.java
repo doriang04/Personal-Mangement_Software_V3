@@ -149,7 +149,7 @@ public class RoleManager {
 
     public RoleHistoryEntry assignRole(int roleId, LocalDate assignedAt) {
         if (assignedAt == null) {
-            throw new IllegalArgumentException("assignedAt must not be null");
+            throw new IllegalArgumentException("assignedAt darf nicht null sein");
         }
 
         // close existing active role
@@ -168,14 +168,14 @@ public class RoleManager {
 
     public void endActiveRole(LocalDate endedAt) {
         if (endedAt == null) {
-            throw new IllegalArgumentException("endedAt must not be null");
+            throw new IllegalArgumentException("endedAt darf nicht null sein");
         }
 
         for (int i = roleHistory.size() - 1; i >= 0; i--) {
             RoleHistoryEntry entry = roleHistory.get(i);
             if (entry.isActive()) {
                 if (endedAt.isBefore(entry.getAcquireDate())) {
-                    throw new IllegalArgumentException("endedAt cannot be before assignedAt");
+                    throw new IllegalArgumentException("endedAt kann nicht vor assignedAt liegen.");
                 }
                 entry.setEndDate(endedAt);
                 return;

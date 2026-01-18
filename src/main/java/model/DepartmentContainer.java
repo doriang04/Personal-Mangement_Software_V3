@@ -19,7 +19,7 @@ public class DepartmentContainer {
     }
 
     public void removeDepartment(Department department) throws Exception {
-        if (department.hasReferences()) throw new Exception("Not allowed to delete department, as it is referenced.");
+        if (department.hasReferences()) throw new Exception("Die Abteilung darf nicht gelöscht werden, da sie referenziert wird.");
         departments.remove(department);
     }
 

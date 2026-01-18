@@ -18,7 +18,7 @@ public class RoleContainer {
     public void addRole(Role role) { roles.add(role); }
 
     public void removeRole(Role role) throws Exception {
-        if (role.hasReferences()) throw new Exception("Not allowed to delete role, as it is referenced.");
+        if (role.hasReferences()) throw new Exception("Die Rolle darf nicht gelöscht werden, da sie referenziert wird.");
         roles.remove(role);
     }
 

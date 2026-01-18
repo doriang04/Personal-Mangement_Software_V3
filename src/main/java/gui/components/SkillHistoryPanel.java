@@ -16,19 +16,13 @@ import java.util.List;
 
 public class SkillHistoryPanel extends JPanel {
 
-    private Employee employee; // Changed to non-final to allow updates
+    private Employee employee;
     private final boolean isEditable;
-    private final Runnable onDataChangedCallback; // Callback for global refresh
+    private final Runnable onDataChangedCallback;
 
     private JTable historyTable;
     private SkillHistoryTableModel tableModel;
 
-    /**
-     * Updated constructor to accept a callback.
-     * @param employee The employee whose skill history is displayed.
-     * @param isEditable If true, editing controls are visible.
-     * @param onDataChangedCallback A callback to run after data is successfully modified. Can be null.
-     */
     public SkillHistoryPanel(Employee employee, boolean isEditable, Runnable onDataChangedCallback) {
         this.employee = employee;
         this.isEditable = isEditable;
@@ -41,36 +35,30 @@ public class SkillHistoryPanel extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Title
-        String titleText = "Skill-Historie für: " + employee.getFirstName() + " " + employee.getLastName();
-        JLabel titleLabel = new JLabel(titleText);
+        JLabel titleLabel = new JLabel("Skill-Historie für: " + employee.getFirstName() + " " + employee.getLastName());
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         add(titleLabel, BorderLayout.NORTH);
 
-        // Table
         tableModel = new SkillHistoryTableModel(new ArrayList<>());
         historyTable = new JTable(tableModel);
         historyTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         historyTable.setFillsViewportHeight(true);
-
-        // Adjust column widths if needed
-        historyTable.getColumnModel().getColumn(0).setPreferredWidth(150); // Skill
-        historyTable.getColumnModel().getColumn(1).setPreferredWidth(200); // Beschreibung
-        historyTable.getColumnModel().getColumn(2).setPreferredWidth(100); // Erworben am
-        historyTable.getColumnModel().getColumn(3).setPreferredWidth(80);  // Status
+        historyTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+        historyTable.getColumnModel().getColumn(1).setPreferredWidth(200);
+        historyTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+        historyTable.getColumnModel().getColumn(3).setPreferredWidth(80);
 
         add(new JScrollPane(historyTable), BorderLayout.CENTER);
 
-        // Buttons (only if editable)
         if (isEditable) {
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             JButton btnAdd = new JButton("Hinzufügen");
             JButton btnEdit = new JButton("Bearbeiten");
             JButton btnDelete = new JButton("Löschen");
 
-            btnAdd.addActionListener(e -> addEntry());
-            btnEdit.addActionListener(e -> editEntry());
-            btnDelete.addActionListener(e -> deleteEntry());
+            btnAdd.addActionListener(_ -> addEntry());
+            btnEdit.addActionListener(_ -> editEntry());
+            btnDelete.addActionListener(_ -> deleteEntry());
 
             buttonPanel.add(btnAdd);
             buttonPanel.add(btnEdit);
@@ -79,9 +67,6 @@ public class SkillHistoryPanel extends JPanel {
         }
     }
 
-    /**
-     * Reloads and displays the skill history data for the current employee.
-     */
     public void loadData() {
         if (employee == null || employee.getSkillManager() == null) {
             tableModel.setHistory(new ArrayList<>());
@@ -92,11 +77,6 @@ public class SkillHistoryPanel extends JPanel {
         tableModel.setHistory(history);
     }
 
-    /**
-     * Updates the employee reference for this panel. This is useful when the parent view
-     * reloads its data and gets a new employee object instance.
-     * @param employee The new, fresh Employee object.
-     */
     public void updateEmployee(Employee employee) {
         this.employee = employee;
     }
@@ -114,11 +94,10 @@ public class SkillHistoryPanel extends JPanel {
 
             JOptionPane.showMessageDialog(this, "Eintrag hinzugefügt.");
 
-            // Trigger global refresh via the provided callback.
             if (onDataChangedCallback != null) {
                 onDataChangedCallback.run();
             } else {
-                loadData(); // Fallback to local refresh if no callback is given.
+                loadData();
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage(), "Fehler", JOptionPane.ERROR_MESSAGE);
@@ -141,7 +120,6 @@ public class SkillHistoryPanel extends JPanel {
             entryToEdit.setAcquireDate(acquireDate);
             JOptionPane.showMessageDialog(this, "Eintrag aktualisiert.");
 
-            // Trigger global refresh via the provided callback.
             if (onDataChangedCallback != null) {
                 onDataChangedCallback.run();
             } else {
@@ -166,7 +144,6 @@ public class SkillHistoryPanel extends JPanel {
             employee.getSkillManager().removeSkillEntry(entryToDelete);
             JOptionPane.showMessageDialog(this, "Eintrag gelöscht.");
 
-            // Trigger global refresh via the provided callback.
             if (onDataChangedCallback != null) {
                 onDataChangedCallback.run();
             } else {
@@ -177,7 +154,7 @@ public class SkillHistoryPanel extends JPanel {
 
     private Skill selectSkillDialog(String title) {
         List<Skill> skills = ServiceLocator.getSkillContainer().getSkills();
-        Skill selected = (Skill) JOptionPane.showInputDialog(
+        return (Skill) JOptionPane.showInputDialog(
                 this,
                 "Bitte einen Skill auswählen:",
                 title,
@@ -186,10 +163,8 @@ public class SkillHistoryPanel extends JPanel {
                 skills.toArray(),
                 null
         );
-        return selected;
     }
 
-    // --- Inner class for the Table Model ---
     private static class SkillHistoryTableModel extends AbstractTableModel {
         private final String[] columnNames = {"Skill", "Beschreibung", "Erworben am", "Status"};
         private List<SkillHistoryEntry> history;
@@ -229,13 +204,13 @@ public class SkillHistoryPanel extends JPanel {
             Skill skill = ServiceLocator.getSkillContainer().getSkillById(entry.getSkillId());
 
             switch (columnIndex) {
-                case 0: // Skill Name
+                case 0:
                     return (skill != null) ? skill.getName() : "Unbekannter Skill (ID: " + entry.getSkillId() + ")";
-                case 1: // Skill Description
+                case 1:
                     return (skill != null) ? skill.getDescription() : "-";
-                case 2: // Acquired Date
+                case 2:
                     return entry.getAcquireDate().format(formatter);
-                case 3: // Status
+                case 3:
                     return entry.isExpired() ? "Abgelaufen" : "Aktiv";
                 default:
                     return null;

@@ -61,7 +61,6 @@ public class EmployeeSearchView extends JPanel implements View {
     }
 
     private void initUI() {
-        // Header
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(true);
         header.setBackground(COLOR_HEADER_BG);
@@ -77,7 +76,6 @@ public class EmployeeSearchView extends JPanel implements View {
         contentWrapper.setOpaque(false);
         contentWrapper.setBorder(new EmptyBorder(25, 30, 25, 30));
 
-        // Mittelteil
         JPanel filterCard = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
         filterCard.setBackground(Color.WHITE);
         filterCard.setBorder(new LineBorder(COLOR_BORDER, 1, true));
@@ -98,21 +96,18 @@ public class EmployeeSearchView extends JPanel implements View {
         filterCard.add(txtSearchEmployee);
         filterCard.add(new JLabel("Abteilung:"));
         filterCard.add(comboFilterDepartment);
-        
+
         contentWrapper.add(filterCard, BorderLayout.NORTH);
 
-        // Tabelle
         initTable();
         JScrollPane scrollPane = new JScrollPane(employeeResultTable);
         scrollPane.setBorder(new LineBorder(COLOR_BORDER));
         scrollPane.getViewport().setBackground(Color.WHITE);
-        
         contentWrapper.add(scrollPane, BorderLayout.CENTER);
         add(contentWrapper, BorderLayout.CENTER);
     }
 
     private void initTable() {
-        // Tabelle initialisieren
         ArrayList<String> columns = new ArrayList<>();
         columns.add("ID"); columns.add("Nachname"); columns.add("Vorname");
         columns.add("Abteilung"); columns.add("E-Mail (Arbeit)");
@@ -126,81 +121,61 @@ public class EmployeeSearchView extends JPanel implements View {
         employeeResultTable.setRowHeight(40);
         employeeResultTable.setFont(new Font("SansSerif", Font.PLAIN, 14));
         employeeResultTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        employeeResultTable.setSelectionBackground(Color.WHITE); 
+        employeeResultTable.setSelectionBackground(Color.WHITE);
         employeeResultTable.setSelectionForeground(Color.BLACK);
         employeeResultTable.setGridColor(COLOR_BORDER);
         employeeResultTable.setShowVerticalLines(false);
         employeeResultTable.setIntercellSpacing(new Dimension(0, 1));
 
-        // ID Spalte verstecken
         employeeResultTable.removeColumn(employeeResultTable.getColumnModel().getColumn(0));
 
-        // Custom Renderer
-        SelectionIndicatorRenderer renderer = new SelectionIndicatorRenderer();
-        employeeResultTable.setDefaultRenderer(Object.class, renderer);
+        employeeResultTable.setDefaultRenderer(Object.class, new SelectionIndicatorRenderer());
 
-        // Header Styling
         JTableHeader header = employeeResultTable.getTableHeader();
         header.setFont(new Font("SansSerif", Font.BOLD, 14));
         header.setBackground(Color.WHITE);
         header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, COLOR_BORDER));
 
-        // Events
         employeeResultTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2 && employeeResultTable.getSelectedRow() != -1) openSelectedProfile();
             }
             @Override
-            public void mouseExited(MouseEvent e) {
-                hoveredRow = -1;
-                employeeResultTable.repaint();
-            }
+            public void mouseExited(MouseEvent e) { hoveredRow = -1; employeeResultTable.repaint(); }
         });
 
-        // Hover-Effekt
         employeeResultTable.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int row = employeeResultTable.rowAtPoint(e.getPoint());
-                if (row != hoveredRow) {
-                    hoveredRow = row;
-                    employeeResultTable.repaint();
-                }
+                if (row != hoveredRow) { hoveredRow = row; employeeResultTable.repaint(); }
             }
         });
     }
 
     private class SelectionIndicatorRenderer extends DefaultTableCellRenderer {
-        // Custom TableCellRenderer mit Hover-Effekt und Indikatorlinie
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, 
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                        boolean hasFocus, int row, int column) {
             JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            
             boolean isHovered = (row == hoveredRow);
-            
             if (isHovered) {
                 c.setBackground(COLOR_HOVER);
-                if (column == 0) {
-                    c.setBorder(BorderFactory.createCompoundBorder(
+                if (column == 0) c.setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createMatteBorder(0, 5, 0, 0, COLOR_ACCENT),
                         new EmptyBorder(0, 10, 0, 5)
-                    ));
-                } else {
-                    c.setBorder(new EmptyBorder(0, 15, 0, 5));
-                }
+                ));
+                else c.setBorder(new EmptyBorder(0, 15, 0, 5));
             } else {
                 c.setBackground(Color.WHITE);
                 c.setBorder(new EmptyBorder(0, 15, 0, 5));
             }
-            
             return c;
         }
     }
 
     private void searchEmployees() {
-        // Mitarbeitersuche basierend auf Filterkriterien
         if (tableModel == null) return;
         tableModel.setRowCount(0);
         String searchText = txtSearchEmployee.getText().toLowerCase().trim();
@@ -212,13 +187,12 @@ public class EmployeeSearchView extends JPanel implements View {
 
             Team team = ServiceLocator.getTeamContainer().getTeamById(emp.getTeamId());
             Department dept = (team != null) ? ServiceLocator.getDepartmentContainer().getDepartmentById(team.getDepartmentId()) : null;
-            
             String deptName = (dept != null) ? dept.getName() : "Keine Abteilung";
             if (filterDeptId != null && (dept == null || dept.getId() != filterDeptId)) continue;
 
-            boolean nameMatch = searchText.isEmpty() || 
-                                emp.getLastName().toLowerCase().contains(searchText) || 
-                                emp.getFirstName().toLowerCase().contains(searchText);
+            boolean nameMatch = searchText.isEmpty() ||
+                    emp.getLastName().toLowerCase().contains(searchText) ||
+                    emp.getFirstName().toLowerCase().contains(searchText);
 
             if (nameMatch) {
                 ArrayList<Object> row = new ArrayList<>();
@@ -235,16 +209,14 @@ public class EmployeeSearchView extends JPanel implements View {
     }
 
     private void openSelectedProfile() {
-        // Öffnet das Detail-Tab des ausgewählten Mitarbeiters
         int viewRow = employeeResultTable.getSelectedRow();
         if (viewRow == -1) return;
         int modelRow = employeeResultTable.convertRowIndexToModel(viewRow);
         int empId = (int) tableModel.getValueAt(modelRow, 0);
-        UIController.getInstance().openEmployeeDetailTab(empId);
+        UIController.getInstance().openTabOrFocus(new gui.views.EmployeeDetailView(empId), true);
     }
 
     private void refreshDepartmentCombo() {
-        // Aktualisiert die Abteilungs-ComboBox
         DepartmentItem selected = (DepartmentItem) comboFilterDepartment.getSelectedItem();
         comboFilterDepartment.removeAllItems();
         comboFilterDepartment.addItem(new DepartmentItem(null));

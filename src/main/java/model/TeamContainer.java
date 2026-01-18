@@ -17,7 +17,7 @@ public class TeamContainer {
     public void addTeam(Team team) { teams.add(team); }
 
     public void removeTeam(Team team) throws Exception {
-        if (team.hasReferences()) throw new Exception("Not allowed to delete company, as it is referenced.");
+        if (team.hasReferences()) throw new Exception("Das Unternehmen darf nicht gelöscht werden, da es referenziert wird.");
         teams.remove(team);
     }
 

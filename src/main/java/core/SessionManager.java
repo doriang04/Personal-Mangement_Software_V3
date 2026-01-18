@@ -3,8 +3,12 @@ package core;
 import model.Employee;
 
 import javax.naming.AuthenticationException;
-import java.io.*;
-import java.nio.file.*;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class SessionManager {
@@ -35,7 +39,7 @@ public class SessionManager {
     }
 
     public void setMaintenanceModeActive(boolean active) {
-        this.maintenanceModeActive = active;
+        maintenanceModeActive = active;
         saveMaintenanceMode();
     }
 
@@ -72,14 +76,16 @@ public class SessionManager {
     }
 
     public String getUserPermission() {
-        if (isSessionActive())
+        if (isSessionActive()) {
             return loggedInUser.getRoleManager().getActiveRole().getSystemPermission();
+        }
         return null;
     }
 
     public String getUserFirstNameAndLastName() {
-        if (isSessionActive())
+        if (isSessionActive()) {
             return loggedInUser.getFirstName() + " " + loggedInUser.getLastName();
+        }
         return null;
     }
 
@@ -90,25 +96,26 @@ public class SessionManager {
     public void logout() {
         loggedInUser = null;
     }
+
     public Employee getCurrentUser() {
         return loggedInUser;
     }
 
     public void login(String username, String password) throws AuthenticationException {
         AuthenticationException error_normal =
-                new AuthenticationException("Username or Password do not match. Please provide correct credentials.");
+                new AuthenticationException("Benutzername oder Passwort stimmen nicht überein. Bitte geben Sie die richtigen Anmeldedaten ein.");
         AuthenticationException error_maintenance =
-                new AuthenticationException("Maintenance mode is active. Login only possible for admins.");
+                new AuthenticationException("Der Wartungsmodus ist aktiv. Die Anmeldung ist nur für Administratoren möglich.");
 
         for (Employee employee : ServiceLocator.getEmployeeContainer().getEmployees()) {
             if (employee.getUsername().equals(username)) {
                 if (employee.getPassword().equals(password)) {
                     if (isMaintenanceModeActive()) {
-                         if (employee.getRoleManager().getActiveRole().getSystemPermission().equals("ADMIN")) {
-                             loggedInUser = employee;
-                             return;
-                         }
-                         throw error_maintenance;
+                        if (employee.getRoleManager().getActiveRole().getSystemPermission().equals("ADMIN")) {
+                            loggedInUser = employee;
+                            return;
+                        }
+                        throw error_maintenance;
                     }
                     loggedInUser = employee;
                     return;

@@ -6,7 +6,6 @@ public class TrainingSkillManagerContainer {
 
     private static TrainingSkillManagerContainer instance;
 
-    // KORREKTUR: Die Liste muss 'TrainingSkillManager' speichern, nicht den Container selbst.
     private ArrayList<TrainingSkillManager> trainingSkillManagers = new ArrayList<>();
 
     private TrainingSkillManagerContainer() {}
@@ -21,7 +20,7 @@ public class TrainingSkillManagerContainer {
     }
 
     public void removeTrainingSkillManager(TrainingSkillManager trainingSkillManager) throws Exception {
-        if (trainingSkillManager.hasReferences()) throw new Exception("Not allowed to delete trainingSkillManager, as it is referenced.");
+        if (trainingSkillManager.hasReferences()) throw new Exception("trainingSkillManager darf nicht gelöscht werden, da darauf verwiesen wird.");
         trainingSkillManagers.remove(trainingSkillManager);
     }
 
@@ -29,12 +28,8 @@ public class TrainingSkillManagerContainer {
         return trainingSkillManagers;
     }
 
-    /**
-     * Sucht den TrainingSkillManager passend zu einer Training-ID.
-     */
     public TrainingSkillManager getTrainingSkillManagerByTrainingId(int trainingId) {
         for (TrainingSkillManager manager : trainingSkillManagers) {
-            // Wir vergleichen die ID des Trainings, für das dieser Manager zuständig ist
             if (manager.getTrainingId() == trainingId) {
                 return manager;
             }

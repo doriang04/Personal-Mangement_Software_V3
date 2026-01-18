@@ -62,7 +62,6 @@ public class MyProfileView extends JPanel implements View {
         setLayout(new BorderLayout());
         setBackground(COLOR_BG_CONTENT);
 
-        // Header
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(true);
         header.setBackground(COLOR_HEADER_BG);
@@ -73,7 +72,6 @@ public class MyProfileView extends JPanel implements View {
         header.add(title, BorderLayout.WEST);
         add(header, BorderLayout.NORTH);
 
-        // Mittelteil
         JPanel cardPanel = new JPanel(new GridBagLayout());
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -91,7 +89,6 @@ public class MyProfileView extends JPanel implements View {
         addModernRow(cardPanel, gbc, row++, "Mitarbeiter-ID:", txtId);
         addModernRow(cardPanel, gbc, row++, "Benutzername:", txtUsername);
 
-        // Rolle mit Button für Historie
         JPanel rolePanel = new JPanel(new BorderLayout(10, 0));
         rolePanel.setOpaque(false);
         rolePanel.add(txtRole, BorderLayout.CENTER);
@@ -132,7 +129,6 @@ public class MyProfileView extends JPanel implements View {
         scrollPane.getViewport().setOpaque(false);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Fußzeile
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 20));
         footer.setOpaque(true);
         footer.setBackground(COLOR_BG_CONTENT);
@@ -170,7 +166,7 @@ public class MyProfileView extends JPanel implements View {
         txtEmail = createModernTextField(true);
         txtPhone = createModernTextField(true);
         txtAddress = createModernTextField(true);
-        
+
         txtPassword = new JPasswordField(20);
         txtPassword.setFont(new Font("SansSerif", Font.PLAIN, 14));
         txtPassword.setBorder(BorderFactory.createCompoundBorder(
@@ -221,10 +217,10 @@ public class MyProfileView extends JPanel implements View {
     private void handlePrimaryAction() {
         if (isInEditMode) {
             if (hasUnsavedChanges) saveChanges();
-            else { 
-                isInEditMode = false; 
+            else {
+                isInEditMode = false;
                 loadData();
-                updateUiForCurrentState(); 
+                updateUiForCurrentState();
             }
         } else {
             isInEditMode = true;
@@ -236,23 +232,17 @@ public class MyProfileView extends JPanel implements View {
 
     private void saveChanges() {
         if (currentUser == null) return;
-        
         if (txtFirstName.getText().trim().isEmpty() || txtLastName.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vor- und Nachname dürfen nicht leer sein.", "Fehler", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         currentUser.setFirstName(txtFirstName.getText().trim());
         currentUser.setLastName(txtLastName.getText().trim());
         currentUser.setEMail(txtEmail.getText().trim());
         currentUser.setPhoneNumber(txtPhone.getText().trim());
         currentUser.setAddress(txtAddress.getText().trim());
-        
         String newPwd = new String(txtPassword.getPassword());
-        if (!newPwd.isEmpty() && !newPwd.equals("********")) {
-            currentUser.setPassword(newPwd);
-        }
-
+        if (!newPwd.isEmpty() && !newPwd.equals("********")) currentUser.setPassword(newPwd);
         JOptionPane.showMessageDialog(this, "Profil erfolgreich aktualisiert!");
         isInEditMode = false;
         hasUnsavedChanges = false;
@@ -295,23 +285,18 @@ public class MyProfileView extends JPanel implements View {
         if (currentUser == null) return;
         txtId.setText(String.valueOf(currentUser.getId()));
         txtUsername.setText(currentUser.getUsername());
-        
-        String roleName = (currentUser.getRoleManager() != null && currentUser.getRoleManager().getActiveRole() != null) 
+        String roleName = (currentUser.getRoleManager() != null && currentUser.getRoleManager().getActiveRole() != null)
                 ? currentUser.getRoleManager().getActiveRole().getName() : "-";
         txtRole.setText(roleName);
-
         int activeSkillsCount = (currentUser.getSkillManager() != null) ? currentUser.getSkillManager().getActiveSkills().size() : 0;
         txtSkills.setText(activeSkillsCount + (activeSkillsCount == 1 ? " aktiver Skill" : " aktive Skills"));
-
         txtTeam.setText("Team-ID: " + currentUser.getTeamId());
         txtFirstName.setText(currentUser.getFirstName());
         txtLastName.setText(currentUser.getLastName());
         txtEmail.setText(currentUser.getEMail());
         txtPhone.setText(currentUser.getPhoneNumber());
         txtAddress.setText(currentUser.getAddress());
-        
-        // Zeigt an, dass ein PW existiert, ohne es auszulesen
-        txtPassword.setText("********"); 
+        txtPassword.setText("********");
     }
 
     private void showRoleHistoryDialog() {

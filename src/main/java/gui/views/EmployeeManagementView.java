@@ -11,6 +11,7 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -62,7 +63,6 @@ public class EmployeeManagementView extends JPanel implements View {
         setLayout(new BorderLayout());
         setBackground(COLOR_BG_CONTENT);
 
-        // Header
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(true);
         header.setBackground(COLOR_HEADER_BG);
@@ -73,7 +73,6 @@ public class EmployeeManagementView extends JPanel implements View {
         header.add(titleLabel, BorderLayout.WEST);
         add(header, BorderLayout.NORTH);
 
-        // Mittelteil
         JPanel leftPanel = createLeftPanel();
         JPanel rightPanel = createRightPanel();
 
@@ -100,24 +99,17 @@ public class EmployeeManagementView extends JPanel implements View {
         employeeList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         employeeList.setSelectionBackground(Color.WHITE);
         employeeList.setSelectionForeground(Color.BLACK);
-        
-        // Hover Logik
+
         employeeList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = employeeList.locationToIndex(e.getPoint());
-                if (index != hoveredIndex) {
-                    hoveredIndex = index;
-                    employeeList.repaint();
-                }
+                if (index != hoveredIndex) { hoveredIndex = index; employeeList.repaint(); }
             }
         });
         employeeList.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseExited(MouseEvent e) {
-                hoveredIndex = -1;
-                employeeList.repaint();
-            }
+            public void mouseExited(MouseEvent e) { hoveredIndex = -1; employeeList.repaint(); }
         });
 
         JScrollPane scrollPane = new JScrollPane(employeeList);
@@ -126,11 +118,8 @@ public class EmployeeManagementView extends JPanel implements View {
 
         JButton btnDelete = createStyledButton("Mitarbeiter löschen", false);
         btnDelete.addActionListener(_ -> {
-            try {
-                deleteSelectedEmployee();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage());
-            }
+            try { deleteSelectedEmployee(); }
+            catch (Exception ex) { JOptionPane.showMessageDialog(this, "Fehler: " + ex.getMessage()); }
         });
         card.add(btnDelete, BorderLayout.SOUTH);
 
@@ -168,18 +157,21 @@ public class EmployeeManagementView extends JPanel implements View {
         addModernFormRow(formPanel, gbc, row++, "Passwort*", txtPassword);
         addModernFormRow(formPanel, gbc, row++, "Team*", cbTeam);
         addModernFormRow(formPanel, gbc, row++, "Rolle*", cbRole);
-        
+
         gbc.gridy = row++; gbc.insets = new Insets(15, 0, 15, 0);
         formPanel.add(new JSeparator(), gbc);
-        
         gbc.insets = new Insets(8, 0, 2, 0);
+
         addModernFormRow(formPanel, gbc, row++, "E-Mail", txtEmail);
         addModernFormRow(formPanel, gbc, row++, "Telefon", txtPhone);
+        addModernFormRow(formPanel, gbc, row++, "Adresse", txtAddress);
         addModernFormRow(formPanel, gbc, row++, "Einstellungsdatum", txtHireDate);
+        addModernFormRow(formPanel, gbc, row++, "Geburtsdatum", txtDateOfBirth);
+        addModernFormRow(formPanel, gbc, row++, "Geschlecht", cbGender);
 
         JButton btnAdd = createStyledButton("Mitarbeiter hinzufügen", true);
         btnAdd.addActionListener(e -> createEmployee());
-        
+
         card.add(new JScrollPane(formPanel), BorderLayout.CENTER);
         card.add(btnAdd, BorderLayout.SOUTH);
 
@@ -198,17 +190,13 @@ public class EmployeeManagementView extends JPanel implements View {
         p.add(rowPanel, gbc);
     }
 
-
     private class EmployeeListRenderer extends DefaultListCellRenderer {
-        // ListCellRenderer für Mitarbeiter mit Hover-Effekt
         @Override
         public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Employee emp = (Employee) value;
             JPanel panel = new JPanel(new BorderLayout(10, 0));
             panel.setPreferredSize(new Dimension(0, 50));
-            
             boolean isHovered = (index == hoveredIndex);
-            
             if (isHovered) {
                 panel.setBackground(COLOR_HOVER);
                 panel.setBorder(BorderFactory.createMatteBorder(0, 5, 0, 0, COLOR_ACCENT));
@@ -216,17 +204,13 @@ public class EmployeeManagementView extends JPanel implements View {
                 panel.setBackground(Color.WHITE);
                 panel.setBorder(new EmptyBorder(0, 15, 0, 5));
             }
-
             JLabel nameLabel = new JLabel("  " + emp.getFirstName() + " " + emp.getLastName());
             nameLabel.setFont(new Font("SansSerif", isSelected ? Font.BOLD : Font.PLAIN, 13));
-            
             JLabel idLabel = new JLabel("ID: " + emp.getId() + "  ");
             idLabel.setFont(new Font("Monospaced", Font.PLAIN, 11));
             idLabel.setForeground(Color.GRAY);
-
             panel.add(nameLabel, BorderLayout.CENTER);
             panel.add(idLabel, BorderLayout.EAST);
-
             return panel;
         }
     }
@@ -236,24 +220,20 @@ public class EmployeeManagementView extends JPanel implements View {
             JOptionPane.showMessageDialog(this, "Pflichtfelder ausfüllen!", "Warnung", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
         try {
             int newId = ServiceLocator.getEmployeeContainer().getEmployees().stream()
                     .mapToInt(Employee::getId).max().orElse(0) + 1;
-
             Employee newEmp = new Employee(
-                    newId, ((TeamItem) cbTeam.getSelectedItem()).team.getId(),
+                    newId, ((TeamItem) Objects.requireNonNull(cbTeam.getSelectedItem())).team.getId(),
                     txtUsername.getText().trim(), new String(txtPassword.getPassword()),
                     txtFirstName.getText().trim(), txtLastName.getText().trim(),
                     txtEmail.getText().trim(), null, txtAddress.getText().trim(),
-                    ((String)cbGender.getSelectedItem()).charAt(0),
+                    ((String) Objects.requireNonNull(cbGender.getSelectedItem())).charAt(0),
                     java.sql.Date.valueOf(LocalDate.parse(txtHireDate.getText())),
                     0, true, txtPhone.getText().trim()
             );
-
-            Role selRole = ((RoleItem) cbRole.getSelectedItem()).role;
+            Role selRole = ((RoleItem) Objects.requireNonNull(cbRole.getSelectedItem())).role;
             if(selRole != null) newEmp.getRoleManager().assignRole(selRole.getId(), LocalDate.now());
-
             ServiceLocator.getEmployeeContainer().addEmployee(newEmp);
             UIController.getInstance().updateMainWindow();
             clearForm();
@@ -265,7 +245,6 @@ public class EmployeeManagementView extends JPanel implements View {
     private void deleteSelectedEmployee() throws Exception {
         Employee selected = employeeList.getSelectedValue();
         if (selected == null) return;
-
         if (JOptionPane.showConfirmDialog(this, "Löschen?") == JOptionPane.YES_OPTION) {
             ServiceLocator.getEmployeeContainer().removeEmployee(selected);
             UIController.getInstance().updateMainWindow();
@@ -290,14 +269,8 @@ public class EmployeeManagementView extends JPanel implements View {
         txtPassword.setText(""); txtEmail.setText("");
     }
 
-    static class TeamItem {
-        Team team; public TeamItem(Team t) { this.team = t; }
-        @Override public String toString() { return (team == null) ? "- Kein Team -" : team.getName(); }
-    }
-    static class RoleItem {
-        Role role; public RoleItem(Role r) { this.role = r; }
-        @Override public String toString() { return (role == null) ? "- Keine Rolle -" : role.getName(); }
-    }
+    static class TeamItem { Team team; public TeamItem(Team t) { this.team = t; } @Override public String toString() { return (team == null) ? "- Kein Team -" : team.getName(); } }
+    static class RoleItem { Role role; public RoleItem(Role r) { this.role = r; } @Override public String toString() { return (role == null) ? "- Keine Rolle -" : role.getName(); } }
 
     @Override public String getViewId() { return "admin-employee-management"; }
     @Override public String getViewTabTitle() { return "Personalverwaltung"; }

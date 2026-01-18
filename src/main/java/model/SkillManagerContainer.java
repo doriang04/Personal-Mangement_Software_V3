@@ -3,7 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-// Skill Manager Container
 public class SkillManagerContainer {
     private static SkillManagerContainer instance;
     private ArrayList<SkillManager> skillManagers = new ArrayList<>();

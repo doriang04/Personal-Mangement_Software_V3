@@ -63,7 +63,6 @@ public class EmployeeDetailView extends JPanel implements View {
     private JLabel lblUnsavedChanges;
 
     public EmployeeDetailView(int employeeId) {
-        // Daten laden vom ServiceLocator
         this.employee = ServiceLocator.getEmployeeContainer().getEmployeeById(employeeId);
         this.canEdit = checkPermissions();
 
@@ -81,7 +80,6 @@ public class EmployeeDetailView extends JPanel implements View {
         setLayout(new BorderLayout());
         setBackground(COLOR_BG_CONTENT);
 
-        // Header
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(true);
         header.setBorder(new EmptyBorder(20, 30, 15, 30));
@@ -102,7 +100,6 @@ public class EmployeeDetailView extends JPanel implements View {
             return;
         }
 
-        // Mittelteil
         JPanel cardPanel = new JPanel(new GridBagLayout());
         cardPanel.setBackground(Color.WHITE);
         cardPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -136,13 +133,12 @@ public class EmployeeDetailView extends JPanel implements View {
         addModernRow(cardPanel, gbc, row++, "Abteilung / Team:", cbTeam);
         addModernRow(cardPanel, gbc, row++, "Aktuelle Rolle:", cbRole);
 
-        // History Button Panel
         JPanel historyButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         historyButtonPanel.setOpaque(false);
 
         btnShowRoleHistory = createStyledButton("Rollenhistorie...", false);
         btnShowRoleHistory.addActionListener(_ -> showRoleHistoryDialog());
-        
+
         btnShowSkillHistory = createStyledButton("Skill-Historie...", false);
         btnShowSkillHistory.addActionListener(_ -> showSkillHistoryDialog());
 
@@ -154,7 +150,6 @@ public class EmployeeDetailView extends JPanel implements View {
         gbc.fill = GridBagConstraints.NONE;
         cardPanel.add(historyButtonPanel, gbc);
 
-        // Zentrieren von Mittelteil mit Scrollbar
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setOpaque(false);
         centerWrapper.add(cardPanel, new GridBagConstraints());
@@ -165,7 +160,6 @@ public class EmployeeDetailView extends JPanel implements View {
         scrollPane.getViewport().setOpaque(false);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Fußzeile mit Zeugs
         if (canEdit) {
             JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 20));
             footer.setOpaque(false);
@@ -192,7 +186,6 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void initFormFields() {
-        // Textfelder
         txtUsername = createModernTextField();
         txtFirstName = createModernTextField();
         txtLastName = createModernTextField();
@@ -216,7 +209,6 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void updateUiForCurrentState() {
-        // Felder aktivieren/deaktivieren
         enableFields(isInEditMode);
         txtUsername.setEditable(false);
         txtUsername.setBackground(new Color(245, 245, 245));
@@ -235,7 +227,6 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void handlePrimaryAction() {
-        // Je nach primary oder nicht: Speichern, Verwerfen oder in den Bearbeitungsmodus wechseln
         if (isInEditMode) {
             if (hasUnsavedChanges) saveChanges();
             else { isInEditMode = false; updateUiForCurrentState(); }
@@ -247,7 +238,6 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void saveChanges() {
-        // Änderungen speichern
         try {
             employee.setFirstName(txtFirstName.getText().trim());
             employee.setLastName(txtLastName.getText().trim());
@@ -278,7 +268,6 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void discardChanges() {
-        // Änderungen verwerfen
         if (JOptionPane.showConfirmDialog(this, "Änderungen wirklich verwerfen?", "Abbrechen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             isInEditMode = false;
             hasUnsavedChanges = false;
@@ -288,7 +277,6 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void addChangeListeners() {
-        // Änderungen überwachen
         DocumentListener dl = new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { markAsChanged(); }
             public void removeUpdate(DocumentEvent e) { markAsChanged(); }
@@ -304,7 +292,6 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void markAsChanged() {
-        // Markiert das Formular als geändert
         if (isInEditMode && !hasUnsavedChanges) {
             hasUnsavedChanges = true;
             updateUiForCurrentState();
@@ -312,7 +299,6 @@ public class EmployeeDetailView extends JPanel implements View {
     }
 
     private void fillFields() {
-        // Felder mit Daten füllen
         if (employee == null) return;
         txtUsername.setText(employee.getUsername());
         txtFirstName.setText(employee.getFirstName());
@@ -321,13 +307,11 @@ public class EmployeeDetailView extends JPanel implements View {
         txtPhone.setText(employee.getPhoneNumber());
         txtAddress.setText(employee.getAddress());
 
-        // Team selection
         for (int i = 0; i < cbTeam.getItemCount(); i++) {
             if (cbTeam.getItemAt(i).team != null && cbTeam.getItemAt(i).team.getId() == employee.getTeamId()) {
                 cbTeam.setSelectedIndex(i); break;
             }
         }
-        // Role selection
         Role active = employee.getRoleManager().getActiveRole();
         if (active != null) {
             for (int i = 0; i < cbRole.getItemCount(); i++) {
@@ -347,10 +331,7 @@ public class EmployeeDetailView extends JPanel implements View {
 
     private void enableFields(boolean enable) {
         JTextField[] fields = {txtFirstName, txtLastName, txtEmail, txtPhone, txtAddress};
-        for (JTextField f : fields) {
-            f.setEditable(enable);
-            f.setBackground(enable ? Color.WHITE : new Color(248, 248, 248));
-        }
+        for (JTextField f : fields) { f.setEditable(enable); f.setBackground(enable ? Color.WHITE : new Color(248, 248, 248)); }
         cbTeam.setEnabled(enable);
         cbRole.setEnabled(enable);
     }

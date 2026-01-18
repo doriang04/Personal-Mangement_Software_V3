@@ -12,19 +12,32 @@ public class AssignTrainingDialog extends JDialog {
     private JComboBox<EmployeeItem> cbEmployees;
     private JComboBox<TrainingItem> cbTrainings;
     private JTextField txtDate;
-    private JButton btnSave, btnCancel;
+    private JButton btnSave;
+    private JButton btnCancel;
     private final Runnable onSuccessCallback;
 
     class EmployeeItem {
         Employee e;
-        EmployeeItem(Employee e) { this.e = e; }
-        public String toString() { return e.getFirstName() + " " + e.getLastName(); }
+
+        EmployeeItem(Employee e) {
+            this.e = e;
+        }
+
+        public String toString() {
+            return e.getFirstName() + " " + e.getLastName();
+        }
     }
 
     class TrainingItem {
         Training t;
-        TrainingItem(Training t) { this.t = t; }
-        public String toString() { return t.getTitle(); }
+
+        TrainingItem(Training t) {
+            this.t = t;
+        }
+
+        public String toString() {
+            return t.getTitle();
+        }
     }
 
     public AssignTrainingDialog(Window owner, Runnable onSuccessCallback) {
@@ -40,11 +53,10 @@ public class AssignTrainingDialog extends JDialog {
 
     private void initUI() {
         JPanel form = new JPanel(new GridLayout(4, 2, 10, 10));
-        form.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        form.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         cbEmployees = new JComboBox<>();
         cbTrainings = new JComboBox<>();
-
         txtDate = new JTextField(LocalDate.now().toString());
 
         form.add(new JLabel("Mitarbeiter:"));
@@ -65,12 +77,18 @@ public class AssignTrainingDialog extends JDialog {
 
         btnPanel.add(btnSave);
         btnPanel.add(btnCancel);
+
         add(btnPanel, BorderLayout.SOUTH);
     }
 
     private void loadData() {
-        for(Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) cbEmployees.addItem(new EmployeeItem(e));
-        for(Training t : ServiceLocator.getTrainingContainer().getTrainings()) cbTrainings.addItem(new TrainingItem(t));
+        for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
+            cbEmployees.addItem(new EmployeeItem(e));
+        }
+
+        for (Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
+            cbTrainings.addItem(new TrainingItem(t));
+        }
     }
 
     private void onSave() {
@@ -89,16 +107,15 @@ public class AssignTrainingDialog extends JDialog {
             TrainingManager tm = empItem.e.getTrainingManager();
             if (tm != null) {
                 tm.assignTraining(trainItem.t.getId(), date);
-
-                System.out.println("DEBUG: Schulung '" + trainItem.t.getTitle() +
-                        "' an " + empItem.e.getUsername() + " zugewiesen.");
             } else {
                 JOptionPane.showMessageDialog(this, "Fehler: Mitarbeiter hat keinen TrainingManager!");
                 return;
             }
 
             JOptionPane.showMessageDialog(this, "Zugewiesen!");
-            if (onSuccessCallback != null) onSuccessCallback.run();
+            if (onSuccessCallback != null) {
+                onSuccessCallback.run();
+            }
             dispose();
 
         } catch (java.time.format.DateTimeParseException dtpe) {

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import core.ServiceLocator;
 import model.*;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -38,9 +39,8 @@ public class DatabaseManager {
             openConnection();
             initDatabase();
         } catch (SQLException e) {
-            System.err.println("❌ Database initialisation failed: " + e.getMessage());
+            System.err.println("Initialisierung der Datenbank fehlgeschlagen: " + e.getMessage());
         }
-
     }
 
     public void saveAllDataOnce() {
@@ -53,26 +53,26 @@ public class DatabaseManager {
         try {
             connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
         } catch (SQLException e) {
-            System.err.println("❌ Database connection failed: " + e.getMessage());
+            System.err.println("Datenbankverbindung fehlgeschlagen: " + e.getMessage());
         }
     }
 
     private void initDatabase() {
         try {
-            InputStream is = getClass().getClassLoader().getResourceAsStream("db/schema.sql");
+            InputStream is =
+                    getClass().getClassLoader().getResourceAsStream("db/schema.sql");
             if (is == null) {
-                throw new RuntimeException("Schema file not found: db/schema.sql");
+                throw new RuntimeException("Schema-Datei nicht gefunden: db/schema.sql");
             }
             RunScript.execute(connection, new InputStreamReader(is));
-            System.out.println("✅ Database schema initialized from schema.sql");
         } catch (Exception e) {
-            System.err.println("❌ Schema init failed: " + e.getMessage());
+            System.err.println("Schema-Initialisierung fehlgeschlagen: " + e.getMessage());
         }
     }
 
     public void importFromJson(Path dir) throws IOException, SQLException {
         if (dir == null || !Files.isDirectory(dir)) {
-            throw new IllegalArgumentException("dir must be an existing directory");
+            throw new IllegalArgumentException("dir muss ein vorhandenes Verzeichnis sein");
         }
 
         connection.setAutoCommit(false);
@@ -88,12 +88,10 @@ public class DatabaseManager {
                     loadFromJson(dir.resolve("employees.json"), Employee.class);
 
             saveEmployees(employees);
-
             saveTrainingSkillsFromJson(dir.resolve("trainings.json"));
             saveEmployeeHistoriesFromJson(employees);
 
             connection.commit();
-            System.out.println("✅ JSON → DB import complete");
         } catch (Exception e) {
             connection.rollback();
             throw e;
@@ -105,13 +103,16 @@ public class DatabaseManager {
     private <T> ArrayList<T> loadFromJson(Path file, Class<T> clazz) throws IOException {
         return mapper.readValue(
                 file.toFile(),
-                mapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz)
+                mapper.getTypeFactory()
+                        .constructCollectionType(ArrayList.class, clazz)
         );
     }
 
     private void saveCompanies(ArrayList<Company> companies) throws SQLException {
         if (companies == null || companies.isEmpty()) return;
-        String sql = "MERGE INTO companies (id, name) KEY (id) VALUES (?, ?)";
+
+        String sql =
+                "MERGE INTO companies (id, name) KEY (id) VALUES (?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Company c : companies) {
                 pstmt.setInt(1, c.getId());
@@ -124,7 +125,9 @@ public class DatabaseManager {
 
     private void saveDepartments(ArrayList<Department> departments) throws SQLException {
         if (departments == null || departments.isEmpty()) return;
-        String sql = "MERGE INTO departments (id, name, company_id) KEY (id) VALUES (?, ?, ?)";
+
+        String sql =
+                "MERGE INTO departments (id, name, company_id) KEY (id) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Department d : departments) {
                 pstmt.setInt(1, d.getId());
@@ -138,7 +141,9 @@ public class DatabaseManager {
 
     private void saveTeams(ArrayList<Team> teams) throws SQLException {
         if (teams == null || teams.isEmpty()) return;
-        String sql = "MERGE INTO teams (id, name, department_id) KEY (id) VALUES (?, ?, ?)";
+
+        String sql =
+                "MERGE INTO teams (id, name, department_id) KEY (id) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Team t : teams) {
                 pstmt.setInt(1, t.getId());
@@ -152,7 +157,9 @@ public class DatabaseManager {
 
     private void saveRoles(ArrayList<Role> roles) throws SQLException {
         if (roles == null || roles.isEmpty()) return;
-        String sql = "MERGE INTO roles (id, name, description, system_permission) KEY (id) VALUES (?, ?, ?, ?)";
+
+        String sql =
+                "MERGE INTO roles (id, name, description, system_permission) KEY (id) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Role r : roles) {
                 pstmt.setInt(1, r.getId());
@@ -167,10 +174,11 @@ public class DatabaseManager {
 
     private void saveSkills(ArrayList<Skill> skills) throws SQLException {
         if (skills == null || skills.isEmpty()) return;
-        String sql = "MERGE INTO skills (id, name, description, required_years) KEY (id) VALUES (?, ?, ?, ?)";
+
+        String sql =
+                "MERGE INTO skills (id, name, description, required_years) KEY (id) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Skill s : skills) {
-                // Annahme: Modell-Methoden getSkillId/getSkillName existieren wie im Original.
                 pstmt.setInt(1, s.getId());
                 pstmt.setString(2, s.getName());
                 pstmt.setString(3, s.getDescription());
@@ -183,12 +191,16 @@ public class DatabaseManager {
 
     private void saveEmployees(ArrayList<Employee> employees) throws SQLException {
         if (employees == null || employees.isEmpty()) return;
+
         String sql = """
-            MERGE INTO employees (id, username, password, first_name, last_name,
-            email, phone_number, date_of_birth, address, gender, hire_date, employment_active,
-            team_id, manager_id) KEY (id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-           """;
+        MERGE INTO employees (
+            id, username, password, first_name, last_name,
+            email, phone_number, date_of_birth, address, gender,
+            hire_date, employment_active, team_id, manager_id
+        ) KEY (id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Employee e : employees) {
                 pstmt.setInt(1, e.getId());
@@ -199,10 +211,8 @@ public class DatabaseManager {
                 pstmt.setString(6, e.getEMail());
                 pstmt.setString(7, e.getPhoneNumber());
 
-                // Datum-Felder defensiv behandeln (können null sein)
                 if (e.getDateOfBirth() != null) {
-                    // erwartet wird ein java.time.LocalDate oder ähnliches -> anpassen falls Modell anders ist
-                    pstmt.setDate(8, new java.sql.Date(e.getDateOfBirth().getTime()));
+                    pstmt.setDate(8, new Date(e.getDateOfBirth().getTime()));
                 } else {
                     pstmt.setNull(8, Types.DATE);
                 }
@@ -211,14 +221,12 @@ public class DatabaseManager {
                 pstmt.setString(10, String.valueOf(e.getGender()));
 
                 if (e.getHireDate() != null) {
-                    pstmt.setDate(11, new java.sql.Date(e.getHireDate().getTime()));
+                    pstmt.setDate(11, new Date(e.getHireDate().getTime()));
                 } else {
                     pstmt.setNull(11, Types.DATE);
                 }
 
                 pstmt.setBoolean(12, e.isEmploymentStatus());
-
-                // team_id und manager_id können null sein; setObject erlaubt null
                 pstmt.setObject(13, e.getTeamId(), Types.INTEGER);
                 pstmt.setObject(14, e.getManagerId(), Types.INTEGER);
 
@@ -230,7 +238,9 @@ public class DatabaseManager {
 
     private void saveTrainings(ArrayList<Training> trainings) throws SQLException {
         if (trainings == null || trainings.isEmpty()) return;
-        String sql = "MERGE INTO trainings (id, title, description, duration_hours) KEY (id) VALUES (?, ?, ?, ?)";
+
+        String sql =
+                "MERGE INTO trainings (id, title, description, duration_hours) KEY (id) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             for (Training t : trainings) {
                 pstmt.setInt(1, t.getId());
@@ -247,18 +257,18 @@ public class DatabaseManager {
         String roleSql = """
         INSERT INTO role_history (employee_id, role_id, assigned_at, ended_at)
         VALUES (?, ?, ?, ?)
-    """;
+        """;
 
         String skillSql = """
         INSERT INTO skill_history (employee_id, skill_id, acquire_date)
         VALUES (?, ?, ?)
-    """;
+        """;
 
         String trainingSql = """
         INSERT INTO training_history
         (employee_id, training_id, status, assigned_at, completed_at)
         VALUES (?, ?, ?, ?, ?)
-    """;
+        """;
 
         try (
                 PreparedStatement roleStmt = connection.prepareStatement(roleSql);
@@ -266,8 +276,6 @@ public class DatabaseManager {
                 PreparedStatement trainingStmt = connection.prepareStatement(trainingSql)
         ) {
             for (Employee e : employees) {
-
-                // Role History
                 var rm = e.getRoleManager();
 
                 for (var entry : rm.getRoleHistory()) {
@@ -282,7 +290,6 @@ public class DatabaseManager {
                     roleStmt.addBatch();
                 }
 
-                // Skill History
                 for (var sh : e.getSkillManager().getSkillHistory()) {
                     skillStmt.setInt(1, e.getId());
                     skillStmt.setInt(2, sh.getSkillId());
@@ -290,7 +297,6 @@ public class DatabaseManager {
                     skillStmt.addBatch();
                 }
 
-                // Training History
                 for (var th : e.getTrainingManager().getTrainingHistory()) {
                     trainingStmt.setInt(1, e.getId());
                     trainingStmt.setInt(2, th.getTrainingId());
@@ -321,18 +327,17 @@ public class DatabaseManager {
     private void saveTrainingSkillsFromJson(Path file) throws IOException, SQLException {
         JsonNode root = mapper.readTree(file.toFile());
 
-        String sql = "INSERT INTO training_skills (training_id, skill_id) VALUES (?, ?)";
+        String sql =
+                "INSERT INTO training_skills (training_id, skill_id) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-
             for (JsonNode training : root) {
                 int trainingId = training.get("id").asInt();
 
-                JsonNode skills = training
-                        .path("skillList")
-                        .path("skills");
+                JsonNode skills =
+                        training.path("skillList").path("skills");
 
                 if (!skills.isArray()) {
-                    continue; // defensive check
+                    continue;
                 }
 
                 for (JsonNode skill : skills) {
@@ -341,14 +346,11 @@ public class DatabaseManager {
                     stmt.addBatch();
                 }
             }
-
             stmt.executeBatch();
         }
     }
 
     public void loadDataFromDb() throws SQLException {
-        System.out.println("📥 Lade Daten aus der Datenbank in den Speicher...");
-
         ServiceLocator.getCompanyContainer().getCompanies().clear();
         ServiceLocator.getDepartmentContainer().getDepartments().clear();
         ServiceLocator.getTeamContainer().getTeams().clear();
@@ -368,13 +370,13 @@ public class DatabaseManager {
         loadRoleHistories();
         loadSkillHistories();
         loadTrainingHistories();
-
-        System.out.println("✅ Alle Daten erfolgreich geladen!");
     }
 
     private void loadCompanies() throws SQLException {
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM companies")) {
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM companies")
+        ) {
             var container = ServiceLocator.getCompanyContainer();
             while (rs.next()) {
                 Company c = new Company(rs.getInt("id"), rs.getString("name"));
@@ -384,11 +386,15 @@ public class DatabaseManager {
     }
 
     private void loadDepartments() throws SQLException {
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM departments")) {
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM departments")
+        ) {
             var container = ServiceLocator.getDepartmentContainer();
             while (rs.next()) {
-                if (container.getDepartmentById(rs.getInt("id")) != null) throw new SQLException("Department with this ID already exists");
+                if (container.getDepartmentById(rs.getInt("id")) != null)
+                    throw new SQLException("Department with this ID already exists");
+
                 Department d = new Department(
                         rs.getString("name"),
                         rs.getInt("company_id")
@@ -399,11 +405,15 @@ public class DatabaseManager {
     }
 
     private void loadTeams() throws SQLException {
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM teams")) {
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM teams")
+        ) {
             var container = ServiceLocator.getTeamContainer();
             while (rs.next()) {
-                if (container.getTeamById(rs.getInt("id")) != null) throw new SQLException("Team with this ID already exists");
+                if (container.getTeamById(rs.getInt("id")) != null)
+                    throw new SQLException("Team with this ID already exists");
+
                 Team t = new Team(
                         rs.getString("name"),
                         rs.getInt("department_id")
@@ -414,11 +424,15 @@ public class DatabaseManager {
     }
 
     private void loadRoles() throws SQLException {
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM roles")) {
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM roles")
+        ) {
             var container = ServiceLocator.getRoleContainer();
             while (rs.next()) {
-                if (container.getRoleById(rs.getInt("id")) != null) throw new SQLException("Role with this ID already exists");
+                if (container.getRoleById(rs.getInt("id")) != null)
+                    throw new SQLException("Role with this ID already exists");
+
                 Role r = new Role(
                         rs.getString("name"),
                         rs.getString("description"),
@@ -430,11 +444,15 @@ public class DatabaseManager {
     }
 
     private void loadSkills() throws SQLException {
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM skills")) {
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM skills")
+        ) {
             var container = ServiceLocator.getSkillContainer();
             while (rs.next()) {
-                if (container.getSkillById(rs.getInt("id")) != null) throw new SQLException("Skill with this ID already exists");
+                if (container.getSkillById(rs.getInt("id")) != null)
+                    throw new SQLException("Skill with this ID already exists");
+
                 Skill s = new Skill(
                         rs.getInt("required_years"),
                         rs.getString("name"),
@@ -446,16 +464,20 @@ public class DatabaseManager {
     }
 
     private void loadTrainings() throws SQLException {
-        TrainingSkillManagerContainer tsmc = ServiceLocator.getTrainingSkillManagerContainer();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM trainings")) {
+        TrainingSkillManagerContainer tsmc =
+                ServiceLocator.getTrainingSkillManagerContainer();
+
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM trainings")
+        ) {
             var container = ServiceLocator.getTrainingContainer();
             while (rs.next()) {
                 Training t = new Training(
-                    rs.getString("title"),
-                    rs.getString("description"),
-                    rs.getInt("duration_hours"),
-                    new TrainingSkillManager()
+                        rs.getString("title"),
+                        rs.getString("description"),
+                        rs.getInt("duration_hours"),
+                        new TrainingSkillManager()
                 );
 
                 t.getSkillManager().setTrainingId(t.getId());
@@ -466,15 +488,18 @@ public class DatabaseManager {
         }
 
         String sql = "SELECT * FROM training_skills";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
+        ) {
             while (rs.next()) {
                 int tId = rs.getInt("training_id");
                 int sId = rs.getInt("skill_id");
 
-                Training training = ServiceLocator.getTrainingContainer().getTrainingById(tId);
-                Skill skill = ServiceLocator.getSkillContainer().getSkillById(sId);
+                Training training =
+                        ServiceLocator.getTrainingContainer().getTrainingById(tId);
+                Skill skill =
+                        ServiceLocator.getSkillContainer().getSkillById(sId);
 
                 if (training != null && skill != null) {
                     training.getSkillManager().addSkill(skill);
@@ -485,8 +510,10 @@ public class DatabaseManager {
 
     private void loadEmployees() throws SQLException {
         String sql = "SELECT * FROM employees";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
+        ) {
             var container = ServiceLocator.getEmployeeContainer();
 
             while (rs.next()) {
@@ -507,11 +534,17 @@ public class DatabaseManager {
 
                 e.setEmploymentStatus(rs.getBoolean("employment_active"));
 
-                if (rs.getDate("date_of_birth") != null)
-                    e.setDateOfBirth(new java.util.Date(rs.getDate("date_of_birth").getTime()));
+                if (rs.getDate("date_of_birth") != null) {
+                    e.setDateOfBirth(
+                            new java.util.Date(rs.getDate("date_of_birth").getTime())
+                    );
+                }
 
-                if (rs.getDate("hire_date") != null)
-                    e.setHireDate(new java.util.Date(rs.getDate("hire_date").getTime()));
+                if (rs.getDate("hire_date") != null) {
+                    e.setHireDate(
+                            new java.util.Date(rs.getDate("hire_date").getTime())
+                    );
+                }
 
                 int teamId = rs.getInt("team_id");
                 if (!rs.wasNull()) e.setTeamId(teamId);
@@ -523,9 +556,12 @@ public class DatabaseManager {
                 e.setSkillManager(new SkillManager(e));
                 e.setTrainingManager(new TrainingManager(e));
 
-                ServiceLocator.getRoleManagerContainer().addRoleManager(e.getRoleManager());
-                ServiceLocator.getSkillManagerContainer().addSkillManager(e.getSkillManager());
-                ServiceLocator.getTrainingManagerContainer().addTrainingManager(e.getTrainingManager());
+                ServiceLocator.getRoleManagerContainer()
+                        .addRoleManager(e.getRoleManager());
+                ServiceLocator.getSkillManagerContainer()
+                        .addSkillManager(e.getSkillManager());
+                ServiceLocator.getTrainingManagerContainer()
+                        .addTrainingManager(e.getTrainingManager());
 
                 container.addEmployee(e);
             }
@@ -534,21 +570,27 @@ public class DatabaseManager {
 
     private void loadRoleHistories() throws SQLException {
         String sql = "SELECT * FROM role_history ORDER BY assigned_at ASC";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
+        ) {
             while (rs.next()) {
                 int empId = rs.getInt("employee_id");
-                Employee emp = ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
+                Employee emp =
+                        ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
 
                 if (emp != null) {
                     var entry = new RoleManager.RoleHistoryEntry();
                     entry.setHistoryId(rs.getInt("id"));
                     entry.setRoleId(rs.getInt("role_id"));
-                    entry.setAcquireDate(rs.getDate("assigned_at").toLocalDate());
+                    entry.setAcquireDate(
+                            rs.getDate("assigned_at").toLocalDate()
+                    );
 
                     if (rs.getDate("ended_at") != null) {
-                        entry.setEndDate(rs.getDate("ended_at").toLocalDate());
+                        entry.setEndDate(
+                                rs.getDate("ended_at").toLocalDate()
+                        );
                     }
 
                     emp.getRoleManager().addRoleHistoryEntry(entry);
@@ -559,20 +601,25 @@ public class DatabaseManager {
 
     private void loadSkillHistories() throws SQLException {
         String sql = "SELECT * FROM skill_history";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
+        ) {
             while (rs.next()) {
                 int empId = rs.getInt("employee_id");
-                Employee emp = ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
+                Employee emp =
+                        ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
 
                 if (emp != null) {
                     var entry = new SkillManager.SkillHistoryEntry();
                     entry.setHistoryId(rs.getInt("id"));
                     entry.setSkillId(rs.getInt("skill_id"));
-                    entry.setAcquireDate(rs.getDate("acquire_date").toLocalDate());
+                    entry.setAcquireDate(
+                            rs.getDate("acquire_date").toLocalDate()
+                    );
 
-                    emp.getSkillManager().addSkill(entry.getSkillId(), entry.getAcquireDate());
+                    emp.getSkillManager()
+                            .addSkill(entry.getSkillId(), entry.getAcquireDate());
                 }
             }
         }
@@ -580,46 +627,50 @@ public class DatabaseManager {
 
     private void loadTrainingHistories() throws SQLException {
         String sql = "SELECT * FROM training_history";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
+        try (
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)
+        ) {
             while (rs.next()) {
                 int empId = rs.getInt("employee_id");
-                Employee emp = ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
+                Employee emp =
+                        ServiceLocator.getEmployeeContainer().getEmployeeById(empId);
 
                 if (emp != null) {
-                    TrainingManager.Status status = TrainingManager.Status.valueOf(rs.getString("status"));
+                    TrainingManager.Status status =
+                            TrainingManager.Status.valueOf(
+                                    rs.getString("status")
+                            );
 
-                    var entry = new TrainingManager.TrainingHistoryEntry(
-                            rs.getInt("id"),
-                            rs.getInt("training_id"),
-                            status,
-                            rs.getDate("assigned_at").toLocalDate(),
-                            rs.getDate("completed_at") != null ? rs.getDate("completed_at").toLocalDate() : null
-                    );
+                    var entry =
+                            new TrainingManager.TrainingHistoryEntry(
+                                    rs.getInt("id"),
+                                    rs.getInt("training_id"),
+                                    status,
+                                    rs.getDate("assigned_at").toLocalDate(),
+                                    rs.getDate("completed_at") != null
+                                            ? rs.getDate("completed_at").toLocalDate()
+                                            : null
+                            );
 
-                    emp.getTrainingManager().getTrainingHistory().add(entry);
+                    emp.getTrainingManager()
+                            .getTrainingHistory()
+                            .add(entry);
                 }
             }
         }
     }
-
     public void saveAllData() {
-        System.out.println("💾 Speichere Daten (Full Rewrite mit Constraint-Pause)...");
         try {
             openConnection();
-            // **IMPROVEMENT**: Use a single transaction for the whole operation
             connection.setAutoCommit(false);
 
             try (Statement stmt = connection.createStatement()) {
 
-                // 1. Foreign Keys global deaktivieren
                 stmt.execute("SET REFERENTIAL_INTEGRITY FALSE");
 
-                // 2. Alle Tabellen leeren
                 clearDatabaseTables();
 
-                // 3. Kataloge & Struktur einfügen (Consider batching these too, see notes below)
                 reinsertSkills();
                 reinsertRoles();
                 reinsertDepartments();
@@ -627,73 +678,66 @@ public class DatabaseManager {
                 reinsertTrainings();
                 reinsertTrainingSkills();
 
-                // 4. Mitarbeiter und deren History einfügen
                 for (Employee e : ServiceLocator.getEmployeeContainer().getEmployees()) {
                     reinsertEmployeeBaseData(e);
                     updateRoleHistory(e);
                     updateTrainingHistory(e);
-                    // **THE FIX**: Add the call to the new method
                     updateSkillHistory(e);
                 }
 
-                // 5. Foreign Keys wieder aktivieren
                 stmt.execute("SET REFERENTIAL_INTEGRITY TRUE");
             }
 
-            // If all went well, commit the transaction
             connection.commit();
-            System.out.println("✅ Speichern erfolgreich!");
 
         } catch (SQLException e) {
-            System.err.println("❌ Fehler beim Full-Rewrite: " + e.getMessage());
+            System.err.println("Fehler beim Full-Rewrite: " + e.getMessage());
             e.printStackTrace();
 
-            // **IMPROVEMENT**: Rollback on failure
             try {
                 if (connection != null) {
-                    System.err.println("... Transaktion wird zurückgerollt.");
+                    System.err.println("Transaktion wird zurückgerollt.");
                     connection.rollback();
                 }
             } catch (SQLException ex) {
-                System.err.println("... Fehler beim Zurückrollen der Transaktion: " + ex.getMessage());
+                System.err.println("Fehler beim Zurückrollen der Transaktion: " + ex.getMessage());
             }
 
         } finally {
-            // **IMPROVEMENT**: Restore original auto-commit state and close connection
             try {
                 if (connection != null) {
-                    connection.setAutoCommit(true); // Restore default behavior
+                    connection.setAutoCommit(true);
                     closeConnection();
                 }
             } catch (SQLException ex) {
-                System.err.println("... Fehler beim Wiederherstellen von Auto-Commit: " + ex.getMessage());
+                System.err.println("Fehler beim Wiederherstellen von Auto-Commit: " + ex.getMessage());
             }
         }
     }
 
     private void clearDatabaseTables() throws SQLException {
         Statement stmt = connection.createStatement();
-        // 1. Kind-Tabellen (Mitarbeiter-Daten)
+
         stmt.executeUpdate("TRUNCATE TABLE training_history");
         stmt.executeUpdate("TRUNCATE TABLE skill_history");
         stmt.executeUpdate("TRUNCATE TABLE role_history");
         stmt.executeUpdate("TRUNCATE TABLE employees");
 
-        // 2. Struktur-Tabellen
         stmt.executeUpdate("TRUNCATE TABLE teams");
         stmt.executeUpdate("TRUNCATE TABLE departments");
 
-        // 3. Unabhängige Kataloge
         stmt.executeUpdate("TRUNCATE TABLE skills");
         stmt.executeUpdate("TRUNCATE TABLE roles");
         stmt.executeUpdate("TRUNCATE TABLE trainings");
         stmt.executeUpdate("TRUNCATE TABLE training_skills");
+
         stmt.close();
         System.out.println("🧹 Datenbank bereinigt für neuen Schreibvorgang.");
     }
 
     private void reinsertSkills() throws SQLException {
-        String sql = "INSERT INTO skills (id, name, description, required_years) VALUES (?, ?, ?, ?)";
+        String sql =
+                "INSERT INTO skills (id, name, description, required_years) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Skill s : ServiceLocator.getSkillContainer().getSkills()) {
                 stmt.setInt(1, s.getId());
@@ -706,7 +750,8 @@ public class DatabaseManager {
     }
 
     private void reinsertRoles() throws SQLException {
-        String sql = "INSERT INTO roles (id, name, description, system_permission) VALUES (?, ?, ?, ?)";
+        String sql =
+                "INSERT INTO roles (id, name, description, system_permission) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Role r : ServiceLocator.getRoleContainer().getRoles()) {
                 stmt.setInt(1, r.getId());
@@ -719,7 +764,8 @@ public class DatabaseManager {
     }
 
     private void reinsertDepartments() throws SQLException {
-        String sql = "INSERT INTO departments (id, name, company_id) VALUES (?, ?, ?)";
+        String sql =
+                "INSERT INTO departments (id, name, company_id) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Department d : ServiceLocator.getDepartmentContainer().getDepartments()) {
                 stmt.setInt(1, d.getId());
@@ -731,7 +777,8 @@ public class DatabaseManager {
     }
 
     private void reinsertTeams() throws SQLException {
-        String sql = "INSERT INTO teams (id, name, department_id) VALUES (?, ?, ?)";
+        String sql =
+                "INSERT INTO teams (id, name, department_id) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Team t : ServiceLocator.getTeamContainer().getTeams()) {
                 stmt.setInt(1, t.getId());
@@ -742,11 +789,13 @@ public class DatabaseManager {
         }
     }
 
-    private void reinsertTrainingSkills() throws SQLException{
-        String sql = "INSERT INTO training_skills (training_id, skill_id) VALUES (?, ?)";
+    private void reinsertTrainingSkills() throws SQLException {
+        String sql =
+                "INSERT INTO training_skills (training_id, skill_id) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            for (TrainingSkillManager tsm : ServiceLocator.getTrainingSkillManagerContainer().getTrainingSkillManagers()) {
-                for (TrainingSkillManager.TrainingSkillEntry tse: tsm.getSkills()) {
+            for (TrainingSkillManager tsm :
+                    ServiceLocator.getTrainingSkillManagerContainer().getTrainingSkillManagers()) {
+                for (TrainingSkillManager.TrainingSkillEntry tse : tsm.getSkills()) {
                     stmt.setInt(1, tse.getTrainingId());
                     stmt.setInt(2, tse.getSkillId());
                     stmt.executeUpdate();
@@ -755,8 +804,9 @@ public class DatabaseManager {
         }
     }
 
-    private void reinsertTrainings() throws SQLException{
-        String sql = "INSERT INTO trainings (id, title, description, duration_hours) VALUES (?, ?, ?, ?)";
+    private void reinsertTrainings() throws SQLException {
+        String sql =
+                "INSERT INTO trainings (id, title, description, duration_hours) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             for (Training t : ServiceLocator.getTrainingContainer().getTrainings()) {
                 stmt.setInt(1, t.getId());
@@ -769,9 +819,10 @@ public class DatabaseManager {
     }
 
     private void reinsertEmployeeBaseData(Employee e) throws SQLException {
-        String sql = "INSERT INTO employees (id, username, password, first_name, last_name, email, " +
-                "phone_number, address, gender, employment_active, date_of_birth, hire_date, " +
-                "team_id, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql =
+                "INSERT INTO employees (id, username, password, first_name, last_name, email, " +
+                        "phone_number, address, gender, employment_active, date_of_birth, hire_date, " +
+                        "team_id, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, e.getId());
@@ -784,11 +835,24 @@ public class DatabaseManager {
             pstmt.setString(8, e.getAddress());
             pstmt.setString(9, String.valueOf(e.getGender()));
             pstmt.setBoolean(10, e.isEmploymentStatus());
-            pstmt.setDate(11, e.getDateOfBirth() != null ? new java.sql.Date(e.getDateOfBirth().getTime()) : null);
-            pstmt.setDate(12, e.getHireDate() != null ? new java.sql.Date(e.getHireDate().getTime()) : null);
+            pstmt.setDate(
+                    11,
+                    e.getDateOfBirth() != null
+                            ? new java.sql.Date(e.getDateOfBirth().getTime())
+                            : null
+            );
+            pstmt.setDate(
+                    12,
+                    e.getHireDate() != null
+                            ? new java.sql.Date(e.getHireDate().getTime())
+                            : null
+            );
 
-            if (e.getTeamId() > 0) pstmt.setInt(13, e.getTeamId()); else pstmt.setNull(13, java.sql.Types.INTEGER);
-            if (e.getManagerId() > 0) pstmt.setInt(14, e.getManagerId()); else pstmt.setNull(14, java.sql.Types.INTEGER);
+            if (e.getTeamId() > 0) pstmt.setInt(13, e.getTeamId());
+            else pstmt.setNull(13, Types.INTEGER);
+
+            if (e.getManagerId() > 0) pstmt.setInt(14, e.getManagerId());
+            else pstmt.setNull(14, Types.INTEGER);
 
             pstmt.executeUpdate();
         }
@@ -801,10 +865,13 @@ public class DatabaseManager {
             delStmt.executeUpdate();
         }
 
-        String insertSql = "INSERT INTO role_history (employee_id, role_id, assigned_at, ended_at) VALUES (?, ?, ?, ?)";
+        String insertSql =
+                "INSERT INTO role_history (employee_id, role_id, assigned_at, ended_at) VALUES (?, ?, ?, ?)";
         try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
             if (e.getRoleManager() != null) {
-                for (RoleManager.RoleHistoryEntry entry : e.getRoleManager().getRoleHistory()) {
+                for (RoleManager.RoleHistoryEntry entry :
+                        e.getRoleManager().getRoleHistory()) {
+
                     insertStmt.setInt(1, e.getId());
                     insertStmt.setInt(2, entry.getRoleId());
                     insertStmt.setDate(3, Date.valueOf(entry.getAcquireDate()));
@@ -814,6 +881,7 @@ public class DatabaseManager {
                     } else {
                         insertStmt.setNull(4, Types.DATE);
                     }
+
                     insertStmt.addBatch();
                 }
                 insertStmt.executeBatch();
@@ -828,24 +896,36 @@ public class DatabaseManager {
             delStmt.executeUpdate();
         }
 
-        String insertSql = "INSERT INTO training_history (employee_id, training_id, status, assigned_at, completed_at) VALUES (?, ?, ?, ?, ?)";
+        String insertSql =
+                "INSERT INTO training_history (employee_id, training_id, status, assigned_at, completed_at) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
             if (e.getTrainingManager() != null) {
-                for (TrainingManager.TrainingHistoryEntry entry : e.getTrainingManager().getTrainingHistory()) {
+                for (TrainingManager.TrainingHistoryEntry entry :
+                        e.getTrainingManager().getTrainingHistory()) {
+
                     insertStmt.setInt(1, e.getId());
                     insertStmt.setInt(2, entry.getTrainingId());
 
-                    // Status als String speichern (OPEN/DONE)
-                    String statusStr = (entry.getStatus() != null) ? entry.getStatus().name() : "OPEN";
+                    String statusStr =
+                            entry.getStatus() != null
+                                    ? entry.getStatus().name()
+                                    : "OPEN";
                     insertStmt.setString(3, statusStr);
 
-                    insertStmt.setDate(4, Date.valueOf(entry.getAssignedAt()));
+                    insertStmt.setDate(
+                            4,
+                            Date.valueOf(entry.getAssignedAt())
+                    );
 
                     if (entry.getCompletedAt() != null) {
-                        insertStmt.setDate(5, Date.valueOf(entry.getCompletedAt()));
+                        insertStmt.setDate(
+                                5,
+                                Date.valueOf(entry.getCompletedAt())
+                        );
                     } else {
                         insertStmt.setNull(5, Types.DATE);
                     }
+
                     insertStmt.addBatch();
                 }
                 insertStmt.executeBatch();
@@ -854,22 +934,25 @@ public class DatabaseManager {
     }
 
     private void updateSkillHistory(Employee e) throws SQLException {
-        // First, delete all existing skill history for this employee
         String deleteSql = "DELETE FROM skill_history WHERE employee_id=?";
         try (PreparedStatement delStmt = connection.prepareStatement(deleteSql)) {
             delStmt.setInt(1, e.getId());
             delStmt.executeUpdate();
         }
 
-        // Then, insert all skill history entries from the employee object
-        String insertSql = "INSERT INTO skill_history (employee_id, skill_id, acquire_date) VALUES (?, ?, ?)";
+        String insertSql =
+                "INSERT INTO skill_history (employee_id, skill_id, acquire_date) VALUES (?, ?, ?)";
         try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
             if (e.getSkillManager() != null) {
-                for (SkillManager.SkillHistoryEntry entry : e.getSkillManager().getSkillHistory()) {
+                for (SkillManager.SkillHistoryEntry entry :
+                        e.getSkillManager().getSkillHistory()) {
+
                     insertStmt.setInt(1, e.getId());
                     insertStmt.setInt(2, entry.getSkillId());
-                    // Convert LocalDate to java.sql.Date
-                    insertStmt.setDate(3, java.sql.Date.valueOf(entry.getAcquireDate()));
+                    insertStmt.setDate(
+                            3,
+                            java.sql.Date.valueOf(entry.getAcquireDate())
+                    );
                     insertStmt.addBatch();
                 }
                 insertStmt.executeBatch();
@@ -883,7 +966,7 @@ public class DatabaseManager {
                 connection.close();
             }
         } catch (SQLException e) {
-            System.err.println("❌ Error closing connection: " + e.getMessage());
+            System.err.println("Fehler beim Schließen der Verbindung: " + e.getMessage());
         }
     }
 }
