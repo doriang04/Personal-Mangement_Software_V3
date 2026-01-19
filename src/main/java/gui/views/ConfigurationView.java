@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -49,8 +50,6 @@ public class ConfigurationView extends JPanel implements View {
     private TeamManagementPanel teamPanel;
     private RoleManagementPanel rolePanel;
     private SkillManagementPanel skillPanel;
-
-    private int hoveredIndex = -1;
 
     public ConfigurationView() {
         setLayout(new BorderLayout());
@@ -93,10 +92,17 @@ public class ConfigurationView extends JPanel implements View {
         list.setSelectionBackground(Color.WHITE);
         list.setSelectionForeground(Color.BLACK);
 
-        list.setCellRenderer((l, value, index, isSelected, cellHasFocus) -> {
+        list.setCellRenderer((l, value, index, isSelected, _) -> {
             JLabel lbl = new JLabel(" " + mapper.apply(value));
             lbl.setOpaque(true);
-            lbl.setFont(new Font("SansSerif", Font.PLAIN, 13));
+            lbl.setFont(new Font("SansSerif", isSelected ? Font.BOLD : Font.PLAIN, 13));
+
+            int hoveredIndex = -1;
+            Object hoverProp = l.getClientProperty("hoveredIndex");
+            if (hoverProp instanceof Integer) {
+                hoveredIndex = (Integer) hoverProp;
+            }
+
             if (index == hoveredIndex) {
                 lbl.setBackground(COLOR_HOVER);
                 lbl.setBorder(BorderFactory.createCompoundBorder(
@@ -114,16 +120,15 @@ public class ConfigurationView extends JPanel implements View {
             @Override
             public void mouseMoved(MouseEvent e) {
                 int index = list.locationToIndex(e.getPoint());
-                if (index != hoveredIndex) {
-                    hoveredIndex = index;
-                    list.repaint();
-                }
+                list.putClientProperty("hoveredIndex", index);
+                list.repaint();
             }
         });
+
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                hoveredIndex = -1;
+                list.putClientProperty("hoveredIndex", -1);
                 list.repaint();
             }
         });

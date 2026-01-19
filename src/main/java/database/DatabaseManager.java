@@ -732,7 +732,6 @@ public class DatabaseManager {
         stmt.executeUpdate("TRUNCATE TABLE training_skills");
 
         stmt.close();
-        System.out.println("🧹 Datenbank bereinigt für neuen Schreibvorgang.");
     }
 
     private void reinsertSkills() throws SQLException {

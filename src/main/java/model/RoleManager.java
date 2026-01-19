@@ -184,7 +184,9 @@ public class RoleManager {
     }
 
     public boolean hasReferences() {
-        // TODO write out this method
+        for (Employee employee: ServiceLocator.getEmployeeContainer().getEmployees()) {
+            if (employee.getId() == employeeId) return true;
+        }
         return false;
     }
 

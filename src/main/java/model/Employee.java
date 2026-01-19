@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 import java.util.Date;
 public class Employee {
 
@@ -188,7 +190,9 @@ public class Employee {
     }
 
     public boolean hasReferences() {
-        // TODO write out this method
+        for (Employee employee: ServiceLocator.getEmployeeContainer().getEmployees()) {
+            if (employee.getManagerId() == getId()) return true;
+        }
         return false;
     }
 }

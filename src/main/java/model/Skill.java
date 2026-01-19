@@ -57,9 +57,6 @@ public class Skill {
     }
 
     public boolean hasReferences() {
-        for (Skill skill: ServiceLocator.getSkillContainer().getSkills()) {
-            if (skill.getId() == getId()) return true;
-        }
         for (TrainingSkillManager tsm: ServiceLocator.getTrainingSkillManagerContainer().getTrainingSkillManagers()) {
             for (TrainingSkillManager.TrainingSkillEntry tse: tsm.getSkills()) {
                 if (tse.getSkillId() == getId()) return true;

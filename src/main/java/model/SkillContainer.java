@@ -17,7 +17,7 @@ public class SkillContainer {
     public void addSkill(Skill skill) { skills.add(skill); }
 
     public void removeSkill(Skill skill) throws Exception {
-        if (skill.hasReferences()) throw new Exception("Die Fertigkeit darf nicht gelöscht werden, da sie referenziert wird.");
+        if (skill.hasReferences()) throw new Exception("Der Skill \"" + skill.getName() + "\" darf nicht gelöscht werden, da sie referenziert wird.");
         skills.remove(skill);
     }
 

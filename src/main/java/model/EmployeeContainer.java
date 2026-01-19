@@ -1,5 +1,7 @@
 package model;
 
+import core.ServiceLocator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,9 @@ public class EmployeeContainer {
     public void removeEmployee(Employee employee) throws Exception {
         if (employee.hasReferences()) throw new Exception("Mitarbeiter darf nicht gelöscht werden, da er referenziert wird.");
         this.employees.remove(employee);
+        ServiceLocator.getRoleManagerContainer().removeRoleManager(employee.getRoleManager());
+        ServiceLocator.getSkillManagerContainer().removeSkillManager(employee.getSkillManager());
+        ServiceLocator.getTrainingManagerContainer().removeTrainingManager(employee.getTrainingManager());
     }
 
     public ArrayList<Employee> getEmployees() {
